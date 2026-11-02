@@ -9,7 +9,7 @@ import {
 import { getErrorMessage } from "@/utils/get-error-message";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const BANK_ACCOUNTS_QUERY_KEY = ["Settings-LoadAllBankAccounts"];
+export const BANK_ACCOUNTS_QUERY_KEY = ["Settings-LoadAllBankAccounts"];
 
 export function useBankAccount() {
   const { dispatchLoader, hideLoader } = useLoaderContext();
