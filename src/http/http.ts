@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://whaidata-api-prod.up.railway.app",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://apiwhaidata.pauloturcko.dev",
 });
 
 http.interceptors.request.use((config) => {
