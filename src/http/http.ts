@@ -1,12 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { AUTH_COOKIE } from "@/constants/storage-keys";
 
 export const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://apiwhaidata.pauloturcko.dev",
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL || "https://apiwhaidata.pauloturcko.dev",
 });
 
 http.interceptors.request.use((config) => {
-  const token = Cookies.get("whaidata.token");
+  const token = Cookies.get(AUTH_COOKIE);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -25,7 +27,7 @@ http.interceptors.response.use(
       error.config.url !== "/users/login" &&
       window.location.pathname !== "/login"
     ) {
-      Cookies.remove("whaidata.token");
+      Cookies.remove(AUTH_COOKIE);
       window.location.href = "/login";
     }
     return Promise.reject(error);

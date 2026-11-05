@@ -27,10 +27,17 @@ const LayoutContainer = styled.div`
   background:
     radial-gradient(
       60rem 30rem at 15% -10%,
-      rgba(${({ theme }) => theme.colors.glowRgb}, ${({ theme }) => (theme.mode === "dark" ? 0.16 : 0.08)}),
+      rgba(
+        ${({ theme }) => theme.colors.glowRgb},
+        ${({ theme }) => (theme.mode === "dark" ? 0.16 : 0.08)}
+      ),
       transparent 70%
     ),
-    radial-gradient(40rem 24rem at 100% 0%, ${({ theme }) => theme.colors.accentSoft}, transparent 70%),
+    radial-gradient(
+      40rem 24rem at 100% 0%,
+      ${({ theme }) => theme.colors.accentSoft},
+      transparent 70%
+    ),
     ${({ theme }) => theme.colors.background};
 `;
 

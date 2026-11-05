@@ -1,52 +1,77 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { SpecularButton } from "@/components/Atoms/SpecularButton";
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { SettingsPanel } from "@/components/Molecules/SettingsPanel";
 import { CardInfo } from "@/components/Organisms/CardInfo";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useCard } from "@/hooks/useCard";
-import { Plus } from "lucide-react";
+import { useConfirm } from "@/hooks/useConfirm";
+import { Card } from "@/services/card-service";
 import { NewCard } from "./FormModal";
 import * as S from "./styles";
 
-const CardFormContent = ({ onClose }: { onClose: () => void }) => (
-  <NewCard onClose={onClose} />
-);
-
 export const CartoesPage = () => {
   const { openModal } = useModalContext();
-  const { loadAllCards } = useCard();
+  const { confirm } = useConfirm();
+  const { loadAllCards, deleteCard } = useCard();
 
-  const handleOpenModal = () => {
+  const handleCreate = () => {
     openModal({
-      component: CardFormContent,
       title: "Novo Cartão",
+      render: (close) => <NewCard onClose={close} />,
+    });
+  };
+
+  const handleEdit = (card: Card) => {
+    openModal({
+      title: "Editar Cartão",
+      render: (close) => (
+        <NewCard
+          onClose={close}
+          card={card}
+        />
+      ),
+    });
+  };
+
+  const handleDelete = (card: Card) => {
+    confirm({
+      title: "Excluir cartão",
+      message: `Tem certeza que deseja excluir o cartão "${card.name}"? Essa ação não pode ser desfeita.`,
+      confirmLabel: "Excluir",
+      danger: true,
+      onConfirm: () => deleteCard.mutate({ id: card.id }),
     });
   };
 
   return (
-    <SettingsWrapper
+    <SettingsPanel
       title="Cartões"
       description="Configure seus cartões"
-      button={
+      action={
         <SpecularButton
           size="sm"
-          onClick={handleOpenModal}
+          onClick={handleCreate}
         >
           <Plus size={18} /> Novo Cartão
         </SpecularButton>
       }
     >
-      <S.CardsGrid>
-        {loadAllCards.isLoading && <p>Carregando...</p>}
-        {loadAllCards.data?.length === 0 && <p>Nenhum cartão cadastrado.</p>}
+      <S.CardsList>
+        {loadAllCards.isLoading && <S.Message>Carregando...</S.Message>}
+        {loadAllCards.data?.length === 0 && (
+          <S.Message>Nenhum cartão cadastrado.</S.Message>
+        )}
         {loadAllCards.data?.map((card) => (
           <CardInfo
             key={card.id}
             card={card}
+            onEdit={() => handleEdit(card)}
+            onDelete={() => handleDelete(card)}
           />
         ))}
-      </S.CardsGrid>
-    </SettingsWrapper>
+      </S.CardsList>
+    </SettingsPanel>
   );
 };

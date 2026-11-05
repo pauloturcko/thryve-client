@@ -1,8 +1,9 @@
 "use client";
+import { ItemActions } from "@/components/Atoms/ItemActions";
 import { getCategoryIcon } from "@/constants/categoryIcons";
 import { Category } from "@/services/category-service";
 import { formatCurrencyBRL } from "@/utils/format";
-import { CircleCheck, Clock, SquarePen, Trash2 } from "lucide-react";
+import { CircleCheck, Clock } from "lucide-react";
 import { createElement } from "react";
 import * as S from "./styles";
 
@@ -59,21 +60,11 @@ export const TransactionInfo = ({
         </S.Amount>
       </S.Footer>
       <S.Actions>
-        <button
-          type="button"
-          aria-label="Editar"
-          onClick={onEdit}
-        >
-          <SquarePen size={28} />
-        </button>
-        <button
-          type="button"
-          aria-label="Excluir"
-          className="trashIcon"
-          onClick={onDelete}
-        >
-          <Trash2 size={28} />
-        </button>
+        <ItemActions
+          itemName={title}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       </S.Actions>
     </S.TransactionWrapper>
   );

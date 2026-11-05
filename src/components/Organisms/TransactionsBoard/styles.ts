@@ -4,27 +4,36 @@ export const Toolbar = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
+
+  @media (max-width: 1280px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Filters = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
-  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: flex-end;
-  gap: 0.75rem 1rem;
+  gap: 0.75rem;
 
   > * {
-    flex: 0 1 12rem;
+    flex: 0 1 11rem;
+    min-width: 8.5rem;
   }
 
   > [data-segment] {
     flex: none;
+    min-width: 0;
   }
 
   @media (max-width: 1280px) {
     width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 `;
 

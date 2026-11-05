@@ -8,7 +8,7 @@ import {
   Moon02Icon,
   MoneyReceiveSquareIcon,
   MoneySendSquareIcon,
-  PiggyBankIcon,
+  MoneyBag02Icon,
   Settings02Icon,
   Sun03Icon,
 } from "@hugeicons/core-free-icons";
@@ -21,7 +21,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: DashboardSquare02Icon },
   { label: "Rendas", href: "/rendas", icon: MoneyReceiveSquareIcon },
   { label: "Gastos", href: "/gastos", icon: MoneySendSquareIcon },
-  { label: "Investimentos", href: "/investimentos", icon: PiggyBankIcon },
+  { label: "Investimentos", href: "/investimentos", icon: MoneyBag02Icon },
   { label: "Relatórios", href: "/relatorios", icon: ChartLineData02Icon },
   { label: "Configurações", href: "/configuracoes", icon: Settings02Icon },
 ];

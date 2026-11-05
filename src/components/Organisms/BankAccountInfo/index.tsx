@@ -1,75 +1,34 @@
-"use client";
-import { SquarePen, Trash2 } from "lucide-react";
-import * as S from "./styles";
+import { ItemActions } from "@/components/Atoms/ItemActions";
 import {
   AccountType,
   AccountTypeLabels,
 } from "@/constants/enums/account-type-enum";
 import { BankAccount } from "@/services/bank-account-service";
 import { formatCurrencyBRL } from "@/utils/format";
-import { useBankAccount } from "@/hooks/useBankAccount";
-import { useConfirm } from "@/hooks/useConfirm";
-import { BaseModalProps, useModalContext } from "@/contexts/ModalContext";
-import { NewBankAccount } from "@/components/Pages/Configuracoes/Contas/FormModal";
-import { ComponentType } from "react";
+import * as S from "./styles";
 
-const EditBankAccountFormContent = ({
-  onClose,
-  bankAccount,
-}: {
-  onClose: () => void;
+type BankAccountInfoProps = {
   bankAccount: BankAccount;
-}) => (
-  <NewBankAccount
-    onClose={onClose}
-    bankAccount={bankAccount}
-  />
-);
+  onEdit: () => void;
+  onDelete: () => void;
+};
 
 export const BankAccountInfo = ({
   bankAccount,
-}: {
-  bankAccount: BankAccount;
-}) => {
-  const { deleteBankAccount } = useBankAccount();
-  const { confirm } = useConfirm();
-  const { openModal } = useModalContext();
+  onEdit,
+  onDelete,
+}: BankAccountInfoProps) => {
   const balance = Number(bankAccount.balance);
-
-  const handleDelete = () => {
-    confirm({
-      title: "Excluir conta",
-      message: `Tem certeza que deseja excluir a conta "${bankAccount.name}"? Essa ação não pode ser desfeita.`,
-      confirmLabel: "Excluir",
-      danger: true,
-      onConfirm: () => deleteBankAccount.mutate({ id: bankAccount.id }),
-    });
-  };
-
-  const handleEdit = () => {
-    openModal({
-      component:
-        EditBankAccountFormContent as unknown as ComponentType<BaseModalProps>,
-      title: "Editar Conta",
-      props: { bankAccount },
-    });
-  };
 
   return (
     <S.AccountWrapper>
       <S.AccountHeader>
         <p>{bankAccount.name}</p>
-        <S.AccountActions>
-          <SquarePen
-            size={30}
-            onClick={handleEdit}
-          />
-          <Trash2
-            size={30}
-            className="trashIcon"
-            onClick={handleDelete}
-          />
-        </S.AccountActions>
+        <ItemActions
+          itemName={bankAccount.name}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       </S.AccountHeader>
       <S.AccountInfoWrapper>
         <S.AccountType>

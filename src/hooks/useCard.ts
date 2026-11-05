@@ -1,4 +1,3 @@
-import { useLoaderContext } from "@/contexts/LoaderContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
   createCardService,
@@ -12,15 +11,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const CARDS_QUERY_KEY = ["Settings-LoadAllCards"];
 
 export function useCard() {
-  const { dispatchLoader, hideLoader } = useLoaderContext();
   const { dispatchToast } = useToastContext();
   const queryClient = useQueryClient();
 
   const createCard = useMutation({
     mutationFn: createCardService.createCard,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Cartão Salvo",
@@ -28,7 +24,6 @@ export function useCard() {
       queryClient.invalidateQueries({ queryKey: CARDS_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao cadastrar cartão"),
@@ -38,9 +33,7 @@ export function useCard() {
 
   const deleteCard = useMutation({
     mutationFn: deleteCardService.deleteCard,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Cartão excluído",
@@ -48,7 +41,6 @@ export function useCard() {
       queryClient.invalidateQueries({ queryKey: CARDS_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao excluir cartão"),
@@ -58,9 +50,7 @@ export function useCard() {
 
   const updateCard = useMutation({
     mutationFn: updateCardService.updateCard,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Cartão atualizado",
@@ -68,7 +58,6 @@ export function useCard() {
       queryClient.invalidateQueries({ queryKey: CARDS_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao atualizar cartão"),

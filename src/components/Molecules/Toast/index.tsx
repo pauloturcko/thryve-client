@@ -6,10 +6,12 @@ import * as S from "./styles";
 
 export const Toast = () => {
   const { message, type, id } = useToastContext();
-  const [status, setStatus] = useState<"hidden" | "visible" | "leaving">("hidden");
+  const [status, setStatus] = useState<"hidden" | "visible" | "leaving">(
+    "hidden"
+  );
 
   useEffect(() => {
-    if (!message) return;
+    if (id === 0) return;
 
     const showTimer = setTimeout(() => setStatus("visible"), 0);
     const hideTimer = setTimeout(() => setStatus("leaving"), 2700);

@@ -23,10 +23,7 @@ export const TopBar = () => {
         href="/dashboard"
         aria-label="Ir para o dashboard"
       >
-        <Logo.FullLogo
-          imgSize={40}
-          fontSize="1.05rem"
-        />
+        <Logo height={34} />
       </Link>
       {user && (
         <UserChip href="/configuracoes/perfil">

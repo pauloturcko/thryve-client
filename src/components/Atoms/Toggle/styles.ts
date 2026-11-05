@@ -14,11 +14,6 @@ export const Track = styled.button<{ $checked: boolean }>`
   cursor: pointer;
   transition: background-color 0.2s ease;
 
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
   &:focus-visible {
     outline: 2px solid ${({ theme }) => theme.colors.primary};
     outline-offset: 2px;

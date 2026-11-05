@@ -16,7 +16,7 @@ export const IncomeStatusLabels: Record<TransactionStatus, string> = {
 const toOptions = (labels: Record<TransactionStatus, string>) =>
   Object.entries(TransactionStatus)
     .filter(([key]) => isNaN(Number(key)))
-    .map(([_, value]) => ({
+    .map(([, value]) => ({
       value,
       label: labels[value as TransactionStatus],
     }));

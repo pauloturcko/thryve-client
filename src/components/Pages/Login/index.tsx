@@ -12,9 +12,7 @@ import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { RubberSegment } from "@/components/Atoms/RubberSegment";
 import { Logo } from "@/components/Atoms/Logo";
 import { MagicBento } from "@/components/Organisms/MagicBento";
-import { useThemeMode } from "@/contexts/ThemeModeContext";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
+import { AUTH_COOKIE } from "@/constants/storage-keys";
 
 type LoginFormData = {
   nome: string;
@@ -29,7 +27,6 @@ export const LoginPage = () => {
   const { register, handleSubmit, reset, clearErrors } =
     useForm<LoginFormData>();
   const { createAccount, login } = useAuth();
-  const { mode, toggleMode } = useThemeMode();
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     if (isActive) {
       login.mutate(
@@ -39,7 +36,7 @@ export const LoginPage = () => {
         },
         {
           onSuccess: (response) => {
-            Cookies.set("whaidata.token", response.data.token, {
+            Cookies.set(AUTH_COOKIE, response.data.token, {
               expires: 1 / 24,
             });
             router.replace("/dashboard");
@@ -73,10 +70,7 @@ export const LoginPage = () => {
   const form = (
     <S.CardBody>
       <S.Brand>
-        <Logo.FullLogo
-          imgSize={36}
-          fontSize="0.95rem"
-        />
+        <Logo height={48} />
       </S.Brand>
       <S.Heading>
         <h1>{isActive ? "Bem-vindo de volta" : "Crie sua conta"}</h1>
@@ -163,13 +157,6 @@ export const LoginPage = () => {
       <S.Strip>
         <S.StripDot aria-hidden="true" />
         <span>Suas finanças em um só lugar</span>
-        <S.ThemeButton
-          type="button"
-          aria-label={mode === "dark" ? "Usar tema claro" : "Usar tema escuro"}
-          onClick={toggleMode}
-        >
-          <HugeiconsIcon icon={mode === "dark" ? Sun03Icon : Moon02Icon} />
-        </S.ThemeButton>
       </S.Strip>
     </S.Container>
   );

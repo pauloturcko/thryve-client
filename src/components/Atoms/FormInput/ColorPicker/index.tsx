@@ -78,7 +78,6 @@ export const ColorPicker = ({
           $hasError={!!error}
         />
       )}
-      {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
     </S.InputWrapper>
   );
 };

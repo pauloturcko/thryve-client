@@ -2,7 +2,7 @@
 
 import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { FormInput } from "@/components/Atoms/FormInput";
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { PageWrapper } from "@/components/Molecules/PageWrapper";
 import { TransactionInfo } from "@/components/Organisms/TransactionInfo";
 import { TransactionsBoard } from "@/components/Organisms/TransactionsBoard";
 import { CategoryType } from "@/constants/enums/category-type-enum";
@@ -16,7 +16,7 @@ import {
   IncomeStatusOptions,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
-import { BaseModalProps, useModalContext } from "@/contexts/ModalContext";
+import { useModalContext } from "@/contexts/ModalContext";
 import { useCategory } from "@/hooks/useCategory";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useIncome, useIncomesList } from "@/hooks/useIncome";
@@ -25,7 +25,7 @@ import { currentMonth, formatDateBR } from "@/utils/date";
 import { formatCurrencyBRL } from "@/utils/format";
 import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingUp } from "lucide-react";
-import { ChangeEvent, ComponentType, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "styled-components";
 import { NewIncome } from "./FormModal";
 
@@ -42,23 +42,6 @@ const initialFilters: FilterState = {
 };
 
 const allOption = { value: "", label: "Todos" };
-
-const IncomeFormContent = ({ onClose }: { onClose: () => void }) => (
-  <NewIncome onClose={onClose} />
-);
-
-const EditIncomeFormContent = ({
-  onClose,
-  income,
-}: {
-  onClose: () => void;
-  income: Income;
-}) => (
-  <NewIncome
-    onClose={onClose}
-    income={income}
-  />
-);
 
 const pluralize = (count: number, singular: string, plural: string) =>
   `${count} ${count === 1 ? singular : plural}`;
@@ -95,26 +78,25 @@ export const RendasPage = () => {
   const received = total - pending;
   const receivedShare = total > 0 ? Math.round((received / total) * 100) : 0;
 
-  const handleSegmentChange = (name: keyof FilterState) => (value: string) =>
+  const handleFilterChange = (name: keyof FilterState) => (value: string) =>
     setFilters((current) => ({ ...current, [name]: value }));
 
-  const handleFilterChange =
-    (name: keyof FilterState) => (event: ChangeEvent<HTMLSelectElement>) =>
-      setFilters((current) => ({ ...current, [name]: event.target.value }));
-
-  const handleOpenModal = () => {
+  const handleCreate = () => {
     openModal({
-      component: IncomeFormContent,
       title: "Nova Receita",
+      render: (close) => <NewIncome onClose={close} />,
     });
   };
 
   const handleEdit = (income: Income) => {
     openModal({
-      component:
-        EditIncomeFormContent as unknown as ComponentType<BaseModalProps>,
       title: "Editar Receita",
-      props: { income },
+      render: (close) => (
+        <NewIncome
+          onClose={close}
+          income={income}
+        />
+      ),
     });
   };
 
@@ -139,13 +121,13 @@ export const RendasPage = () => {
   };
 
   return (
-    <SettingsWrapper
+    <PageWrapper
       title="Rendas"
       description="Acompanhe suas receitas do mês"
-      button={
+      action={
         <SpecularButton
           size="sm"
-          onClick={handleOpenModal}
+          onClick={handleCreate}
         >
           <Plus size={18} /> Nova Receita
         </SpecularButton>
@@ -158,20 +140,19 @@ export const RendasPage = () => {
           <>
             <FormInput.Segment
               label="Status"
-              size="sm"
               options={[allOption, ...IncomeStatusOptions]}
               value={filters.status}
-              onChange={handleSegmentChange("status")}
+              onChange={handleFilterChange("status")}
             />
             <FormInput.Segment
               label="Tipo"
-              size="sm"
               options={[allOption, ...IncomeKindOptions]}
               value={filters.incomeKind}
-              onChange={handleSegmentChange("incomeKind")}
+              onChange={handleFilterChange("incomeKind")}
             />
             <FormInput.Select
               label="Categoria"
+              compact
               options={categoryOptions}
               value={filters.categoryId}
               onChange={handleFilterChange("categoryId")}
@@ -255,6 +236,6 @@ export const RendasPage = () => {
           );
         })}
       </TransactionsBoard>
-    </SettingsWrapper>
+    </PageWrapper>
   );
 };

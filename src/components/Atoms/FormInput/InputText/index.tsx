@@ -28,6 +28,7 @@ export const InputText = ({
         <S.Input
           {...props}
           type={isVisible ? "text" : props.type}
+          aria-invalid={!!error || undefined}
           $hasError={!!error}
         />
         {props.type === "password" && (
@@ -49,7 +50,6 @@ export const InputText = ({
           </S.ToggleButton>
         )}
       </S.InputContainer>
-      {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
     </S.InputWrapper>
   );
 };

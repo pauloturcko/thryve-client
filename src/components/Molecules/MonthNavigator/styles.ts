@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-  height: 2.5rem;
+  height: 2.375rem;
   background-color: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 0.5rem;

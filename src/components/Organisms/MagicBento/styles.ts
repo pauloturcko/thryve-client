@@ -2,12 +2,12 @@ import { css, styled } from "styled-components";
 
 const FALLOFF = [1, 0.973, 0.837, 0.593, 0.317, 0.104, 0.009];
 
-/** smooth radial falloff, same stops as the React Bits original */
 const radialGlow = (size: string, alpha: string, amount: string) =>
   `radial-gradient(
     ${size} circle at var(--mb-x, -999px) var(--mb-y, -999px),
     ${FALLOFF.map(
-      (f, i) => `rgba(var(--mb-glow-rgb), calc(${alpha} * var(${amount}, 0) * ${f})) ${i * 15}%`
+      (f, i) =>
+        `rgba(var(--mb-glow-rgb), calc(${alpha} * var(${amount}, 0) * ${f})) ${i * 15}%`
     ).join(",\n    ")},
     rgba(var(--mb-glow-rgb), 0) 100%
   )`;
@@ -35,7 +35,8 @@ export const Grid = styled.div<{
   --mb-glow-alpha: ${({ theme }) => (theme.mode === "dark" ? 0.9 : 0.55)};
   --mb-spot-alpha: ${({ theme }) => (theme.mode === "dark" ? 0.11 : 0.06)};
   --mb-radius: ${({ $radius }) => `${$radius}px`};
-  --mb-pad: ${({ $radius }) => `${Math.round(Math.min(22, Math.max(14, $radius * 0.9)))}px`};
+  --mb-pad: ${({ $radius }) =>
+    `${Math.round(Math.min(22, Math.max(14, $radius * 0.9)))}px`};
   --mb-spot-size: ${({ $spot }) => `${$spot}px`};
   --mb-border-size: ${({ $spot }) => `${Math.round($spot * 0.75)}px`};
 
@@ -44,7 +45,9 @@ export const Grid = styled.div<{
   grid-auto-flow: row dense;
   grid-template-columns: repeat(${({ $cols }) => $cols}, minmax(0, 1fr));
   grid-auto-rows: ${({ $cols, $rowHeight }) =>
-    $cols === 1 ? `minmax(${Math.round($rowHeight * 0.7)}px, auto)` : `${$rowHeight}px`};
+    $cols === 1
+      ? `minmax(${Math.round($rowHeight * 0.7)}px, auto)`
+      : `${$rowHeight}px`};
   gap: ${({ $gap }) => `${$gap}px`};
   width: 100%;
   color: ${({ theme }) => theme.colors.textPrimary};
@@ -83,16 +86,15 @@ export const Card = styled.div<{ $clickable?: boolean; $tone?: string }>`
   outline: none;
   color: inherit;
   text-align: left;
-  background: ${({ theme, $tone }) =>
-    $tone
-      ? $tone
-      : theme.colors.card};
+  background: ${({ theme, $tone }) => ($tone ? $tone : theme.colors.card)};
   box-shadow: ${({ theme }) =>
     theme.mode === "dark"
       ? "0 24px 48px -28px rgba(0, 0, 0, 0.85), 0 8px 18px -12px rgba(0, 0, 0, 0.6)"
       : `0 24px 48px -30px rgba(${theme.colors.shadowRgb}, 0.28), 0 8px 18px -14px rgba(${theme.colors.shadowRgb}, 0.16)`};
-  transform: perspective(900px) translate3d(var(--mb-tx, 0px), var(--mb-ty, 0px), 0)
-    rotateX(var(--mb-rx, 0deg)) rotateY(var(--mb-ry, 0deg)) scale(var(--mb-press, 1));
+  transform: perspective(900px)
+    translate3d(var(--mb-tx, 0px), var(--mb-ty, 0px), 0)
+    rotateX(var(--mb-rx, 0deg)) rotateY(var(--mb-ry, 0deg))
+    scale(var(--mb-press, 1));
   cursor: ${({ $clickable }) => ($clickable ? "pointer" : "default")};
 
   &:focus-visible {
@@ -105,7 +107,11 @@ export const Light = styled.span`
   inset: 0;
   z-index: 1;
   border-radius: inherit;
-  background: ${radialGlow("var(--mb-spot-size)", "var(--mb-spot-alpha)", "--mb-hot")};
+  background: ${radialGlow(
+    "var(--mb-spot-size)",
+    "var(--mb-spot-alpha)",
+    "--mb-hot"
+  )};
   pointer-events: none;
 `;
 
@@ -172,7 +178,9 @@ export const IconBadge = styled.span<{ $color?: string }>`
   border-radius: 0.65rem;
   color: ${({ $color, theme }) => $color ?? theme.colors.textPrimary};
   background: ${({ theme }) =>
-    theme.mode === "dark" ? "rgba(255, 255, 255, 0.05)" : `rgba(${theme.colors.shadowRgb}, 0.04)`};
+    theme.mode === "dark"
+      ? "rgba(255, 255, 255, 0.05)"
+      : `rgba(${theme.colors.shadowRgb}, 0.04)`};
   box-shadow: ${({ theme }) =>
     theme.mode === "dark"
       ? "inset 0 0 0 1px rgba(255, 255, 255, 0.07)"

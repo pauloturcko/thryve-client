@@ -1,4 +1,3 @@
-import { useLoaderContext } from "@/contexts/LoaderContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
   createBankAccountService,
@@ -12,15 +11,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const BANK_ACCOUNTS_QUERY_KEY = ["Settings-LoadAllBankAccounts"];
 
 export function useBankAccount() {
-  const { dispatchLoader, hideLoader } = useLoaderContext();
   const { dispatchToast } = useToastContext();
   const queryClient = useQueryClient();
 
   const createBankAccount = useMutation({
     mutationFn: createBankAccountService.createBankAccount,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Conta salva",
@@ -28,7 +24,6 @@ export function useBankAccount() {
       queryClient.invalidateQueries({ queryKey: BANK_ACCOUNTS_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao cadastrar conta"),
@@ -38,9 +33,7 @@ export function useBankAccount() {
 
   const deleteBankAccount = useMutation({
     mutationFn: deleteBankAccountService.deleteBankAccount,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Conta excluída",
@@ -48,7 +41,6 @@ export function useBankAccount() {
       queryClient.invalidateQueries({ queryKey: BANK_ACCOUNTS_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao excluir conta"),
@@ -58,9 +50,7 @@ export function useBankAccount() {
 
   const updateBankAccount = useMutation({
     mutationFn: updateBankAccountService.updateBankAccount,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Conta atualizada",
@@ -68,7 +58,6 @@ export function useBankAccount() {
       queryClient.invalidateQueries({ queryKey: BANK_ACCOUNTS_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao atualizar conta"),

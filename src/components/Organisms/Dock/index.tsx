@@ -21,41 +21,21 @@ export type DockEntry =
     }
   | { kind: "separator" };
 
-type DockProps = {
-  items: DockEntry[];
-  baseItemSize?: number;
-  magnification?: number;
-  distance?: number;
-  panelHeight?: number;
-  gap?: number;
-};
+export const Dock = ({ items }: { items: DockEntry[] }) => {
+  const spans = items.map((item) =>
+    item.kind === "separator" ? "separator" : "item"
+  );
+  const { rootRef, itemRefs, hop, focus, metrics } = useDockMotion(spans);
 
-export const Dock = ({
-  items,
-  baseItemSize = 48,
-  magnification = 72,
-  distance = 180,
-  panelHeight = 64,
-  gap = 10,
-}: DockProps) => {
-  const spans = items.map((item) => (item.kind === "separator" ? "separator" : "item"));
-  const { rootRef, itemRefs, hop, focus, metrics } = useDockMotion({
-    spans,
-    baseItemSize,
-    magnification,
-    distance,
-    panelHeight,
-    gap,
-    spring: { mass: 0.1, stiffness: 150, damping: 12 },
-    bounce: true,
-  });
-
-  const order = items.flatMap((item, index) => (item.kind === "separator" ? [] : [index]));
+  const order = items.flatMap((item, index) =>
+    item.kind === "separator" ? [] : [index]
+  );
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>, index: number) => {
     const at = order.indexOf(index);
     let next: number | undefined;
-    if (event.key === "ArrowLeft") next = order[(at - 1 + order.length) % order.length];
+    if (event.key === "ArrowLeft")
+      next = order[(at - 1 + order.length) % order.length];
     else if (event.key === "ArrowRight") next = order[(at + 1) % order.length];
     else if (event.key === "Home") next = order[0];
     else if (event.key === "End") next = order[order.length - 1];
@@ -69,7 +49,8 @@ export const Dock = ({
       if (event.currentTarget.matches(":focus-visible")) focus(index);
     },
     onBlur: () => focus(-1),
-    onKeyDown: (event: KeyboardEvent<HTMLElement>) => handleKeyDown(event, index),
+    onKeyDown: (event: KeyboardEvent<HTMLElement>) =>
+      handleKeyDown(event, index),
   });
 
   return (

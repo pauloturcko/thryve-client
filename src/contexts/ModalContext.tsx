@@ -1,23 +1,11 @@
 "use client";
-import { BaseModal } from "@/components/Molecules/BaseModal";
-import {
-  ReactNode,
-  useContext,
-  useState,
-  createContext,
-  ComponentType,
-} from "react";
 
-export type BaseModalProps = {
-  onClose: () => void;
-  modalTitle: string;
-  [key: string]: unknown;
-};
+import { createContext, ReactNode, useContext, useState } from "react";
+import { BaseModal } from "@/components/Molecules/BaseModal";
 
 type ModalConfig = {
-  component: ComponentType<BaseModalProps>;
   title: string;
-  props?: Omit<BaseModalProps, "onClose" | "modalTitle">;
+  render: (close: () => void) => ReactNode;
 };
 
 type ModalContextType = {
@@ -33,21 +21,15 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const openModal = (config: ModalConfig) => setModalConfig(config);
   const closeModal = () => setModalConfig(null);
 
-  const ActiveComponent = modalConfig?.component ?? null;
-
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      {ActiveComponent && (
+      {modalConfig && (
         <BaseModal
-          title={modalConfig!.title}
+          title={modalConfig.title}
           onClose={closeModal}
         >
-          <ActiveComponent
-            {...(modalConfig?.props ?? {})}
-            onClose={closeModal}
-            modalTitle={modalConfig!.title}
-          />
+          {modalConfig.render(closeModal)}
         </BaseModal>
       )}
     </ModalContext.Provider>

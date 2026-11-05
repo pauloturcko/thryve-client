@@ -41,7 +41,8 @@ export const useDashboardData = () => {
   const totalExpenses = sumAmounts(expenses);
   const totalIncomes = sumAmounts(incomes);
   const balance = totalIncomes - totalExpenses;
-  const savingsRate = totalIncomes > 0 ? Math.max(0, balance / totalIncomes) : 0;
+  const savingsRate =
+    totalIncomes > 0 ? Math.max(0, balance / totalIncomes) : 0;
 
   const pendingExpenses = expenses
     .filter((expense) => expense.status === TransactionStatus.Pendente)
@@ -52,8 +53,12 @@ export const useDashboardData = () => {
   const lastDay = daysInMonth(month);
   const visibleDays = Math.min(today, lastDay);
   const dailyNet = new Array(lastDay + 1).fill(0);
-  incomes.forEach((income) => (dailyNet[dayOf(income.date)] += Number(income.amount)));
-  expenses.forEach((expense) => (dailyNet[dayOf(expense.date)] -= Number(expense.amount)));
+  incomes.forEach(
+    (income) => (dailyNet[dayOf(income.date)] += Number(income.amount))
+  );
+  expenses.forEach(
+    (expense) => (dailyNet[dayOf(expense.date)] -= Number(expense.amount))
+  );
 
   const balanceSeries: BalancePoint[] = [];
   let running = 0;
@@ -76,11 +81,21 @@ export const useDashboardData = () => {
   });
   const sorted = [...byCategory.values()].sort((a, b) => b.total - a.total);
   const top = sorted.slice(0, MAX_SLICES);
-  const rest = sorted.slice(MAX_SLICES).reduce((sum, slice) => sum + slice.total, 0);
+  const rest = sorted
+    .slice(MAX_SLICES)
+    .reduce((sum, slice) => sum + slice.total, 0);
   const slices: CategorySlice[] = [
     ...top,
     ...(rest > 0
-      ? [{ id: "other" as const, name: "Outras", color: "", total: rest, share: 0 }]
+      ? [
+          {
+            id: "other" as const,
+            name: "Outras",
+            color: "",
+            total: rest,
+            share: 0,
+          },
+        ]
       : []),
   ].map((slice) => ({
     ...slice,
@@ -99,8 +114,14 @@ export const useDashboardData = () => {
       savingsRate,
     },
     changes: {
-      incomes: percentChange(totalIncomes, sumAmounts(previousIncomesQuery.data ?? [])),
-      expenses: percentChange(totalExpenses, sumAmounts(previousExpensesQuery.data ?? [])),
+      incomes: percentChange(
+        totalIncomes,
+        sumAmounts(previousIncomesQuery.data ?? [])
+      ),
+      expenses: percentChange(
+        totalExpenses,
+        sumAmounts(previousExpensesQuery.data ?? [])
+      ),
     },
     counts: { incomes: incomes.length, expenses: expenses.length },
     balanceSeries,

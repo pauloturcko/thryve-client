@@ -1,14 +1,15 @@
 "use client";
 
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { SettingsPanel } from "@/components/Molecules/SettingsPanel";
+import * as S from "./styles";
 
 export const MetasPage = () => {
   return (
-    <SettingsWrapper
+    <SettingsPanel
       title="Metas"
       description="Configure suas metas"
     >
-      <p>Em breve.</p>
-    </SettingsWrapper>
+      <S.Message>Em breve.</S.Message>
+    </SettingsPanel>
   );
 };

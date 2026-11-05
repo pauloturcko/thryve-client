@@ -1,17 +1,17 @@
 import { styled } from "styled-components";
 
-export const SettingsWrapper = styled.div`
+export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `;
 
-export const InfoWrapper = styled.div`
+export const Heading = styled.div`
   display: flex;
   flex-direction: column;
 
   gap: 0.2rem;
 
-  p {
+  h1 {
     font-family: ${({ theme }) => theme.fonts.display};
     font-size: clamp(1.4rem, 2.4vw, 1.9rem);
     font-weight: 600;
@@ -19,7 +19,7 @@ export const InfoWrapper = styled.div`
     line-height: 1.1;
   }
 
-  span {
+  p {
     font-size: 0.95rem;
     color: ${({ theme }) => theme.colors.textSecondary};
   }

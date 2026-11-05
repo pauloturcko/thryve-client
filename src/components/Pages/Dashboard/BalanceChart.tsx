@@ -34,7 +34,9 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
   const [hover, setHover] = useState<number | null>(null);
 
   if (points.length < 2) {
-    return <Empty>O gráfico aparece a partir do segundo dia com lançamentos.</Empty>;
+    return (
+      <Empty>O gráfico aparece a partir do segundo dia com lançamentos.</Empty>
+    );
   }
 
   const values = points.map((point) => point.balance);
@@ -44,7 +46,10 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
   const x = (index: number) => (index / (points.length - 1)) * WIDTH;
   const y = (value: number) =>
     PAD_TOP + (1 - (value - min) / range) * (HEIGHT - PAD_TOP - PAD_BOTTOM);
-  const coords = points.map((point, index): [number, number] => [x(index), y(point.balance)]);
+  const coords = points.map((point, index): [number, number] => [
+    x(index),
+    y(point.balance),
+  ]);
   const line = smoothPath(coords);
   const zeroY = y(0);
   const area = `${line} L${WIDTH},${zeroY} L0,${zeroY} Z`;
@@ -56,7 +61,10 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
   const handleMove = (event: PointerEvent<HTMLDivElement>) => {
     const rect = plotRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+    const ratio = Math.min(
+      1,
+      Math.max(0, (event.clientX - rect.left) / rect.width)
+    );
     setHover(Math.round(ratio * lastIndex));
   };
 
@@ -151,7 +159,9 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
           $flip={active > lastIndex * 0.7}
         >
           <span>Dia {activePoint.day}</span>
-          <strong data-positive={positive}>{formatCurrencyBRL(activePoint.balance)}</strong>
+          <strong data-positive={positive}>
+            {formatCurrencyBRL(activePoint.balance)}
+          </strong>
         </Tooltip>
       </Plot>
       <Axis>
@@ -210,7 +220,9 @@ const Tooltip = styled.div<{ $flip: boolean }>`
   border-radius: 10px;
   background: ${({ theme }) => theme.colors.surfaceElevated};
   box-shadow: inset 0 0 0 1px ${({ theme }) => theme.colors.border};
-  transform: translateX(${({ $flip }) => ($flip ? "calc(-100% - 12px)" : "12px")});
+  transform: translateX(
+    ${({ $flip }) => ($flip ? "calc(-100% - 12px)" : "12px")}
+  );
   pointer-events: none;
   white-space: nowrap;
 

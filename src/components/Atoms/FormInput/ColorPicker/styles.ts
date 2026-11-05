@@ -100,9 +100,3 @@ export const CustomInput = styled.input<{ $hasError?: boolean }>`
     border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
-
-export const ErrorMessage = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.danger};
-  margin-top: -4px;
-`;

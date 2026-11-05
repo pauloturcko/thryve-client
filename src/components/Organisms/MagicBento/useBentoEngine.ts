@@ -36,17 +36,17 @@ const STAGGER = 80;
 const TILT = 6;
 const MAGNET = 6;
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, value));
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-/**
- * Ported from React Bits <MagicBento />. One rAF loop tracks the pointer and
- * writes CSS custom properties per card (--mb-x, --mb-near, --mb-hot, tilt,
- * press, click wave). The styles read those to paint the glow.
- */
-export const useBentoEngine = (settings: BentoEngineSettings, count: number) => {
+// Adaptado do <MagicBento /> do React Bits.
+export const useBentoEngine = (
+  settings: BentoEngineSettings,
+  count: number
+) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
@@ -61,7 +61,9 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
     const root = rootRef.current;
     if (!root) return undefined;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
     const motion = !reduced;
     const playIntro = motion && settingsRef.current.intro;
     if (playIntro) root.dataset.intro = "";
@@ -102,7 +104,12 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
       return states[index];
     };
 
-    const write = (element: HTMLElement, state: CardState, name: string, value: string) => {
+    const write = (
+      element: HTMLElement,
+      state: CardState,
+      name: string,
+      value: string
+    ) => {
       if (state.written[name] === value) return;
       state.written[name] = value;
       element.style.setProperty(name, value);
@@ -111,7 +118,9 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
     const measure = () => {
       dirty = false;
       bounds = root.getBoundingClientRect();
-      rects = cellRefs.current.map((cell) => (cell ? cell.getBoundingClientRect() : null));
+      rects = cellRefs.current.map((cell) =>
+        cell ? cell.getBoundingClientRect() : null
+      );
     };
 
     const startWave = (x: number, y: number, duration: number) => {
@@ -159,7 +168,8 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
       light.near += (near - light.near) * fade;
       if (Math.abs(near - light.near) < 0.002) light.near = near;
       else busy = true;
-      if (Math.abs(pointer.x - light.x) + Math.abs(pointer.y - light.y) > 0.3) busy = true;
+      if (Math.abs(pointer.x - light.x) + Math.abs(pointer.y - light.y) > 0.3)
+        busy = true;
 
       let waveRadius = 0;
       let waveAlpha = 0;
@@ -183,7 +193,12 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
         const px = pointer.x - rect.left;
         const py = pointer.y - rect.top;
         const inside =
-          pointer.inside && entered && px >= 0 && py >= 0 && px <= rect.width && py <= rect.height;
+          pointer.inside &&
+          entered &&
+          px >= 0 &&
+          py >= 0 &&
+          px <= rect.width &&
+          py <= rect.height;
 
         if (inside !== state.active) {
           state.active = inside;
@@ -193,7 +208,8 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
 
         const hotTarget = inside && s.enableSpotlight ? 1 : 0;
         state.hot +=
-          (hotTarget - state.hot) * (1 - Math.exp(-dt / (hotTarget > state.hot ? 0.14 : 0.32)));
+          (hotTarget - state.hot) *
+          (1 - Math.exp(-dt / (hotTarget > state.hot ? 0.14 : 0.32)));
         if (Math.abs(hotTarget - state.hot) < 0.002) state.hot = hotTarget;
         else busy = true;
 
@@ -217,28 +233,42 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
         const h = dt / steps;
         keys.forEach(([key, velocity], k) => {
           for (let step = 0; step < steps; step++) {
-            state[velocity] += (170 * (targets[k] - state[key]) - 20 * state[velocity]) * h;
+            state[velocity] +=
+              (170 * (targets[k] - state[key]) - 20 * state[velocity]) * h;
             state[key] += state[velocity] * h;
           }
-          if (Math.abs(targets[k] - state[key]) < 0.002 && Math.abs(state[velocity]) < 0.01) {
+          if (
+            Math.abs(targets[k] - state[key]) < 0.002 &&
+            Math.abs(state[velocity]) < 0.01
+          ) {
             state[key] = targets[k];
             state[velocity] = 0;
           } else busy = true;
         });
 
-        const pressTarget = pointer.down === index && s.clickEffect && motion ? 0.985 : 1;
+        const pressTarget =
+          pointer.down === index && s.clickEffect && motion ? 0.985 : 1;
         for (let step = 0; step < steps; step++) {
-          state.vpress += (420 * (pressTarget - state.press) - 28 * state.vpress) * h;
+          state.vpress +=
+            (420 * (pressTarget - state.press) - 28 * state.vpress) * h;
           state.press += state.vpress * h;
         }
-        if (Math.abs(pressTarget - state.press) < 0.0002 && Math.abs(state.vpress) < 0.001) {
+        if (
+          Math.abs(pressTarget - state.press) < 0.0002 &&
+          Math.abs(state.vpress) < 0.001
+        ) {
           state.press = pressTarget;
           state.vpress = 0;
         } else busy = true;
 
         write(card, state, "--mb-x", `${lx.toFixed(1)}px`);
         write(card, state, "--mb-y", `${ly.toFixed(1)}px`);
-        write(card, state, "--mb-near", (s.enableBorderGlow ? light.near : 0).toFixed(3));
+        write(
+          card,
+          state,
+          "--mb-near",
+          (s.enableBorderGlow ? light.near : 0).toFixed(3)
+        );
         write(card, state, "--mb-hot", state.hot.toFixed(3));
         write(card, state, "--mb-rx", `${state.rx.toFixed(3)}deg`);
         write(card, state, "--mb-ry", `${state.ry.toFixed(3)}deg`);
@@ -311,7 +341,11 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
       const width = root.clientWidth;
       const cell = (n: number) => (width - s.gap * (n - 1)) / n;
       const next =
-        cell(s.columns) >= MIN_CELL ? s.columns : s.columns >= 2 && cell(2) >= MIN_PAIR ? 2 : 1;
+        cell(s.columns) >= MIN_CELL
+          ? s.columns
+          : s.columns >= 2 && cell(2) >= MIN_PAIR
+            ? 2
+            : 1;
       setCols(next);
       dirty = true;
       wake();
@@ -331,9 +365,14 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
         if (bounds) startWave(bounds.left, bounds.top, 1.7);
         wake();
       }, 260);
-      settleTimer = window.setTimeout(() => {
-        cellRefs.current.forEach((cell) => cell?.style.setProperty("--mb-delay", "0ms"));
-      }, order * STAGGER + 2600);
+      settleTimer = window.setTimeout(
+        () => {
+          cellRefs.current.forEach((cell) =>
+            cell?.style.setProperty("--mb-delay", "0ms")
+          );
+        },
+        order * STAGGER + 2600
+      );
       wake();
     };
 
@@ -369,7 +408,10 @@ export const useBentoEngine = (settings: BentoEngineSettings, count: number) => 
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
     window.addEventListener("pointerup", release, { passive: true });
     window.addEventListener("pointercancel", release, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    window.addEventListener("scroll", onScroll, {
+      passive: true,
+      capture: true,
+    });
     window.addEventListener("resize", onScroll, { passive: true });
     document.addEventListener("pointerout", onPointerOut);
     root.addEventListener("click", onClick);

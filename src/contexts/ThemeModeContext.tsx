@@ -1,63 +1,50 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
-import { ACTIVE_PALETTE, isPalette, PaletteName } from "@/styles/theme";
-
-export type ThemeMode = "dark" | "light";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { THEME_STORAGE_KEY } from "@/constants/storage-keys";
+import { ThemeMode } from "@/styles/theme";
 
 type ThemeModeContextValue = {
   mode: ThemeMode;
   toggleMode: () => void;
-  palette: PaletteName;
-  setPalette: (palette: PaletteName) => void;
-};
-
-const STORAGE_KEY = "whaidata.theme";
-const PALETTE_KEY = "whaidata.palette";
-
-const store = (key: string, value: string) => {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // storage unavailable: keep the choice for this visit only
-  }
-};
-
-const readStoredPalette = (): PaletteName | null => {
-  try {
-    const stored = window.localStorage.getItem(PALETTE_KEY) ?? undefined;
-    return isPalette(stored) ? stored : null;
-  } catch {
-    return null;
-  }
 };
 
 const ThemeModeContext = createContext<ThemeModeContextValue | null>(null);
 
 const readStoredMode = (): ThemeMode | null => {
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
     return stored === "light" || stored === "dark" ? stored : null;
   } catch {
     return null;
   }
 };
 
+const storeMode = (mode: ThemeMode) => {
+  try {
+    window.localStorage.setItem(THEME_STORAGE_KEY, mode);
+  } catch {
+  }
+};
+
 export const ThemeModeProvider = ({
   children,
 }: {
-  children: (mode: ThemeMode, palette: PaletteName) => ReactNode;
+  children: (mode: ThemeMode) => ReactNode;
 }) => {
-  const [mode, setMode] = useState<ThemeMode>("dark");
-  const [palette, setPaletteState] = useState<PaletteName>(ACTIVE_PALETTE);
+  const [mode, setMode] = useState<ThemeMode>("light");
 
   useEffect(() => {
     const stored = readStoredMode();
-    const storedPalette = readStoredPalette();
-    /* eslint-disable react-hooks/set-state-in-effect */
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (stored) setMode(stored);
-    if (storedPalette) setPaletteState(storedPalette);
-    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const value = useMemo(
@@ -66,27 +53,23 @@ export const ThemeModeProvider = ({
       toggleMode: () =>
         setMode((current) => {
           const next = current === "dark" ? "light" : "dark";
-          store(STORAGE_KEY, next);
+          storeMode(next);
           return next;
         }),
-      palette,
-      setPalette: (next: PaletteName) => {
-        store(PALETTE_KEY, next);
-        setPaletteState(next);
-      },
     }),
-    [mode, palette]
+    [mode]
   );
 
   return (
     <ThemeModeContext.Provider value={value}>
-      {children(mode, palette)}
+      {children(mode)}
     </ThemeModeContext.Provider>
   );
 };
 
 export const useThemeMode = () => {
   const context = useContext(ThemeModeContext);
-  if (!context) throw new Error("useThemeMode must be used inside ThemeModeProvider");
+  if (!context)
+    throw new Error("useThemeMode must be used inside ThemeModeProvider");
   return context;
 };

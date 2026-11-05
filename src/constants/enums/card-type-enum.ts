@@ -12,7 +12,7 @@ export const CardTypeLabels: Record<CardType, string> = {
 
 export const CardTypeOptions = Object.entries(CardType)
   .filter(([key]) => isNaN(Number(key)))
-  .map(([_, value]) => ({
+  .map(([, value]) => ({
     value,
     label: CardTypeLabels[value as CardType],
   }));

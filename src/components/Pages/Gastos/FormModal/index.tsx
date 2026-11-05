@@ -23,6 +23,7 @@ import { parseCurrencyInput } from "@/utils/parse";
 import { ChangeEvent } from "react";
 import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import * as S from "./styles";
+import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
 
 type NewExpenseFormData = {
   descricao: string;
@@ -167,6 +168,8 @@ export const NewExpense = ({
   const missingCategories =
     loadAllCategories.isSuccess && expenseCategories.length === 0;
 
+  const handleInvalid = useInvalidFormToast();
+
   const onSubmit: SubmitHandler<NewExpenseFormData> = (formData) => {
     const payload = {
       description: formData.descricao.trim(),
@@ -201,7 +204,7 @@ export const NewExpense = ({
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper onSubmit={handleSubmit(onSubmit, handleInvalid)}>
       {missingAccounts && (
         <S.Notice>
           Cadastre uma conta em Configurações › Contas antes de lançar gastos.
@@ -276,13 +279,12 @@ export const NewExpense = ({
           control={control}
           rules={{ required: requiredMessage }}
           render={({ field }) => (
-            <FormInput.Radio
+            <FormInput.Select
               label="Tipo"
               options={ExpenseKindOptions}
               required
-              value={field.value}
-              onChange={field.onChange}
               error={errors.tipo?.message}
+              {...field}
             />
           )}
         />
@@ -291,13 +293,12 @@ export const NewExpense = ({
           control={control}
           rules={{ required: requiredMessage }}
           render={({ field }) => (
-            <FormInput.Radio
+            <FormInput.Select
               label="Status"
               options={ExpenseStatusOptions}
               required
-              value={field.value}
-              onChange={field.onChange}
               error={errors.status?.message}
+              {...field}
             />
           )}
         />
@@ -372,25 +373,10 @@ export const NewExpense = ({
         {...observacoes}
       />
       <S.Actions>
+        <Button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</Button>
         <Button
-          type="submit"
-          rounded="0.5rem"
-          height="2.5rem"
-          color="textPrimary"
-          width="100%"
-        >
-          {isEditMode ? "Atualizar" : "Salvar"}
-        </Button>
-        <Button
-          type="button"
+          variant="cancel"
           onClick={onClose}
-          rounded="0.5rem"
-          height="2.5rem"
-          border
-          hover="danger"
-          background="transparent"
-          color="textPrimary"
-          width="100%"
         >
           Cancelar
         </Button>

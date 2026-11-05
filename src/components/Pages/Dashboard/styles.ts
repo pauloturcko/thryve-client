@@ -107,7 +107,11 @@ export const Ring = styled.div`
     border-radius: 50%;
     background: conic-gradient(
       ${({ theme }) => theme.colors.ringAccent} calc(var(--value) * 360deg),
-      ${({ theme }) => (theme.mode === "dark" ? "rgba(255,255,255,0.07)" : "rgba(23,18,42,0.07)")} 0
+      ${({ theme }) =>
+          theme.mode === "dark"
+            ? "rgba(255,255,255,0.07)"
+            : "rgba(23,18,42,0.07)"}
+        0
     );
     -webkit-mask: radial-gradient(circle, transparent 58%, #000 59%);
     mask: radial-gradient(circle, transparent 58%, #000 59%);

@@ -1,15 +1,16 @@
 import { Button } from "@/components/Atoms/Button";
 import { FormInput } from "@/components/Atoms/FormInput";
 import { FormWrapper } from "@/components/Atoms/FormWrapper";
-import { CardFlagOptions } from "@/constants/enums/card-flag-enum";
-import { CardTypeOptions } from "@/constants/enums/card-type-enum";
+import { CardFlag, CardFlagOptions } from "@/constants/enums/card-flag-enum";
+import { CardType, CardTypeOptions } from "@/constants/enums/card-type-enum";
 import { useCard } from "@/hooks/useCard";
 import { Card } from "@/services/card-service";
 import { formatCurrencyInput, formatExpiryDate } from "@/utils/format";
 import { maskCurrency, maskDigitsOnly, maskExpiryDate } from "@/utils/masks";
 import { ChangeEvent } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as S from "./styles";
+import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
 
 type NewCardFormData = {
   nome: string;
@@ -34,6 +35,7 @@ export const NewCard = ({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<NewCardFormData>({
@@ -46,17 +48,17 @@ export const NewCard = ({
           validade: formatExpiryDate(card.expiresIn),
           limite: formatCurrencyInput(Number(card.limit)),
         }
-      : undefined,
+      : { bandeira: CardFlag.Visa, tipo: CardType.Credito },
   });
 
   const nome = register("nome", { required: requiredMessage });
   const ultimosDigitos = register("ultimosDigitos", {
     required: requiredMessage,
   });
-  const bandeira = register("bandeira", { required: requiredMessage });
-  const tipo = register("tipo", { required: requiredMessage });
   const validade = register("validade", { required: requiredMessage });
   const limite = register("limite", { required: requiredMessage });
+
+  const handleInvalid = useInvalidFormToast();
 
   const onSubmit: SubmitHandler<NewCardFormData> = (data) => {
     const payload = {
@@ -80,7 +82,7 @@ export const NewCard = ({
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper onSubmit={handleSubmit(onSubmit, handleInvalid)}>
       <FormInput.Text
         label="Nome"
         placeholder="Ex: Itaú"
@@ -101,19 +103,39 @@ export const NewCard = ({
           ultimosDigitos.onChange(event);
         }}
       />
-      <FormInput.Select
-        label="Bandeira"
-        options={CardFlagOptions}
-        required
-        error={errors.bandeira?.message}
-        {...bandeira}
+      <Controller
+        name="bandeira"
+        control={control}
+        rules={{ required: requiredMessage }}
+        render={({ field }) => (
+          <FormInput.Select
+            label="Bandeira"
+            options={CardFlagOptions}
+            required
+            error={errors.bandeira?.message}
+            ref={field.ref}
+            value={String(field.value ?? "")}
+            onChange={(value) => field.onChange(Number(value))}
+            onBlur={field.onBlur}
+          />
+        )}
       />
-      <FormInput.Select
-        label="Tipo"
-        options={CardTypeOptions}
-        required
-        error={errors.tipo?.message}
-        {...tipo}
+      <Controller
+        name="tipo"
+        control={control}
+        rules={{ required: requiredMessage }}
+        render={({ field }) => (
+          <FormInput.Select
+            label="Tipo"
+            options={CardTypeOptions}
+            required
+            error={errors.tipo?.message}
+            ref={field.ref}
+            value={String(field.value ?? "")}
+            onChange={(value) => field.onChange(Number(value))}
+            onBlur={field.onBlur}
+          />
+        )}
       />
       <FormInput.Text
         label="Validade"
@@ -141,25 +163,10 @@ export const NewCard = ({
         }}
       />
       <S.Actions>
+        <Button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</Button>
         <Button
-          type="submit"
-          rounded="0.5rem"
-          height="2.5rem"
-          color="textPrimary"
-          width="100%"
-        >
-          {isEditMode ? "Atualizar" : "Salvar"}
-        </Button>
-        <Button
-          type="button"
+          variant="cancel"
           onClick={onClose}
-          rounded="0.5rem"
-          height="2.5rem"
-          border
-          hover="danger"
-          background="transparent"
-          color="textPrimary"
-          width="100%"
         >
           Cancelar
         </Button>

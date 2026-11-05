@@ -13,23 +13,39 @@ export const Container = styled.main`
   gap: 1rem;
   overflow: hidden;
   background:
-    radial-gradient(50rem 28rem at 50% -10%, rgba(${({ theme }) => theme.colors.glowRgb}, ${({ theme }) => (theme.mode === "dark" ? 0.24 : 0.1)}), transparent 70%),
-    radial-gradient(30rem 20rem at 85% 110%, ${({ theme }) => theme.colors.accentSoft}, transparent 70%),
+    radial-gradient(
+      50rem 28rem at 50% -10%,
+      rgba(
+        ${({ theme }) => theme.colors.glowRgb},
+        ${({ theme }) => (theme.mode === "dark" ? 0.24 : 0.1)}
+      ),
+      transparent 70%
+    ),
+    radial-gradient(
+      30rem 20rem at 85% 110%,
+      ${({ theme }) => theme.colors.accentSoft},
+      transparent 70%
+    ),
     ${({ theme }) => theme.colors.background};
 `;
 
-/* faint dot grid behind the card, fading out from the center */
 export const Backdrop = styled.span`
   position: absolute;
   inset: 0;
   background-image: radial-gradient(
     ${({ theme }) =>
-        theme.mode === "dark" ? "rgba(255, 255, 255, 0.07)" : `rgba(${theme.colors.shadowRgb}, 0.08)`}
+        theme.mode === "dark"
+          ? "rgba(255, 255, 255, 0.07)"
+          : `rgba(${theme.colors.shadowRgb}, 0.08)`}
       1px,
     transparent 1px
   );
   background-size: 22px 22px;
-  -webkit-mask: radial-gradient(ellipse 60% 55% at 50% 45%, #000 0%, transparent 75%);
+  -webkit-mask: radial-gradient(
+    ellipse 60% 55% at 50% 45%,
+    #000 0%,
+    transparent 75%
+  );
   mask: radial-gradient(ellipse 60% 55% at 50% 45%, #000 0%, transparent 75%);
   pointer-events: none;
 `;
@@ -55,7 +71,7 @@ export const CardBody = styled.div`
 export const Brand = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
 `;
 
@@ -107,12 +123,11 @@ export const ResetPassword = styled.button`
   }
 `;
 
-/* glass strip with the same material as the Dock */
 export const Strip = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 6px 6px 6px 1rem;
+  padding: 0.6rem 1.25rem;
   border-radius: 999px;
   background: ${({ theme }) => theme.colors.glass};
   box-shadow: ${({ theme }) =>
@@ -135,37 +150,4 @@ export const StripDot = styled.span`
   border-radius: 50%;
   background: ${({ theme }) => theme.colors.ringAccent};
   box-shadow: 0 0 8px ${({ theme }) => theme.colors.ringAccent};
-`;
-
-export const ThemeButton = styled.button`
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.7rem;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  background: ${({ theme }) => theme.colors.tile};
-  box-shadow: ${({ theme }) =>
-    theme.mode === "dark"
-      ? `inset 0 0 0 1px rgba(255, 255, 255, 0.07),
-         inset 0 1px 0 rgba(255, 255, 255, 0.12),
-         0 4px 10px -4px rgba(0, 0, 0, 0.7)`
-      : `inset 0 0 0 1px rgba(${theme.colors.shadowRgb}, 0.08),
-         inset 0 1px 0 #FFFFFF,
-         0 4px 10px -5px rgba(${theme.colors.shadowRgb}, 0.25)`};
-  transition: transform 0.16s ease;
-
-  &:active {
-    transform: scale(0.94);
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.primaryText};
-    outline-offset: 2px;
-  }
-
-  svg {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
 `;

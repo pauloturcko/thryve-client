@@ -57,12 +57,6 @@ export const Input = styled.input<{ $hasError?: boolean }>`
   }
 `;
 
-export const ErrorMessage = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.danger};
-  margin-top: -4px;
-`;
-
 export const ToggleButton = styled.button`
   position: absolute;
   top: 50%;

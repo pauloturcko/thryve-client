@@ -17,10 +17,10 @@ const displayFont = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "Whaidata",
-  description: "Whaidata Finance Dashboard",
+  title: "Thryve",
+  description: "Thryve Finance Dashboard",
   icons: {
-    icon: "/logo.svg",
+    icon: "/thryve-logo.svg",
   },
 };
 

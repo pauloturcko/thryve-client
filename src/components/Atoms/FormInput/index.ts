@@ -1,7 +1,6 @@
 import { ColorPicker } from "./ColorPicker";
 import { IconPicker } from "./IconPicker";
 import { InputText } from "./InputText";
-import { Radio } from "./Radio";
 import { Segment } from "./Segment";
 import { Select } from "./Select";
 
@@ -11,5 +10,4 @@ export const FormInput = {
   Icon: IconPicker,
   Color: ColorPicker,
   Segment: Segment,
-  Radio: Radio,
 };

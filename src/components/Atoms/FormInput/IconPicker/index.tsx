@@ -29,13 +29,14 @@ export const IconPicker = ({
 }: IconPickerProps) => {
   return (
     <S.InputWrapper>
-      <S.Label>
+      <S.Label $hasError={!!error}>
         {label}
         {required && <S.RequiredMark>*</S.RequiredMark>}
       </S.Label>
       <S.IconGrid
         role="radiogroup"
         aria-label={label}
+        aria-invalid={!!error || undefined}
       >
         {options.map((option) => (
           <S.IconOption
@@ -53,7 +54,6 @@ export const IconPicker = ({
           </S.IconOption>
         ))}
       </S.IconGrid>
-      {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
     </S.InputWrapper>
   );
 };

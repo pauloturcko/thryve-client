@@ -31,11 +31,13 @@ export const DashboardPage = () => {
   const monthLabel = formatMonthLabel(month);
 
   const delta = (change: number | null, goodWhenUp: boolean) => {
-    if (change === null) return <S.Delta $tone="neutral">sem mês anterior</S.Delta>;
+    if (change === null)
+      return <S.Delta $tone="neutral">sem mês anterior</S.Delta>;
     const good = change === 0 ? true : change > 0 === goodWhenUp;
     return (
       <S.Delta $tone={good ? "good" : "bad"}>
-        {change > 0 ? "▲" : change < 0 ? "▼" : "•"} {Math.abs(change)}% vs mês anterior
+        {change > 0 ? "▲" : change < 0 ? "▼" : "•"} {Math.abs(change)}% vs mês
+        anterior
       </S.Delta>
     );
   };
@@ -61,7 +63,9 @@ export const DashboardPage = () => {
             >
               {formatCurrencyBRL(totals.balance)}
             </MagicBento.Figure>
-            <MagicBento.Note>Receitas menos gastos lançados no mês</MagicBento.Note>
+            <MagicBento.Note>
+              Receitas menos gastos lançados no mês
+            </MagicBento.Note>
           </S.Hero>
           <BalanceChart
             points={balanceSeries}
@@ -107,7 +111,9 @@ export const DashboardPage = () => {
             </MagicBento.IconBadge>
           </MagicBento.Header>
           <MagicBento.Footer>
-            <MagicBento.Figure $size="lg">{formatCurrencyBRL(totals.incomes)}</MagicBento.Figure>
+            <MagicBento.Figure $size="lg">
+              {formatCurrencyBRL(totals.incomes)}
+            </MagicBento.Figure>
             {delta(changes.incomes, true)}
           </MagicBento.Footer>
         </>
@@ -126,7 +132,9 @@ export const DashboardPage = () => {
             </MagicBento.IconBadge>
           </MagicBento.Header>
           <MagicBento.Footer>
-            <MagicBento.Figure $size="lg">{formatCurrencyBRL(totals.expenses)}</MagicBento.Figure>
+            <MagicBento.Figure $size="lg">
+              {formatCurrencyBRL(totals.expenses)}
+            </MagicBento.Figure>
             {delta(changes.expenses, false)}
           </MagicBento.Footer>
         </>
@@ -145,10 +153,16 @@ export const DashboardPage = () => {
             </MagicBento.IconBadge>
           </MagicBento.Header>
           <MagicBento.Footer>
-            <MagicBento.Figure $size="lg">{formatCurrencyBRL(totals.pending)}</MagicBento.Figure>
+            <MagicBento.Figure $size="lg">
+              {formatCurrencyBRL(totals.pending)}
+            </MagicBento.Figure>
             <MagicBento.Note>
               {totals.pendingCount > 0
-                ? pluralize(totals.pendingCount, "conta pendente", "contas pendentes")
+                ? pluralize(
+                    totals.pendingCount,
+                    "conta pendente",
+                    "contas pendentes"
+                  )
                 : "Tudo pago este mês"}
             </MagicBento.Note>
           </MagicBento.Footer>
@@ -194,7 +208,9 @@ export const DashboardPage = () => {
             </MagicBento.IconBadge>
           </MagicBento.Header>
           {slices.length === 0 ? (
-            <MagicBento.Note>Nenhum gasto lançado em {monthLabel.toLowerCase()}.</MagicBento.Note>
+            <MagicBento.Note>
+              Nenhum gasto lançado em {monthLabel.toLowerCase()}.
+            </MagicBento.Note>
           ) : (
             <MagicBento.Footer>
               <S.Stack aria-hidden="true">
@@ -211,7 +227,11 @@ export const DashboardPage = () => {
               <S.CategoryList>
                 {slices.map((slice) => (
                   <li key={slice.id}>
-                    <i style={{ background: slice.color || theme.colors.textMuted }} />
+                    <i
+                      style={{
+                        background: slice.color || theme.colors.textMuted,
+                      }}
+                    />
                     <span>{slice.name}</span>
                     <strong>{formatCurrencyBRL(slice.total)}</strong>
                     <em>{percent(slice.share)}</em>
@@ -230,7 +250,9 @@ export const DashboardPage = () => {
         <>
           <MagicBento.Header>
             <span>Próximos vencimentos</span>
-            <S.HeaderNote>{pluralize(counts.expenses, "gasto no mês", "gastos no mês")}</S.HeaderNote>
+            <S.HeaderNote>
+              {pluralize(counts.expenses, "gasto no mês", "gastos no mês")}
+            </S.HeaderNote>
           </MagicBento.Header>
           {upcoming.length === 0 ? (
             <MagicBento.Note>Nada pendente. Bom trabalho.</MagicBento.Note>
@@ -239,14 +261,23 @@ export const DashboardPage = () => {
               {upcoming.map((expense) => (
                 <li key={expense.id}>
                   <S.DueDate>
-                    <strong>{(expense.dueDate ?? expense.date).slice(8, 10)}</strong>
-                    <span>{formatDateBR(expense.dueDate ?? expense.date).slice(3, 5)}</span>
+                    <strong>
+                      {(expense.dueDate ?? expense.date).slice(8, 10)}
+                    </strong>
+                    <span>
+                      {formatDateBR(expense.dueDate ?? expense.date).slice(
+                        3,
+                        5
+                      )}
+                    </span>
                   </S.DueDate>
                   <S.DueInfo>
                     <span>{expense.description}</span>
                     <small>{expense.category.name}</small>
                   </S.DueInfo>
-                  <S.DueAmount>{formatCurrencyBRL(Number(expense.amount))}</S.DueAmount>
+                  <S.DueAmount>
+                    {formatCurrencyBRL(Number(expense.amount))}
+                  </S.DueAmount>
                 </li>
               ))}
             </S.Upcoming>

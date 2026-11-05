@@ -1,11 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-export type DockSpring = {
-  mass: number;
-  stiffness: number;
-  damping: number;
-};
-
 type Motion = {
   size: number;
   velocity: number;
@@ -18,17 +12,12 @@ type Motion = {
   node: HTMLElement | null;
 };
 
-type DockMotionOptions = {
-  spans: ("item" | "separator")[];
-  baseItemSize: number;
-  magnification: number;
-  distance: number;
-  panelHeight: number;
-  gap: number;
-  spring: DockSpring;
-  bounce: boolean;
-};
-
+const BASE_ITEM_SIZE = 48;
+const MAGNIFICATION = 72;
+const DISTANCE = 180;
+const PANEL_HEIGHT = 64;
+const GAP = 10;
+const SPRING = { mass: 0.1, stiffness: 150, damping: 12 };
 const EDGE = 12;
 const HOP = 0.4;
 const HOP_TIME = 0.38;
@@ -36,21 +25,7 @@ const HOP_TIME = 0.38;
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-/**
- * Ported from React Bits <Dock />: a spring-driven magnification loop that
- * writes size + hop offset straight to the DOM so React never re-renders
- * while the pointer moves.
- */
-export const useDockMotion = ({
-  spans,
-  baseItemSize,
-  magnification,
-  distance,
-  panelHeight,
-  gap,
-  spring,
-  bounce,
-}: DockMotionOptions) => {
+export const useDockMotion = (spans: ("item" | "separator")[]) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
   const hopRef = useRef<((index: number) => void) | null>(null);
@@ -58,24 +33,22 @@ export const useDockMotion = ({
   const wakeRef = useRef<(() => void) | null>(null);
   const [fit, setFit] = useState(1);
 
-  const rawBase = Math.max(16, baseItemSize);
-  const rawPeak = Math.max(rawBase, magnification);
-  const rawThickness = Math.max(rawBase, panelHeight);
   const length =
-    spans.reduce((sum, span) => sum + (span === "separator" ? 1 : rawBase), 0) +
-    gap * Math.max(0, spans.length - 1) +
-    rawThickness -
-    rawBase;
+    spans.reduce(
+      (sum, span) => sum + (span === "separator" ? 1 : BASE_ITEM_SIZE),
+      0
+    ) +
+    GAP * Math.max(0, spans.length - 1) +
+    PANEL_HEIGHT -
+    BASE_ITEM_SIZE;
 
   const settings = {
     spans,
-    base: rawBase * fit,
-    peak: rawPeak * fit,
-    gap: gap * fit,
-    distance: Math.max(1, distance) * fit,
-    length: length + rawPeak - rawBase,
-    spring,
-    bounce,
+    base: BASE_ITEM_SIZE * fit,
+    peak: MAGNIFICATION * fit,
+    gap: GAP * fit,
+    distance: DISTANCE * fit,
+    length: length + MAGNIFICATION - BASE_ITEM_SIZE,
   };
   const settingsRef = useRef(settings);
   useIsomorphicLayoutEffect(() => {
@@ -90,13 +63,14 @@ export const useDockMotion = ({
     const measure = () => {
       const room = window.innerWidth - EDGE * 2;
       const s = settingsRef.current;
-      const next = s.length > 0 ? Math.min(1, Math.max(0.4, room / s.length)) : 1;
+      const next =
+        s.length > 0 ? Math.min(1, Math.max(0.4, room / s.length)) : 1;
       setFit(Math.round(next * 1000) / 1000);
     };
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [length, rawPeak, rawBase]);
+  }, [length]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -151,7 +125,10 @@ export const useDockMotion = ({
       const center = rect.left + rect.width / 2;
       const widths = s.spans.map((span) => (span === "separator" ? 1 : s.base));
       let cursor =
-        -(widths.reduce((sum, w) => sum + w, 0) + s.gap * Math.max(0, widths.length - 1)) / 2;
+        -(
+          widths.reduce((sum, w) => sum + w, 0) +
+          s.gap * Math.max(0, widths.length - 1)
+        ) / 2;
       const rest = widths.map((w) => {
         const middle = cursor + w / 2;
         cursor += w + s.gap;
@@ -164,17 +141,20 @@ export const useDockMotion = ({
 
       const steps = Math.max(1, Math.ceil(dt * 240));
       const h = dt / steps;
-      const k = s.spring.stiffness / s.spring.mass;
-      const c = s.spring.damping / s.spring.mass;
+      const k = SPRING.stiffness / SPRING.mass;
+      const c = SPRING.damping / SPRING.mass;
       let moving = false;
 
       s.spans.forEach((span, index) => {
         const node = itemRefs.current[index];
         if (!node || span === "separator") return;
         const state = entry(index);
-        const reach = focus === null ? 1 : Math.abs(focus - rest[index]) / s.distance;
+        const reach =
+          focus === null ? 1 : Math.abs(focus - rest[index]) / s.distance;
         const target =
-          s.base + (s.peak - s.base) * (reach < 1 ? Math.cos((reach * Math.PI) / 2) ** 2 : 0);
+          s.base +
+          (s.peak - s.base) *
+            (reach < 1 ? Math.cos((reach * Math.PI) / 2) ** 2 : 0);
 
         if (reduce) {
           state.size = target;
@@ -182,7 +162,8 @@ export const useDockMotion = ({
         } else {
           for (let i = 0; i < steps; i++) {
             state.velocity =
-              (state.velocity + h * k * (target - state.size)) / (1 + h * c + h * h * k);
+              (state.velocity + h * k * (target - state.size)) /
+              (1 + h * c + h * h * k);
             state.size += state.velocity * h;
             if (!state.hopping) continue;
             state.rise -= state.gravity * h;
@@ -197,7 +178,10 @@ export const useDockMotion = ({
           }
         }
 
-        if (Math.abs(state.velocity) < 0.01 && Math.abs(target - state.size) < 0.01) {
+        if (
+          Math.abs(state.velocity) < 0.01 &&
+          Math.abs(target - state.size) < 0.01
+        ) {
           state.size = target;
           state.velocity = 0;
         } else {
@@ -213,7 +197,8 @@ export const useDockMotion = ({
         const tile = node.firstElementChild as HTMLElement | null;
         node.style.width = `${size}px`;
         node.style.height = `${size}px`;
-        if (tile) tile.style.transform = `translate(0, ${-state.lift}px) scale(${size / s.base})`;
+        if (tile)
+          tile.style.transform = `translate(0, ${-state.lift}px) scale(${size / s.base})`;
       });
 
       if (moving) raf = requestAnimationFrame(tick);
@@ -229,7 +214,7 @@ export const useDockMotion = ({
 
     hopRef.current = (index: number) => {
       const node = itemRefs.current[index];
-      if (reduce || !settingsRef.current.bounce || !node) return;
+      if (reduce || !node) return;
       const state = entry(index);
       if (state.hopping) return;
       const height = state.size * HOP;
@@ -280,7 +265,7 @@ export const useDockMotion = ({
     focus: (index: number) => focusRef.current?.(index),
     metrics: {
       base: settings.base,
-      thickness: rawThickness * fit,
+      thickness: PANEL_HEIGHT * fit,
       gap: settings.gap,
       reach: settings.peak - settings.base,
     },

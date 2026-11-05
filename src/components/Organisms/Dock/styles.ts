@@ -41,7 +41,7 @@ export const Root = styled.nav<DockVars>`
   backdrop-filter: blur(20px) saturate(1.6);
   touch-action: manipulation;
 
-  /* keeps the pointer "inside" while hovering the magnified overflow */
+  /* mantém o ponteiro "dentro" da dock sobre a parte ampliada dos itens */
   &::before {
     content: "";
     position: absolute;
@@ -105,11 +105,10 @@ export const Face = styled.span<{ $active?: boolean; $tone?: "danger" }>`
   justify-content: center;
   overflow: hidden;
   border-radius: var(--dock-radius);
-  color: ${({ theme, $active }) => ($active ? theme.colors.onPrimary : theme.colors.textPrimary)};
+  color: ${({ theme, $active }) =>
+    $active ? theme.colors.onPrimary : theme.colors.textPrimary};
   background: ${({ theme, $active }) =>
-    $active
-      ? theme.colors.gradientPrimary
-      : theme.colors.tile};
+    $active ? theme.colors.gradientPrimary : theme.colors.tile};
   box-shadow: ${({ theme, $active }) =>
     $active
       ? `inset 0 0 0 1px rgba(255, 255, 255, 0.18),
@@ -122,7 +121,9 @@ export const Face = styled.span<{ $active?: boolean; $tone?: "danger" }>`
         : `inset 0 0 0 1px rgba(${theme.colors.shadowRgb}, 0.08),
            inset 0 1px 0 #FFFFFF,
            0 4px 10px -5px rgba(${theme.colors.shadowRgb}, 0.25)`};
-  transition: filter 0.2s ease, color 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    color 0.2s ease;
 
   svg {
     width: 46%;
@@ -170,7 +171,9 @@ export const Separator = styled.span`
   height: calc(var(--dock-base) * 0.72);
   border-radius: 1px;
   background: ${({ theme }) =>
-    theme.mode === "dark" ? "rgba(255, 255, 255, 0.12)" : `rgba(${theme.colors.shadowRgb}, 0.12)`};
+    theme.mode === "dark"
+      ? "rgba(255, 255, 255, 0.12)"
+      : `rgba(${theme.colors.shadowRgb}, 0.12)`};
 `;
 
 export const Label = styled.span`

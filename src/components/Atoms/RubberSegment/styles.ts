@@ -2,9 +2,6 @@ import { motion } from "motion/react";
 import { styled } from "styled-components";
 
 type TrackVars = {
-  $radius: number;
-  $inset: number;
-  $thumbRadius: number;
   $height: number;
   $font: number;
   $pad: number;
@@ -13,8 +10,8 @@ type TrackVars = {
 };
 
 export const Track = styled.div<TrackVars>`
-  --rs-inset: ${({ $inset }) => `${$inset}px`};
-  --rs-thumb-radius: ${({ $thumbRadius }) => `${$thumbRadius}px`};
+  --rs-inset: 3px;
+  --rs-thumb-radius: 9px;
   --rs-h: ${({ $height }) => `${$height}px`};
   --rs-font: ${({ $font }) => `${$font}px`};
   --rs-pad: ${({ $pad }) => `${$pad}px`};
@@ -24,10 +21,10 @@ export const Track = styled.div<TrackVars>`
   display: ${({ $fullWidth }) => ($fullWidth ? "grid" : "inline-grid")};
   width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
   grid-auto-flow: column;
-  grid-auto-columns: auto;
+  grid-auto-columns: minmax(0, 1fr);
   vertical-align: middle;
   padding: var(--rs-inset);
-  border-radius: ${({ $radius }) => `${$radius}px`};
+  border-radius: 12px;
   background: ${({ theme }) => theme.colors.surfaceElevated};
   box-shadow: inset 0 0 0 1px ${({ theme }) => theme.colors.border};
   touch-action: pan-y;
@@ -35,15 +32,6 @@ export const Track = styled.div<TrackVars>`
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
-
-  &[data-equal] {
-    grid-auto-columns: minmax(0, 1fr);
-  }
-
-  &[aria-disabled="true"] {
-    opacity: 0.5;
-    pointer-events: none;
-  }
 
   &[data-held],
   &[data-held] button {
@@ -73,10 +61,6 @@ export const Item = styled.button`
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 
   &[aria-checked="true"] {
-    cursor: default;
-  }
-
-  [data-draggable] &[aria-checked="true"] {
     cursor: grab;
   }
 
@@ -95,11 +79,6 @@ export const Item = styled.button`
     }
   }
 
-  svg {
-    width: 1.1em;
-    height: 1.1em;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     transition: opacity 160ms ease;
   }
@@ -110,15 +89,11 @@ export const Thumb = styled(motion.div)`
   inset: var(--rs-inset);
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: auto;
+  grid-auto-columns: minmax(0, 1fr);
   background: ${({ theme }) =>
     `linear-gradient(180deg, ${theme.colors.hover} 0%, ${theme.colors.primary} 100%)`};
   color: ${({ theme }) => theme.colors.onPrimary};
   pointer-events: none;
-
-  [data-equal] > & {
-    grid-auto-columns: minmax(0, 1fr);
-  }
 `;
 
 export const Copy = styled(Item)`

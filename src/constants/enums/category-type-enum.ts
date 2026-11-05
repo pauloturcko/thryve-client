@@ -10,7 +10,7 @@ export const CategoryTypeLabels: Record<CategoryType, string> = {
 
 export const CategoryTypeOptions = Object.entries(CategoryType)
   .filter(([key]) => isNaN(Number(key)))
-  .map(([_, value]) => ({
+  .map(([, value]) => ({
     value,
     label: CategoryTypeLabels[value as CategoryType],
   }));

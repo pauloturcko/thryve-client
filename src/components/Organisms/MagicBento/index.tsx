@@ -58,7 +58,10 @@ const MagicBentoRoot = ({
     items.length
   );
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, item: MagicBentoItem) => {
+  const handleKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>,
+    item: MagicBentoItem
+  ) => {
     if (!item.onClick || (event.key !== "Enter" && event.key !== " ")) return;
     event.preventDefault();
     event.currentTarget.click();
@@ -97,7 +100,9 @@ const MagicBentoRoot = ({
               tabIndex={clickable ? 0 : undefined}
               aria-label={clickable ? item.label : undefined}
               onClick={item.onClick}
-              onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => handleKeyDown(event, item)}
+              onKeyDown={(event: KeyboardEvent<HTMLDivElement>) =>
+                handleKeyDown(event, item)
+              }
             >
               {enableSpotlight && <S.Light />}
               <S.Content>{item.content}</S.Content>

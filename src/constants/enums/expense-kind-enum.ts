@@ -10,7 +10,7 @@ export const ExpenseKindLabels: Record<ExpenseKind, string> = {
 
 export const ExpenseKindOptions = Object.entries(ExpenseKind)
   .filter(([key]) => isNaN(Number(key)))
-  .map(([_, value]) => ({
+  .map(([, value]) => ({
     value,
     label: ExpenseKindLabels[value as ExpenseKind],
   }));

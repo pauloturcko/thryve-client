@@ -7,39 +7,25 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState,
 } from "react";
 import {
   animate,
   MotionValue,
   useMotionValue,
   useReducedMotion,
-  useTransform,
 } from "motion/react";
 import * as S from "./styles";
 
-/* Ported from React Bits <RubberSegment />: a segmented control whose thumb
-   stretches toward the target, can be dragged and rubber-bands at the edges. */
 
-export type RubberSegmentItem = string | { value: string; label: ReactNode; icon?: ReactNode };
+type RubberSegmentItem = { value: string; label: ReactNode };
 
 type RubberSegmentProps = {
   items: RubberSegmentItem[];
-  value?: string;
-  defaultValue?: string;
-  onChange?: (value: string, index: number) => void;
-  size?: "sm" | "md" | "lg";
-  radius?: number;
-  inset?: number;
-  equalSlots?: boolean;
+  value: string;
+  onChange: (value: string) => void;
+  size?: "md" | "lg";
   fullWidth?: boolean;
-  stretch?: number;
-  squash?: number;
-  speed?: number;
-  glide?: number;
-  draggable?: boolean;
-  disabled?: boolean;
-  "aria-label"?: string;
+  "aria-label": string;
 };
 
 type Slot = { l: number; r: number };
@@ -66,17 +52,23 @@ const MAX_VELOCITY = 2000;
 const DEADZONE = 4;
 const SLOP = 10;
 const RUBBER = 0.55;
+const RADIUS = 12;
+const INSET = 3;
+const THUMB_RADIUS = RADIUS - INSET;
+const SQUASH = 3;
+const GLIDE = 75;
 
 const SIZES = {
-  sm: { height: 30, font: 12, pad: 10, min: 36 },
   md: { height: 38, font: 13, pad: 14, min: 44 },
   lg: { height: 46, font: 14, pad: 18, min: 48 },
 };
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-const rubber = (over: number, dim: number) => (over * dim * RUBBER) / (dim + RUBBER * Math.abs(over));
-const project = (v: number, glide: number) => {
-  const d = 1 - 0.1 * Math.pow(0.05, glide / 100);
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, value));
+const rubber = (over: number, dim: number) =>
+  (over * dim * RUBBER) / (dim + RUBBER * Math.abs(over));
+const project = (v: number) => {
+  const d = 1 - 0.1 * Math.pow(0.05, GLIDE / 100);
   return ((v / 1000) * d) / (1 - d);
 };
 const velocityOf = (hist: Sample[], now: number) => {
@@ -101,27 +93,14 @@ const nearestSlot = (slots: Slot[], x: number) => {
 export const RubberSegment = ({
   items,
   value,
-  defaultValue,
   onChange,
   size = "md",
-  radius = 12,
-  inset = 3,
-  equalSlots = true,
   fullWidth = false,
-  stretch = 100,
-  squash = 3,
-  speed = 1,
-  glide = 75,
-  draggable = true,
-  disabled = false,
-  "aria-label": ariaLabel = "Opções",
+  "aria-label": ariaLabel,
 }: RubberSegmentProps) => {
-  const list = items.map((item) => (typeof item === "string" ? { value: item, label: item } : item));
-  const [inner, setInner] = useState<string | undefined>(defaultValue ?? list[0]?.value);
-  const current = value !== undefined ? value : inner;
   const index = Math.max(
     0,
-    list.findIndex((item) => item.value === current)
+    items.findIndex((item) => item.value === value)
   );
   const reduce = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
@@ -135,12 +114,14 @@ export const RubberSegment = ({
   const edgeL = useMotionValue(0);
   const edgeR = useMotionValue(0);
   const innerW = useMotionValue(0);
-  const thumbRadius = Math.max(0, radius - inset);
-  const clipPath = useTransform(
-    () =>
-      `inset(0 ${Math.max(0, innerW.get() - edgeR.get())}px 0 ${Math.max(0, edgeL.get())}px round ${thumbRadius}px)`
-  );
-  const t = (seconds: number) => seconds / speed;
+
+  const clipPath = useMotionValue(`inset(0 100% 0 0 round ${THUMB_RADIUS}px)`);
+  const paintClip = () => {
+    if (innerW.get() <= 0) return;
+    const right = Math.max(0, innerW.get() - edgeR.get());
+    const left = Math.max(0, edgeL.get());
+    clipPath.set(`inset(0 ${right}px 0 ${left}px round ${THUMB_RADIUS}px)`);
+  };
 
   const jumpTo = (i: number) => {
     const s = slots.current[i];
@@ -156,17 +137,18 @@ export const RubberSegment = ({
     if (!track) return;
     const rect = track.getBoundingClientRect();
     box.current = rect;
-    slots.current = list.map((_, i) => {
+    slots.current = items.map((_, i) => {
       const el = itemRefs.current[i];
       if (!el) return { l: 0, r: 0 };
       const r = el.getBoundingClientRect();
-      return { l: r.left - rect.left - inset, r: r.right - rect.left - inset };
+      return { l: r.left - rect.left - INSET, r: r.right - rect.left - INSET };
     });
-    innerW.set(rect.width - inset * 2);
+    innerW.set(rect.width - INSET * 2);
     jumpTo(committed.current);
+    paintClip();
   };
 
-  const listKey = list.map((item) => item.value).join("|");
+  const listKey = items.map((item) => item.value).join("|");
   useLayoutEffect(() => {
     measure();
     const observer = new ResizeObserver(measure);
@@ -174,7 +156,7 @@ export const RubberSegment = ({
     document.fonts?.ready.then(measure);
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listKey, size, inset, equalSlots]);
+  }, [listKey, size]);
 
   useEffect(() => {
     if (!drag.current && committed.current !== index) {
@@ -182,6 +164,15 @@ export const RubberSegment = ({
       jumpTo(index);
     }
   });
+
+  useEffect(() => {
+    const unsubscribe = [edgeL, edgeR, innerW].map((mv) =>
+      mv.on("change", paintClip)
+    );
+    paintClip();
+    return () => unsubscribe.forEach((off) => off());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [edgeL, edgeR, innerW]);
 
   useEffect(
     () => () => {
@@ -195,35 +186,45 @@ export const RubberSegment = ({
   const commit = (i: number) => {
     committed.current = i;
     if (i === index) return;
-    if (value === undefined) setInner(list[i].value);
-    onChange?.(list[i].value, i);
+    onChange(items[i].value);
   };
 
-  const land = (to: number, v: number | null, flick: boolean, withSquash: boolean) => {
+  const land = (
+    to: number,
+    v: number | null,
+    flick: boolean,
+    withSquash: boolean
+  ) => {
     const b = slots.current[to];
     if (!b) return;
     const g = ++gen.current;
-    const dir = Math.sign((b.l + b.r) / 2 - (edgeL.get() + edgeR.get()) / 2) || 1;
+    const dir =
+      Math.sign((b.l + b.r) / 2 - (edgeL.get() + edgeR.get()) / 2) || 1;
     const [lead, leadTo, trail, trailTo] =
       dir > 0 ? [edgeR, b.r, edgeL, b.l] : [edgeL, b.l, edgeR, b.r];
     const velocityFor = (mv: MotionValue<number>) =>
       clamp(v === null ? mv.getVelocity() : v, -MAX_VELOCITY, MAX_VELOCITY);
     animate(lead, leadTo, {
       ...(flick ? SPRING_MOMENTUM : SPRING_UI),
-      duration: t(flick ? 0.4 : 0.3),
+      duration: flick ? 0.4 : 0.3,
       velocity: velocityFor(lead),
     });
     const trailVelocity = velocityFor(trail);
-    if (!withSquash || squash <= 0) {
-      animate(trail, trailTo, { ...SPRING_UI, duration: t(0.3), velocity: trailVelocity });
+    if (!withSquash) {
+      animate(trail, trailTo, {
+        ...SPRING_UI,
+        duration: 0.3,
+        velocity: trailVelocity,
+      });
       return;
     }
-    animate(trail, trailTo + dir * squash, {
+    animate(trail, trailTo + dir * SQUASH, {
       ...SPRING_UI,
-      duration: t(0.3),
+      duration: 0.3,
       velocity: trailVelocity,
     }).then(() => {
-      if (gen.current === g) animate(trail, trailTo, { ...SPRING_RELAX, duration: t(0.16) });
+      if (gen.current === g)
+        animate(trail, trailTo, { ...SPRING_RELAX, duration: 0.16 });
     });
   };
 
@@ -238,26 +239,27 @@ export const RubberSegment = ({
       edgeR.jump(b.r);
       return;
     }
-    const u = stretch / 100;
-    const tween = { duration: t(DILATE), ease: EASE_OUT };
-    animate(edgeL, b.l + (Math.min(a.l, b.l) - b.l) * u, tween);
-    animate(edgeR, b.r + (Math.max(a.r, b.r) - b.r) * u, tween);
-    handoff.current = setTimeout(() => land(to, null, false, true), t(HANDOFF) * 1000);
+    const tween = { duration: DILATE, ease: EASE_OUT };
+    animate(edgeL, Math.min(a.l, b.l), tween);
+    animate(edgeR, Math.max(a.r, b.r), tween);
+    handoff.current = setTimeout(
+      () => land(to, null, false, true),
+      HANDOFF * 1000
+    );
   };
 
   const localX = (e: { clientX: number }) =>
-    e.clientX - (box.current ? box.current.left : 0) - inset;
+    e.clientX - (box.current ? box.current.left : 0) - INSET;
 
   const handlePointerDown = (e: PointerEvent<HTMLButtonElement>, i: number) => {
-    if (disabled || drag.current || e.button !== 0) return;
+    if (drag.current || e.button !== 0) return;
     box.current = trackRef.current?.getBoundingClientRect() ?? null;
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
-      // pointer capture is best-effort
     }
     const x = localX(e);
-    const onThumb = draggable && x >= edgeL.get() && x <= edgeR.get();
+    const onThumb = x >= edgeL.get() && x <= edgeR.get();
     drag.current = {
       id: e.pointerId,
       x0: x,
@@ -334,8 +336,12 @@ export const RubberSegment = ({
     }
     const v = velocityOf(d.hist, e.timeStamp);
     const flick = Math.abs(v) > FLICK;
-    let to = nearestSlot(slots.current, (edgeL.get() + edgeR.get()) / 2 + project(v, glide));
-    if (flick && to === committed.current) to = clamp(to + Math.sign(v), 0, list.length - 1);
+    let to = nearestSlot(
+      slots.current,
+      (edgeL.get() + edgeR.get()) / 2 + project(v)
+    );
+    if (flick && to === committed.current)
+      to = clamp(to + Math.sign(v), 0, items.length - 1);
     commit(to);
     if (reduce) jumpTo(to);
     else land(to, v, flick, flick);
@@ -351,11 +357,12 @@ export const RubberSegment = ({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (disabled) return;
-    const last = list.length - 1;
+    const last = items.length - 1;
     let next: number | null = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = Math.min(last, index + 1);
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = Math.max(0, index - 1);
+    if (e.key === "ArrowRight" || e.key === "ArrowDown")
+      next = Math.min(last, index + 1);
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+      next = Math.max(0, index - 1);
     else if (e.key === "Home") next = 0;
     else if (e.key === "End") next = last;
     if (next === null) return;
@@ -373,12 +380,6 @@ export const RubberSegment = ({
       ref={trackRef}
       role="radiogroup"
       aria-label={ariaLabel}
-      aria-disabled={disabled || undefined}
-      data-equal={equalSlots ? "" : undefined}
-      data-draggable={draggable && !disabled ? "" : undefined}
-      $radius={radius}
-      $inset={inset}
-      $thumbRadius={thumbRadius}
       $height={preset.height}
       $font={preset.font}
       $pad={preset.pad}
@@ -389,7 +390,7 @@ export const RubberSegment = ({
       onPointerCancel={handlePointerCancel}
       onLostPointerCapture={handlePointerCancel}
     >
-      {list.map((item, i) => (
+      {items.map((item, i) => (
         <S.Item
           key={item.value}
           ref={(el: HTMLButtonElement | null) => {
@@ -399,11 +400,11 @@ export const RubberSegment = ({
           role="radio"
           aria-checked={i === index}
           tabIndex={i === index ? 0 : -1}
-          disabled={disabled}
-          onPointerDown={(e: PointerEvent<HTMLButtonElement>) => handlePointerDown(e, i)}
+          onPointerDown={(e: PointerEvent<HTMLButtonElement>) =>
+            handlePointerDown(e, i)
+          }
           onKeyDown={handleKeyDown}
         >
-          {item.icon}
           {item.label}
         </S.Item>
       ))}
@@ -411,12 +412,11 @@ export const RubberSegment = ({
         aria-hidden="true"
         style={{ clipPath }}
       >
-        {list.map((item) => (
+        {items.map((item) => (
           <S.Copy
             as="span"
             key={item.value}
           >
-            {item.icon}
             {item.label}
           </S.Copy>
         ))}
