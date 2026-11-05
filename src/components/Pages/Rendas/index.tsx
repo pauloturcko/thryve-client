@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { FormInput } from "@/components/Atoms/FormInput";
 import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
 import { TransactionInfo } from "@/components/Organisms/TransactionInfo";
@@ -95,6 +95,9 @@ export const RendasPage = () => {
   const received = total - pending;
   const receivedShare = total > 0 ? Math.round((received / total) * 100) : 0;
 
+  const handleSegmentChange = (name: keyof FilterState) => (value: string) =>
+    setFilters((current) => ({ ...current, [name]: value }));
+
   const handleFilterChange =
     (name: keyof FilterState) => (event: ChangeEvent<HTMLSelectElement>) =>
       setFilters((current) => ({ ...current, [name]: event.target.value }));
@@ -140,15 +143,12 @@ export const RendasPage = () => {
       title="Rendas"
       description="Acompanhe suas receitas do mês"
       button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
+        <SpecularButton
+          size="sm"
           onClick={handleOpenModal}
         >
-          <Plus size={22} /> Nova Receita
-        </Button>
+          <Plus size={18} /> Nova Receita
+        </SpecularButton>
       }
     >
       <TransactionsBoard
@@ -156,17 +156,19 @@ export const RendasPage = () => {
         onMonthChange={setMonth}
         filters={
           <>
-            <FormInput.Select
+            <FormInput.Segment
               label="Status"
+              size="sm"
               options={[allOption, ...IncomeStatusOptions]}
               value={filters.status}
-              onChange={handleFilterChange("status")}
+              onChange={handleSegmentChange("status")}
             />
-            <FormInput.Select
+            <FormInput.Segment
               label="Tipo"
+              size="sm"
               options={[allOption, ...IncomeKindOptions]}
               value={filters.incomeKind}
-              onChange={handleFilterChange("incomeKind")}
+              onChange={handleSegmentChange("incomeKind")}
             />
             <FormInput.Select
               label="Categoria"

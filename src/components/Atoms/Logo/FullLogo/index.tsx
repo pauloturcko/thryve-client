@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Image from "next/image";
+import { LogoMark } from "../LogoMark";
 
 interface FullLogoProps {
   fontSize?: number | string;
@@ -9,15 +9,10 @@ interface FullLogoProps {
 export const FullLogo = ({ fontSize, imgSize }: FullLogoProps) => {
   return (
     <Wrapper $fontSize={fontSize}>
-      <Image
-        src="/logo.svg"
-        alt="WhaiData logo"
-        width={imgSize ?? 100}
-        height={imgSize ?? 100}
-      />
+      <LogoMark size={imgSize ?? 100} />
 
-      <h1>Whai</h1>
-      <h1 style={{ color: "#3CDD7F" }}>Data</h1>
+      <Name>Whai</Name>
+      <Accent as="span">Data</Accent>
     </Wrapper>
   );
 };
@@ -36,4 +31,19 @@ const Wrapper = styled.div<{ $fontSize?: number | string }>`
 
     return $fontSize;
   }};
+`;
+
+
+const Name = styled.span`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+`;
+
+const Accent = styled(Name)`
+  background: ${({ theme }) => theme.colors.gradientPrimary};
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 `;

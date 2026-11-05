@@ -23,7 +23,6 @@ export function useIncome() {
   const { dispatchToast } = useToastContext();
   const queryClient = useQueryClient();
 
-  // Receita paga mexe no saldo da conta, então a lista de contas também fica velha.
   const handleSuccess = (message: string) => {
     hideLoader();
     dispatchToast({ type: "success", message });

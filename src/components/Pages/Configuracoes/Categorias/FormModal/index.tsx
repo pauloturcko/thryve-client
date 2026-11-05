@@ -47,7 +47,7 @@ export const NewCategory = ({
       : {
           tipo: CategoryType.Despesa,
           icone: "tag",
-          cor: "#00af73",
+          cor: "#6a00f4",
         },
   });
 

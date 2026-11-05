@@ -120,8 +120,6 @@ export const NewIncome = ({
         },
   });
 
-  const tipo = register("tipo", { required: requiredMessage });
-  const status = register("status", { required: requiredMessage });
   const valor = register("valor", {
     required: requiredMessage,
     validate: (value) =>
@@ -198,19 +196,35 @@ export const NewIncome = ({
         </S.Notice>
       )}
       <S.Row>
-        <FormInput.Select
-          label="Tipo"
-          options={IncomeKindOptions}
-          required
-          error={errors.tipo?.message}
-          {...tipo}
+        <Controller
+          name="tipo"
+          control={control}
+          rules={{ required: requiredMessage }}
+          render={({ field }) => (
+            <FormInput.Radio
+              label="Tipo"
+              options={IncomeKindOptions}
+              required
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.tipo?.message}
+            />
+          )}
         />
-        <FormInput.Select
-          label="Status"
-          options={IncomeStatusOptions}
-          required
-          error={errors.status?.message}
-          {...status}
+        <Controller
+          name="status"
+          control={control}
+          rules={{ required: requiredMessage }}
+          render={({ field }) => (
+            <FormInput.Radio
+              label="Status"
+              options={IncomeStatusOptions}
+              required
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.status?.message}
+            />
+          )}
         />
       </S.Row>
       <S.Row>

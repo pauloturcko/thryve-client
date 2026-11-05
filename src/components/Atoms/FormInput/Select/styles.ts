@@ -12,18 +12,23 @@ export const Container = styled.div`
   width: 100%;
 
   &::after {
-    content: "▼";
+    content: "";
     position: absolute;
-    right: 12px;
+    right: 15px;
     top: 50%;
-    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid ${({ theme }) => theme.colors.textSecondary};
+    border-bottom: 1.5px solid ${({ theme }) => theme.colors.textSecondary};
+    transform: translateY(-70%) rotate(45deg);
     pointer-events: none;
-    font-size: 12px;
   }
 `;
 
 export const Label = styled.label`
-  font-size: 0.925rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
 export const RequiredMark = styled.span`
@@ -33,20 +38,43 @@ export const RequiredMark = styled.span`
 
 export const Select = styled.select<{ $hasError?: boolean }>`
   width: 100%;
-  padding: 10px 30px 10px 12px;
+  min-height: 2.75rem;
+  padding: 10px 36px 10px 14px;
   border: 1px solid
     ${({ $hasError, theme }) =>
       $hasError ? theme.colors.danger : theme.colors.border};
-  border-radius: 0.5rem;
-  font-size: 14px;
+  border-radius: ${({ theme }) => theme.radii.md};
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.textPrimary};
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.colors.surface};
+  background-color: ${({ theme }) =>
+    theme.mode === "dark" ? "rgba(255, 255, 255, 0.03)" : theme.colors.surface};
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  &:hover {
+    border-color: ${({ $hasError, theme }) =>
+      $hasError ? theme.colors.danger : theme.colors.textMuted};
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primaryText};
+    box-shadow: 0 0 0 4px rgba(${({ theme }) => theme.colors.glowRgb}, 0.22);
+  }
   -webkit-appearance: none;
   appearance: none;
+  cursor: pointer;
 
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
+  option {
+    background: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.textPrimary};
   }
 `;
 

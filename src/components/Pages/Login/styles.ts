@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.main`
+  position: relative;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
@@ -9,94 +10,162 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(50rem 28rem at 50% -10%, rgba(${({ theme }) => theme.colors.glowRgb}, ${({ theme }) => (theme.mode === "dark" ? 0.24 : 0.1)}), transparent 70%),
+    radial-gradient(30rem 20rem at 85% 110%, ${({ theme }) => theme.colors.accentSoft}, transparent 70%),
+    ${({ theme }) => theme.colors.background};
 `;
 
-export const LoginModal = styled.div`
-  background-color: ${({ theme }) => theme.colors.surface};
-  width: 90%;
+/* faint dot grid behind the card, fading out from the center */
+export const Backdrop = styled.span`
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    ${({ theme }) =>
+        theme.mode === "dark" ? "rgba(255, 255, 255, 0.07)" : `rgba(${theme.colors.shadowRgb}, 0.08)`}
+      1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  -webkit-mask: radial-gradient(ellipse 60% 55% at 50% 45%, #000 0%, transparent 75%);
+  mask: radial-gradient(ellipse 60% 55% at 50% 45%, #000 0%, transparent 75%);
+  pointer-events: none;
+`;
+
+export const CardSlot = styled.div`
+  position: relative;
+  width: 100%;
   max-width: 440px;
-  min-height: auto;
-  border-radius: 0.75rem;
-  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  gap: 1.5rem;
+  padding: 0.75rem 0.75rem 0.5rem;
+
+  @media (max-width: 480px) {
+    padding: 0.25rem 0 0;
+    gap: 1.25rem;
+  }
 `;
 
-export const LoginOrCreateContainer = styled.div`
-  display: flex;
-  width: 100%;
-  height: auto;
-  gap: 0.1rem;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-`;
-
-export const LoginOrCreate = styled.button<{ $isActive: boolean }>`
-  width: 50%;
-  height: 3rem;
-  background-color: ${({ $isActive, theme }) =>
-    $isActive ? theme.colors.primary : theme.colors.surface};
-  border: none;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  cursor: pointer;
+export const Brand = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: background 0.2s ease, color 0.2s ease;
+  justify-content: space-between;
+  gap: 1rem;
+`;
 
-  &:first-child {
-    border-radius: 0.75rem 0 0 0;
-    background: ${({ $isActive, theme }) =>
-      $isActive
-        ? "linear-gradient(90deg, #246245, #00af73)"
-        : theme.colors.surface};
+export const Heading = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  h1 {
+    font-size: clamp(1.5rem, 4vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.1;
   }
 
-  &:last-child {
-    border-radius: 0 0.75rem 0 0;
-    background: ${({ $isActive, theme }) =>
-      $isActive
-        ? "linear-gradient(90deg, #00af73, #246245)"
-        : theme.colors.surface};
+  p {
+    font-size: 0.9rem;
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
 `;
 
 export const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  align-items: center;
-  justify-content: flex-start;
+  gap: 1.1rem;
   width: 100%;
-  padding: 1.75rem 2rem;
-
-  @media (max-width: 480px) {
-    padding: 1.25rem 1.25rem;
-    gap: 1rem;
-  }
 `;
 
 export const ButtonWrapper = styled.div`
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 `;
 
-export const ResetPassword = styled.a`
-  width: 100%;
-  text-align: end;
-  margin-top: -0.25rem;
-  margin-bottom: 0.25rem;
-  font-size: 0.875rem;
-  cursor: pointer;
+export const ResetPassword = styled.button`
+  align-self: flex-end;
+  margin-top: -0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.textSecondary};
+  border-radius: 4px;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primaryText};
     text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primaryText};
+    outline-offset: 2px;
+  }
+`;
+
+/* glass strip with the same material as the Dock */
+export const Strip = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 6px 6px 6px 1rem;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.colors.glass};
+  box-shadow: ${({ theme }) =>
+    theme.mode === "dark"
+      ? `inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+         inset 0 1px 0 rgba(255, 255, 255, 0.07),
+         0 22px 44px -20px rgba(0, 0, 0, 0.8)`
+      : `inset 0 0 0 1px rgba(${theme.colors.shadowRgb}, 0.07),
+         inset 0 1px 0 rgba(255, 255, 255, 0.95),
+         0 22px 44px -22px rgba(${theme.colors.shadowRgb}, 0.3)`};
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+export const StripDot = styled.span`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.ringAccent};
+  box-shadow: 0 0 8px ${({ theme }) => theme.colors.ringAccent};
+`;
+
+export const ThemeButton = styled.button`
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.7rem;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  background: ${({ theme }) => theme.colors.tile};
+  box-shadow: ${({ theme }) =>
+    theme.mode === "dark"
+      ? `inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+         inset 0 1px 0 rgba(255, 255, 255, 0.12),
+         0 4px 10px -4px rgba(0, 0, 0, 0.7)`
+      : `inset 0 0 0 1px rgba(${theme.colors.shadowRgb}, 0.08),
+         inset 0 1px 0 #FFFFFF,
+         0 4px 10px -5px rgba(${theme.colors.shadowRgb}, 0.25)`};
+  transition: transform 0.16s ease;
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primaryText};
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 1.1rem;
+    height: 1.1rem;
   }
 `;

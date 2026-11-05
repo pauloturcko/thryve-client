@@ -10,28 +10,27 @@ export const Toolbar = styled.div`
 `;
 
 export const Filters = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(9rem, 12rem);
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+
+  > * {
+    flex: 0 1 12rem;
+  }
+
+  > [data-segment] {
+    flex: none;
+  }
 
   @media (max-width: 1280px) {
     width: 100%;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   }
 `;
 
 export const SummaryGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
   width: 100%;
   margin-top: 1.5rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 export const Section = styled.section`

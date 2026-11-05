@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
 import { CardInfo } from "@/components/Organisms/CardInfo";
 import { useModalContext } from "@/contexts/ModalContext";
@@ -29,15 +29,12 @@ export const CartoesPage = () => {
       title="Cartões"
       description="Configure seus cartões"
       button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
+        <SpecularButton
+          size="sm"
           onClick={handleOpenModal}
         >
-          <Plus size={22} /> Novo Cartão
-        </Button>
+          <Plus size={18} /> Novo Cartão
+        </SpecularButton>
       }
     >
       <S.CardsGrid>

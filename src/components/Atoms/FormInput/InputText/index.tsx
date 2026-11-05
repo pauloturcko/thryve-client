@@ -1,6 +1,7 @@
 import * as S from "./styles";
 import { Eye, EyeOff } from "lucide-react";
 import { InputHTMLAttributes, useState } from "react";
+import { useTheme } from "styled-components";
 
 type InputTextProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
@@ -14,6 +15,7 @@ export const InputText = ({
   error,
   ...props
 }: InputTextProps) => {
+  const theme = useTheme();
   const [isVisible, setIsVisible] = useState(false);
 
   return (
@@ -35,12 +37,12 @@ export const InputText = ({
           >
             {isVisible ? (
               <EyeOff
-                color="#5f6b73"
+                color={theme.colors.textMuted}
                 size={20}
               />
             ) : (
               <Eye
-                color="#5f6b73"
+                color={theme.colors.textMuted}
                 size={20}
               />
             )}

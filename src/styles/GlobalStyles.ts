@@ -16,11 +16,36 @@ export const GlobalStyles = createGlobalStyle`
     body {
         background: ${({ theme }) => theme.colors.background};
         color: ${({ theme }) => theme.colors.textPrimary};
-        font-family: sans-serif;
+        font-family: ${({ theme }) => theme.fonts.body};
+        font-feature-settings: "ss01";
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: transparent;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: ${({ theme }) => theme.fonts.display};
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+    }
+
+    ::selection {
+        background: ${({ theme }) => theme.colors.primary};
+        color: ${({ theme }) => theme.colors.onPrimary};
+    }
+
+    :focus-visible {
+        outline: 2px solid ${({ theme }) => theme.colors.primaryText};
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
     }
 
     button {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
 import { CategoryInfo } from "@/components/Organisms/CategoryInfo";
 import { CategoryType } from "@/constants/enums/category-type-enum";
@@ -35,15 +35,12 @@ export const CategoriasPage = () => {
       title="Categorias"
       description="Configure suas categorias"
       button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
+        <SpecularButton
+          size="sm"
           onClick={handleOpenModal}
         >
-          <Plus size={22} /> Nova Categoria
-        </Button>
+          <Plus size={18} /> Nova Categoria
+        </SpecularButton>
       }
     >
       {loadAllCategories.isLoading && <p>Carregando...</p>}

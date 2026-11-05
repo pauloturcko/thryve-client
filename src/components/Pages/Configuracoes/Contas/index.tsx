@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
 import { BankAccountInfo } from "@/components/Organisms/BankAccountInfo";
 import { useModalContext } from "@/contexts/ModalContext";
@@ -29,15 +29,12 @@ export const ContasPage = () => {
       title="Contas"
       description="Configure suas contas"
       button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
+        <SpecularButton
+          size="sm"
           onClick={handleOpenModal}
         >
-          <Plus size={22} /> Nova Conta
-        </Button>
+          <Plus size={18} /> Nova Conta
+        </SpecularButton>
       }
     >
       <S.AccountsGrid>

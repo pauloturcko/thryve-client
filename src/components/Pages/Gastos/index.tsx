@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { FormInput } from "@/components/Atoms/FormInput";
 import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
 import { TransactionInfo } from "@/components/Organisms/TransactionInfo";
@@ -119,6 +119,9 @@ export const GastosPage = () => {
   const paid = total - pending;
   const paidShare = total > 0 ? Math.round((paid / total) * 100) : 0;
 
+  const handleSegmentChange = (name: keyof FilterState) => (value: string) =>
+    setFilters((current) => ({ ...current, [name]: value }));
+
   const handleFilterChange =
     (name: keyof FilterState) => (event: ChangeEvent<HTMLSelectElement>) =>
       setFilters((current) => ({ ...current, [name]: event.target.value }));
@@ -168,15 +171,12 @@ export const GastosPage = () => {
       title="Gastos"
       description="Acompanhe seus gastos do mês"
       button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
+        <SpecularButton
+          size="sm"
           onClick={handleOpenModal}
         >
-          <Plus size={22} /> Novo Gasto
-        </Button>
+          <Plus size={18} /> Novo Gasto
+        </SpecularButton>
       }
     >
       <TransactionsBoard
@@ -184,17 +184,19 @@ export const GastosPage = () => {
         onMonthChange={setMonth}
         filters={
           <>
-            <FormInput.Select
+            <FormInput.Segment
               label="Status"
+              size="sm"
               options={[allOption, ...ExpenseStatusOptions]}
               value={filters.status}
-              onChange={handleFilterChange("status")}
+              onChange={handleSegmentChange("status")}
             />
-            <FormInput.Select
+            <FormInput.Segment
               label="Tipo"
+              size="sm"
               options={[allOption, ...ExpenseKindOptions]}
               value={filters.expenseKind}
-              onChange={handleFilterChange("expenseKind")}
+              onChange={handleSegmentChange("expenseKind")}
             />
             <FormInput.Select
               label="Categoria"

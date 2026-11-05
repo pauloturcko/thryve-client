@@ -99,8 +99,6 @@ export const NewExpense = ({
     required: requiredMessage,
     maxLength: { value: 150, message: "Máximo de 150 caracteres" },
   });
-  const tipo = register("tipo", { required: requiredMessage });
-  const status = register("status", { required: requiredMessage });
   const valor = register("valor", {
     required: requiredMessage,
     validate: (value) =>
@@ -273,19 +271,35 @@ export const NewExpense = ({
         />
       </S.Row>
       <S.Row>
-        <FormInput.Select
-          label="Tipo"
-          options={ExpenseKindOptions}
-          required
-          error={errors.tipo?.message}
-          {...tipo}
+        <Controller
+          name="tipo"
+          control={control}
+          rules={{ required: requiredMessage }}
+          render={({ field }) => (
+            <FormInput.Radio
+              label="Tipo"
+              options={ExpenseKindOptions}
+              required
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.tipo?.message}
+            />
+          )}
         />
-        <FormInput.Select
-          label="Status"
-          options={ExpenseStatusOptions}
-          required
-          error={errors.status?.message}
-          {...status}
+        <Controller
+          name="status"
+          control={control}
+          rules={{ required: requiredMessage }}
+          render={({ field }) => (
+            <FormInput.Radio
+              label="Status"
+              options={ExpenseStatusOptions}
+              required
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.status?.message}
+            />
+          )}
         />
       </S.Row>
       <S.Row>

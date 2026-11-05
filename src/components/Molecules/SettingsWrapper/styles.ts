@@ -9,14 +9,19 @@ export const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  gap: 0.2rem;
+
   p {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: ${({ theme }) => theme.fonts.display};
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
   }
 
   span {
-    font-size: 1rem;
-    color: ${({ theme }) => theme.colors.textMuted};
+    font-size: 0.95rem;
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
 `;
 

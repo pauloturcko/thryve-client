@@ -1,16 +1,7 @@
-import Image from "next/image";
+import { LogoMark } from "../LogoMark";
 
 interface IconOnlyProps {
   size?: number;
 }
 
-export const IconOnly = ({ size }: IconOnlyProps) => {
-  return (
-    <Image
-      src="/logo.svg"
-      alt="WhaiData logo"
-      width={size ?? 100}
-      height={size ?? 100}
-    />
-  );
-};
+export const IconOnly = ({ size }: IconOnlyProps) => <LogoMark size={size ?? 100} />;

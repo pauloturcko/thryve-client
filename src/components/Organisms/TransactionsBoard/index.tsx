@@ -1,6 +1,6 @@
 "use client";
 import { MonthNavigator } from "@/components/Molecules/MonthNavigator";
-import { SimpleCard } from "@/components/Organisms/SimpleCard";
+import { MagicBento } from "@/components/Organisms/MagicBento";
 import { Inbox } from "lucide-react";
 import { ReactNode } from "react";
 import * as S from "./styles";
@@ -46,16 +46,32 @@ export const TransactionsBoard = ({
         <S.Filters>{filters}</S.Filters>
       </S.Toolbar>
       <S.SummaryGrid>
-        {summary.map((item) => (
-          <SimpleCard
-            key={item.title}
-            title={item.title}
-            icon={item.icon}
-            value={item.value}
-            description={item.description}
-            valueColor={item.color}
-          />
-        ))}
+        <MagicBento
+          columns={3}
+          rowHeight={150}
+          radius={20}
+          intro={false}
+          items={summary.map((item) => ({
+            id: item.title,
+            content: (
+              <>
+                <MagicBento.Header>
+                  <span>{item.title}</span>
+                  <MagicBento.IconBadge>{item.icon}</MagicBento.IconBadge>
+                </MagicBento.Header>
+                <MagicBento.Footer>
+                  <MagicBento.Figure
+                    $size="lg"
+                    $color={item.color}
+                  >
+                    {item.value}
+                  </MagicBento.Figure>
+                  <MagicBento.Note>{item.description}</MagicBento.Note>
+                </MagicBento.Footer>
+              </>
+            ),
+          }))}
+        />
       </S.SummaryGrid>
       <S.Section>
         <S.SectionTitle>

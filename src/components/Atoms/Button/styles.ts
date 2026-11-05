@@ -47,13 +47,29 @@ export const StyledButton = styled.button<ButtonProps>`
   cursor: ${({ $disabled }) => ($disabled ? "not-allowed" : "pointer")};
   background: ${({ theme, $background, $faded }) =>
     $faded
-      ? "linear-gradient(90deg, #246245, #00af73)"
+      ? theme.colors.gradientPrimary
       : $background
         ? theme.colors[$background]
         : theme.colors.primary};
 
+  font-family: inherit;
+  transition:
+    transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.16s ease,
+    filter 0.16s ease;
+
   &:hover {
     background-color: ${({ theme, $hover }) =>
       $hover ? theme.colors[$hover] : null};
+    filter: ${({ $hover }) => ($hover ? "none" : "brightness(1.08)")};
+  }
+
+  &:active {
+    transform: ${({ $disabled }) => ($disabled ? "none" : "scale(0.97)")};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primaryText};
+    outline-offset: 2px;
   }
 `;
