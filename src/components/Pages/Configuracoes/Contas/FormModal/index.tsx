@@ -1,14 +1,18 @@
 import { Button } from "@/components/Atoms/Button";
 import { FormInput } from "@/components/Atoms/FormInput";
 import { FormWrapper } from "@/components/Atoms/FormWrapper";
-import { AccountTypeOptions } from "@/constants/enums/account-type-enum";
+import {
+  AccountType,
+  AccountTypeOptions,
+} from "@/constants/enums/account-type-enum";
 import { useBankAccount } from "@/hooks/useBankAccount";
 import { BankAccount } from "@/services/bank-account-service";
 import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";
 import { ChangeEvent } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as S from "./styles";
+import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
 
 type NewBankAccountFormData = {
   nome: string;
@@ -30,6 +34,7 @@ export const NewBankAccount = ({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<NewBankAccountFormData>({
@@ -39,15 +44,16 @@ export const NewBankAccount = ({
           tipo: bankAccount.accountType,
           saldo: formatCurrencyInput(Number(bankAccount.balance)),
         }
-      : undefined,
+      : { tipo: AccountType.ContaDigital },
   });
 
   const nome = register("nome", {
     required: requiredMessage,
     minLength: { value: 3, message: "Mínimo de 3 caracteres" },
   });
-  const tipo = register("tipo", { required: requiredMessage });
   const saldo = register("saldo");
+
+  const handleInvalid = useInvalidFormToast();
 
   const onSubmit: SubmitHandler<NewBankAccountFormData> = (data) => {
     const payload = {
@@ -68,7 +74,7 @@ export const NewBankAccount = ({
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper onSubmit={handleSubmit(onSubmit, handleInvalid)}>
       <FormInput.Text
         label="Nome"
         placeholder="Ex: Nubank"
@@ -76,12 +82,22 @@ export const NewBankAccount = ({
         error={errors.nome?.message}
         {...nome}
       />
-      <FormInput.Select
-        label="Tipo"
-        options={AccountTypeOptions}
-        required
-        error={errors.tipo?.message}
-        {...tipo}
+      <Controller
+        name="tipo"
+        control={control}
+        rules={{ required: requiredMessage }}
+        render={({ field }) => (
+          <FormInput.Select
+            label="Tipo"
+            options={AccountTypeOptions}
+            required
+            error={errors.tipo?.message}
+            ref={field.ref}
+            value={String(field.value ?? "")}
+            onChange={(value) => field.onChange(Number(value))}
+            onBlur={field.onBlur}
+          />
+        )}
       />
       <FormInput.Text
         label="Saldo"
@@ -95,25 +111,10 @@ export const NewBankAccount = ({
         }}
       />
       <S.Actions>
+        <Button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</Button>
         <Button
-          type="submit"
-          rounded="0.5rem"
-          height="2.5rem"
-          color="textPrimary"
-          width="100%"
-        >
-          {isEditMode ? "Atualizar" : "Salvar"}
-        </Button>
-        <Button
-          type="button"
+          variant="cancel"
           onClick={onClose}
-          rounded="0.5rem"
-          height="2.5rem"
-          border
-          hover="danger"
-          background="transparent"
-          color="textPrimary"
-          width="100%"
         >
           Cancelar
         </Button>

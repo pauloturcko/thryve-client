@@ -1,15 +1,13 @@
 import { styled } from "styled-components";
 
-export const CardWrapper = styled.div<{ $color?: string }>`
+export const CardWrapper = styled.div`
   width: 100%;
   max-width: 30rem;
   min-width: 0;
   min-height: 15rem;
   height: auto;
-  background: ${({ $color, theme }) =>
-    $color
-      ? $color
-      : `linear-gradient(150deg, ${theme.colors.background} 0%, ${theme.colors.background} 55%, ${theme.colors.primarySoft}) 100%`};
+  background: ${({ theme }) =>
+    `linear-gradient(150deg, ${theme.colors.background} 0%, ${theme.colors.background} 55%, ${theme.colors.primarySoft} 100%)`};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 1rem;
   opacity: 75%;
@@ -36,28 +34,6 @@ export const CardHeader = styled.div`
     @media (max-width: 1280px) {
       font-size: 1.25rem;
     }
-  }
-`;
-
-export const CardActions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-
-  svg {
-    cursor: pointer;
-    padding: 0.25rem;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.surfaceElevated};
-      border: 1px solid ${({ theme }) => theme.colors.border};
-      border-radius: 0.4rem;
-    }
-  }
-
-  .trashIcon:hover {
-    color: ${({ theme }) => theme.colors.danger};
   }
 `;
 

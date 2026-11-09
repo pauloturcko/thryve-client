@@ -7,8 +7,10 @@ export const InputWrapper = styled.div`
   gap: 0.5rem;
 `;
 
-export const Label = styled.span`
+export const Label = styled.span<{ $hasError?: boolean }>`
   font-size: 0.925rem;
+  color: ${({ theme, $hasError }) =>
+    $hasError ? theme.colors.danger : "inherit"};
 `;
 
 export const RequiredMark = styled.span`
@@ -59,10 +61,4 @@ export const IconOption = styled.button<{
     outline: 2px solid ${({ theme }) => theme.colors.primary};
     outline-offset: 2px;
   }
-`;
-
-export const ErrorMessage = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.danger};
-  margin-top: -4px;
 `;

@@ -1,6 +1,6 @@
+import { createElement } from "react";
 import { ConfirmDialog } from "@/components/Molecules/ConfirmDialog";
-import { BaseModalProps, useModalContext } from "@/contexts/ModalContext";
-import { ComponentType } from "react";
+import { useModalContext } from "@/contexts/ModalContext";
 
 type ConfirmOptions = {
   title?: string;
@@ -11,23 +11,19 @@ type ConfirmOptions = {
   danger?: boolean;
 };
 
-export function useConfirm() {
+export const useConfirm = () => {
   const { openModal } = useModalContext();
 
   const confirm = ({
     title = "Confirmar ação",
-    message,
-    onConfirm,
-    confirmLabel,
-    cancelLabel,
-    danger,
+    ...dialogProps
   }: ConfirmOptions) => {
     openModal({
-      component: ConfirmDialog as unknown as ComponentType<BaseModalProps>,
       title,
-      props: { message, onConfirm, confirmLabel, cancelLabel, danger },
+      render: (close) =>
+        createElement(ConfirmDialog, { ...dialogProps, onClose: close }),
     });
   };
 
   return { confirm };
-}
+};

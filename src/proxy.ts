@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { AUTH_COOKIE } from "@/constants/storage-keys";
 
 export function proxy(request: NextRequest) {
-  const token = request.cookies.get("whaidata.token")?.value;
+  const token = request.cookies.get(AUTH_COOKIE)?.value;
   const isLoginPage = request.nextUrl.pathname === "/login";
   const isHomePage = request.nextUrl.pathname === "/";
 

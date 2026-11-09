@@ -12,7 +12,7 @@ export const IncomeKindLabels: Record<IncomeKind, string> = {
 
 export const IncomeKindOptions = Object.entries(IncomeKind)
   .filter(([key]) => isNaN(Number(key)))
-  .map(([_, value]) => ({
+  .map(([, value]) => ({
     value,
     label: IncomeKindLabels[value as IncomeKind],
   }));

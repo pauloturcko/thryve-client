@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { FormInput } from "@/components/Atoms/FormInput";
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { PageWrapper } from "@/components/Molecules/PageWrapper";
 import { TransactionInfo } from "@/components/Organisms/TransactionInfo";
 import { TransactionsBoard } from "@/components/Organisms/TransactionsBoard";
 import { CategoryType } from "@/constants/enums/category-type-enum";
@@ -16,7 +16,7 @@ import {
   ExpenseStatusOptions,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
-import { BaseModalProps, useModalContext } from "@/contexts/ModalContext";
+import { useModalContext } from "@/contexts/ModalContext";
 import { useCategory } from "@/hooks/useCategory";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useExpense, useExpensesList } from "@/hooks/useExpense";
@@ -26,7 +26,7 @@ import { currentMonth, formatDateBR } from "@/utils/date";
 import { formatCurrencyBRL } from "@/utils/format";
 import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingDown } from "lucide-react";
-import { ChangeEvent, ComponentType, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "styled-components";
 import { NewExpense } from "./FormModal";
 
@@ -45,23 +45,6 @@ const initialFilters: FilterState = {
 };
 
 const allOption = { value: "", label: "Todos" };
-
-const ExpenseFormContent = ({ onClose }: { onClose: () => void }) => (
-  <NewExpense onClose={onClose} />
-);
-
-const EditExpenseFormContent = ({
-  onClose,
-  expense,
-}: {
-  onClose: () => void;
-  expense: Expense;
-}) => (
-  <NewExpense
-    onClose={onClose}
-    expense={expense}
-  />
-);
 
 const pluralize = (count: number, singular: string, plural: string) =>
   `${count} ${count === 1 ? singular : plural}`;
@@ -119,23 +102,25 @@ export const GastosPage = () => {
   const paid = total - pending;
   const paidShare = total > 0 ? Math.round((paid / total) * 100) : 0;
 
-  const handleFilterChange =
-    (name: keyof FilterState) => (event: ChangeEvent<HTMLSelectElement>) =>
-      setFilters((current) => ({ ...current, [name]: event.target.value }));
+  const handleFilterChange = (name: keyof FilterState) => (value: string) =>
+    setFilters((current) => ({ ...current, [name]: value }));
 
-  const handleOpenModal = () => {
+  const handleCreate = () => {
     openModal({
-      component: ExpenseFormContent,
       title: "Novo Gasto",
+      render: (close) => <NewExpense onClose={close} />,
     });
   };
 
   const handleEdit = (expense: Expense) => {
     openModal({
-      component:
-        EditExpenseFormContent as unknown as ComponentType<BaseModalProps>,
       title: "Editar Gasto",
-      props: { expense },
+      render: (close) => (
+        <NewExpense
+          onClose={close}
+          expense={expense}
+        />
+      ),
     });
   };
 
@@ -164,19 +149,16 @@ export const GastosPage = () => {
   };
 
   return (
-    <SettingsWrapper
+    <PageWrapper
       title="Gastos"
       description="Acompanhe seus gastos do mês"
-      button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
-          onClick={handleOpenModal}
+      action={
+        <SpecularButton
+          size="sm"
+          onClick={handleCreate}
         >
-          <Plus size={22} /> Novo Gasto
-        </Button>
+          <Plus size={18} /> Novo Gasto
+        </SpecularButton>
       }
     >
       <TransactionsBoard
@@ -184,13 +166,13 @@ export const GastosPage = () => {
         onMonthChange={setMonth}
         filters={
           <>
-            <FormInput.Select
+            <FormInput.Segment
               label="Status"
               options={[allOption, ...ExpenseStatusOptions]}
               value={filters.status}
               onChange={handleFilterChange("status")}
             />
-            <FormInput.Select
+            <FormInput.Segment
               label="Tipo"
               options={[allOption, ...ExpenseKindOptions]}
               value={filters.expenseKind}
@@ -198,12 +180,14 @@ export const GastosPage = () => {
             />
             <FormInput.Select
               label="Categoria"
+              compact
               options={categoryOptions}
               value={filters.categoryId}
               onChange={handleFilterChange("categoryId")}
             />
             <FormInput.Select
               label="Pagamento"
+              compact
               options={paymentMethodOptions}
               value={filters.paymentMethodId}
               onChange={handleFilterChange("paymentMethodId")}
@@ -288,6 +272,6 @@ export const GastosPage = () => {
           );
         })}
       </TransactionsBoard>
-    </SettingsWrapper>
+    </PageWrapper>
   );
 };

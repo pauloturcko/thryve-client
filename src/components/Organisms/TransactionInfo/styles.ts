@@ -111,30 +111,4 @@ export const Amount = styled.span<{ $variant: "income" | "expense" }>`
 
 export const Actions = styled.div`
   grid-area: actions;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  button {
-    display: flex;
-    border: none;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-  }
-
-  svg {
-    padding: 0.25rem;
-    border: 1px solid transparent;
-    border-radius: 0.4rem;
-  }
-
-  button:hover svg {
-    background-color: ${({ theme }) => theme.colors.surfaceElevated};
-    border-color: ${({ theme }) => theme.colors.border};
-  }
-
-  .trashIcon:hover {
-    color: ${({ theme }) => theme.colors.danger};
-  }
 `;

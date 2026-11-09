@@ -40,28 +40,6 @@ export const AccountHeader = styled.div`
   }
 `;
 
-export const AccountActions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-
-  svg {
-    cursor: pointer;
-    padding: 0.25rem;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.surfaceElevated};
-      border: 1px solid ${({ theme }) => theme.colors.border};
-      border-radius: 0.4rem;
-    }
-  }
-
-  .trashIcon:hover {
-    color: ${({ theme }) => theme.colors.danger};
-  }
-`;
-
 export const AccountInfoWrapper = styled.div`
   width: 100%;
   display: flex;

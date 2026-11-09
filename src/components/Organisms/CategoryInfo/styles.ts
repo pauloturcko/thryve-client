@@ -34,24 +34,3 @@ export const Name = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
-
-export const CategoryActions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  svg {
-    cursor: pointer;
-    padding: 0.25rem;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.surfaceElevated};
-      border: 1px solid ${({ theme }) => theme.colors.border};
-      border-radius: 0.4rem;
-    }
-  }
-
-  .trashIcon:hover {
-    color: ${({ theme }) => theme.colors.danger};
-  }
-`;

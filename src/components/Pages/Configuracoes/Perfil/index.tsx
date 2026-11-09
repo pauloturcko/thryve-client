@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar } from "@/components/Atoms/Avatar";
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { SettingsPanel } from "@/components/Molecules/SettingsPanel";
 import { Currency, CurrencyLabels } from "@/constants/enums/currency-enum";
 import { Language, LanguageLabels } from "@/constants/enums/language-enum";
 import {
@@ -18,21 +18,43 @@ const notDefined = "Não definido";
 export const PerfilPage = () => {
   const { user, systemPreferences, isLoading } = useUser();
 
+  const preferences = [
+    {
+      label: "Tema",
+      value: systemPreferences
+        ? SystemThemeLabels[systemPreferences.theme as SystemTheme]
+        : notDefined,
+    },
+    {
+      label: "Idioma",
+      value: systemPreferences
+        ? LanguageLabels[systemPreferences.language as Language]
+        : notDefined,
+    },
+    {
+      label: "Moeda",
+      value: systemPreferences
+        ? CurrencyLabels[systemPreferences.currency as Currency]
+        : notDefined,
+    },
+  ];
+
   return (
-    <SettingsWrapper
+    <SettingsPanel
       title="Perfil"
       description="Suas informações de perfil"
     >
-      {isLoading && <p>Carregando...</p>}
+      {isLoading && <S.Loading>Carregando...</S.Loading>}
       {user && (
-        <S.ProfileContent>
-          <S.ProfileCard>
+        <>
+          <S.Identity>
             <Avatar
               name={user.name}
               src={user.profilePicture}
+              size="5.5rem"
             />
-            <S.ProfileInfo>
-              <p>{user.name}</p>
+            <S.Name>{user.name}</S.Name>
+            <S.Meta>
               <span>
                 <Mail size={16} />
                 {user.email}
@@ -41,38 +63,22 @@ export const PerfilPage = () => {
                 <CalendarDays size={16} />
                 Membro desde {formatMonthYear(user.createdAt)}
               </span>
-            </S.ProfileInfo>
-          </S.ProfileCard>
+            </S.Meta>
+          </S.Identity>
 
-          <S.SectionCard>
+          <S.Section>
             <S.SectionTitle>Preferências do sistema</S.SectionTitle>
-            <S.InfoRow>
-              <p>Tema</p>
-              <span>
-                {systemPreferences
-                  ? SystemThemeLabels[systemPreferences.theme as SystemTheme]
-                  : notDefined}
-              </span>
-            </S.InfoRow>
-            <S.InfoRow>
-              <p>Idioma</p>
-              <span>
-                {systemPreferences
-                  ? LanguageLabels[systemPreferences.language as Language]
-                  : notDefined}
-              </span>
-            </S.InfoRow>
-            <S.InfoRow>
-              <p>Moeda</p>
-              <span>
-                {systemPreferences
-                  ? CurrencyLabels[systemPreferences.currency as Currency]
-                  : notDefined}
-              </span>
-            </S.InfoRow>
-          </S.SectionCard>
-        </S.ProfileContent>
+            <S.InfoList>
+              {preferences.map((preference) => (
+                <S.InfoRow key={preference.label}>
+                  <dt>{preference.label}</dt>
+                  <dd>{preference.value}</dd>
+                </S.InfoRow>
+              ))}
+            </S.InfoList>
+          </S.Section>
+        </>
       )}
-    </SettingsWrapper>
+    </SettingsPanel>
   );
 };

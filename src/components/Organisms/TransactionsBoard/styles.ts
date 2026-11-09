@@ -4,34 +4,42 @@ export const Toolbar = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
+
+  @media (max-width: 1280px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Filters = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(9rem, 12rem);
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
   gap: 0.75rem;
+
+  > * {
+    flex: 0 1 11rem;
+    min-width: 8.5rem;
+  }
+
+  > [data-segment] {
+    flex: none;
+    min-width: 0;
+  }
 
   @media (max-width: 1280px) {
     width: 100%;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 `;
 
 export const SummaryGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
   width: 100%;
   margin-top: 1.5rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 export const Section = styled.section`

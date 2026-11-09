@@ -1,18 +1,16 @@
 "use client";
 
-import { Button } from "@/components/Atoms/Button";
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { Plus } from "lucide-react";
+import { SpecularButton } from "@/components/Atoms/SpecularButton";
+import { SettingsPanel } from "@/components/Molecules/SettingsPanel";
 import { CategoryInfo } from "@/components/Organisms/CategoryInfo";
 import { CategoryType } from "@/constants/enums/category-type-enum";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useCategory } from "@/hooks/useCategory";
-import { Plus } from "lucide-react";
+import { useConfirm } from "@/hooks/useConfirm";
+import { Category } from "@/services/category-service";
 import { NewCategory } from "./FormModal";
 import * as S from "./styles";
-
-const CategoryFormContent = ({ onClose }: { onClose: () => void }) => (
-  <NewCategory onClose={onClose} />
-);
 
 const categorySections = [
   { type: CategoryType.Despesa, title: "Despesas" },
@@ -21,34 +19,54 @@ const categorySections = [
 
 export const CategoriasPage = () => {
   const { openModal } = useModalContext();
-  const { loadAllCategories } = useCategory();
+  const { confirm } = useConfirm();
+  const { loadAllCategories, deleteCategory } = useCategory();
 
-  const handleOpenModal = () => {
+  const handleCreate = () => {
     openModal({
-      component: CategoryFormContent,
       title: "Nova Categoria",
+      render: (close) => <NewCategory onClose={close} />,
+    });
+  };
+
+  const handleEdit = (category: Category) => {
+    openModal({
+      title: "Editar Categoria",
+      render: (close) => (
+        <NewCategory
+          onClose={close}
+          category={category}
+        />
+      ),
+    });
+  };
+
+  const handleDelete = (category: Category) => {
+    confirm({
+      title: "Excluir categoria",
+      message: `Tem certeza que deseja excluir a categoria "${category.name}"? Essa ação não pode ser desfeita.`,
+      confirmLabel: "Excluir",
+      danger: true,
+      onConfirm: () => deleteCategory.mutate({ id: category.id }),
     });
   };
 
   return (
-    <SettingsWrapper
+    <SettingsPanel
       title="Categorias"
       description="Configure suas categorias"
-      button={
-        <Button
-          border
-          rounded="0.5rem"
-          height="2.5rem"
-          color="background"
-          onClick={handleOpenModal}
+      action={
+        <SpecularButton
+          size="sm"
+          onClick={handleCreate}
         >
-          <Plus size={22} /> Nova Categoria
-        </Button>
+          <Plus size={18} /> Nova Categoria
+        </SpecularButton>
       }
     >
-      {loadAllCategories.isLoading && <p>Carregando...</p>}
+      {loadAllCategories.isLoading && <S.Message>Carregando...</S.Message>}
       {loadAllCategories.data?.length === 0 && (
-        <p>Nenhuma categoria cadastrada.</p>
+        <S.Message>Nenhuma categoria cadastrada.</S.Message>
       )}
       {categorySections.map(({ type, title }) => {
         const categories = loadAllCategories.data?.filter(
@@ -62,17 +80,19 @@ export const CategoriasPage = () => {
             <S.SectionTitle>
               {title} <span>{categories.length}</span>
             </S.SectionTitle>
-            <S.CategoriesGrid>
+            <S.CategoriesList>
               {categories.map((category) => (
                 <CategoryInfo
                   key={category.id}
                   category={category}
+                  onEdit={() => handleEdit(category)}
+                  onDelete={() => handleDelete(category)}
                 />
               ))}
-            </S.CategoriesGrid>
+            </S.CategoriesList>
           </S.Section>
         );
       })}
-    </SettingsWrapper>
+    </SettingsPanel>
   );
 };

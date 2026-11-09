@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const Section = styled.section`
   width: 100%;
-  margin-top: 1.5rem;
 `;
 
 export const SectionTitle = styled.h3`
@@ -22,17 +21,13 @@ export const SectionTitle = styled.h3`
   }
 `;
 
-export const CategoriesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+export const CategoriesList = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   width: 100%;
+`;
 
-  @media (max-width: 1280px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+export const Message = styled.p`
+  color: ${({ theme }) => theme.colors.textSecondary};
 `;

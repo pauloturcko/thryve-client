@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { Panel } from "@/components/Atoms/Panel";
 
 export const Overlay = styled.div`
   position: fixed;
@@ -13,37 +14,7 @@ export const Overlay = styled.div`
   padding: 1rem;
 `;
 
-export const Container = styled.div`
-  width: 90%;
-  max-width: 45rem;
-  min-height: auto;
+export const ModalPanel = styled(Panel)`
   max-height: 90vh;
   overflow-y: auto;
-  background-color: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  gap: 1rem;
-`;
-
-export const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-
-  button {
-    padding: 0.5rem;
-    color: ${({ theme }) => theme.colors.textSecondary};
-
-    &:hover {
-      color: ${({ theme }) => theme.colors.textPrimary};
-    }
-  }
 `;

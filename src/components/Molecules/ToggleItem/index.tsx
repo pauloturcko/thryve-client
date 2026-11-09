@@ -6,7 +6,6 @@ type ToggleItemProps = {
   description?: string;
   checked: boolean;
   onChange: () => void;
-  disabled?: boolean;
 };
 
 export const ToggleItem = ({
@@ -14,7 +13,6 @@ export const ToggleItem = ({
   description,
   checked,
   onChange,
-  disabled,
 }: ToggleItemProps) => {
   return (
     <S.ItemWrapper>
@@ -25,7 +23,6 @@ export const ToggleItem = ({
       <Toggle
         checked={checked}
         onChange={onChange}
-        disabled={disabled}
         label={title}
       />
     </S.ItemWrapper>

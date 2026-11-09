@@ -1,26 +1,30 @@
 import styled, { keyframes } from "styled-components";
 
-const drawLoop = keyframes`
-    0%   { stroke-dashoffset: 1; }
-    50%  { stroke-dashoffset: 0; }
-    100% { stroke-dashoffset: 1; }
+const spin = keyframes`
+  to { transform: rotate(360deg); }
 `;
 
 export const Overlay = styled.div`
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(2px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(
+    ${({ theme }) => theme.colors.shadowRgb},
+    ${({ theme }) => (theme.mode === "dark" ? 0.45 : 0.2)}
+  );
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: progress;
 `;
 
-export const LogoWrapper = styled.div`
-    .loader-path {
-        stroke-dasharray: 1;
-        stroke-dashoffset: 1;
-        animation: ${drawLoop} 2.4s ease-in-out infinite;
-    }
+export const Spinner = styled.div`
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 3px solid ${({ theme }) => theme.colors.border};
+  border-top-color: ${({ theme }) => theme.colors.textPrimary};
+  animation: ${spin} 0.7s linear infinite;
 `;

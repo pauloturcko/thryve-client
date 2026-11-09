@@ -16,12 +16,12 @@ export const BaseModal = ({
 }: BaseModalPops) => {
   return (
     <S.Overlay onClick={onClose}>
-      <S.Container onClick={(event) => event.stopPropagation()}>
-        <S.Header>
-          <h3>{title}</h3>
-        </S.Header>
+      <S.ModalPanel
+        title={title}
+        onClick={(event) => event.stopPropagation()}
+      >
         {children}
-      </S.Container>
+      </S.ModalPanel>
     </S.Overlay>
   );
 };

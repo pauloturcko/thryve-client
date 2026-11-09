@@ -1,13 +1,24 @@
-import { darkTheme } from "./dark";
-import { lightTheme } from "./light";
+import { darkColors, lightColors } from "./colors";
 
-export const theme = {
-  dark: darkTheme,
-  light: lightTheme,
-  weight: {
-    bold: 700,
-    semiBold: 600,
-  }
+export type ThemeMode = "dark" | "light";
+
+const fonts = {
+  body: "var(--font-body), system-ui, -apple-system, 'Segoe UI', sans-serif",
+  display: "var(--font-display), var(--font-body), system-ui, sans-serif",
 };
 
-export type ThemeType = typeof darkTheme;
+const radii = {
+  sm: "0.5rem",
+  md: "0.875rem",
+  lg: "1.25rem",
+  pill: "999px",
+};
+
+export const buildTheme = (mode: ThemeMode) => ({
+  mode,
+  colors: mode === "dark" ? darkColors : lightColors,
+  fonts,
+  radii,
+});
+
+export type ThemeType = ReturnType<typeof buildTheme>;

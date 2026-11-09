@@ -1,4 +1,3 @@
-import { useLoaderContext } from "@/contexts/LoaderContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import {
   createCategoryService,
@@ -12,15 +11,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const CATEGORIES_QUERY_KEY = ["Settings-LoadAllCategories"];
 
 export function useCategory() {
-  const { dispatchLoader, hideLoader } = useLoaderContext();
   const { dispatchToast } = useToastContext();
   const queryClient = useQueryClient();
 
   const createCategory = useMutation({
     mutationFn: createCategoryService.createCategory,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Categoria salva",
@@ -28,7 +24,6 @@ export function useCategory() {
       queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao cadastrar categoria"),
@@ -38,9 +33,7 @@ export function useCategory() {
 
   const deleteCategory = useMutation({
     mutationFn: deleteCategoryService.deleteCategory,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Categoria excluída",
@@ -48,7 +41,6 @@ export function useCategory() {
       queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao excluir categoria"),
@@ -58,9 +50,7 @@ export function useCategory() {
 
   const updateCategory = useMutation({
     mutationFn: updateCategoryService.updateCategory,
-    onMutate: () => dispatchLoader(),
     onSuccess: () => {
-      hideLoader();
       dispatchToast({
         type: "success",
         message: "Categoria atualizada",
@@ -68,7 +58,6 @@ export function useCategory() {
       queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     },
     onError: (error) => {
-      hideLoader();
       dispatchToast({
         type: "error",
         message: getErrorMessage(error, "Erro ao atualizar categoria"),

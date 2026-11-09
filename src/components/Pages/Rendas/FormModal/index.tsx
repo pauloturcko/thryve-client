@@ -28,6 +28,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import * as S from "./styles";
+import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
 
 type NewIncomeFormData = {
   tipo: string;
@@ -120,8 +121,6 @@ export const NewIncome = ({
         },
   });
 
-  const tipo = register("tipo", { required: requiredMessage });
-  const status = register("status", { required: requiredMessage });
   const valor = register("valor", {
     required: requiredMessage,
     validate: (value) =>
@@ -159,6 +158,8 @@ export const NewIncome = ({
   const missingCategories =
     loadAllCategories.isSuccess && incomeCategories.length === 0;
 
+  const handleInvalid = useInvalidFormToast();
+
   const onSubmit: SubmitHandler<NewIncomeFormData> = (formData) => {
     const payload = {
       incomeKind: Number(formData.tipo),
@@ -186,7 +187,7 @@ export const NewIncome = ({
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper onSubmit={handleSubmit(onSubmit, handleInvalid)}>
       {missingAccounts && (
         <S.Notice>
           Cadastre uma conta em Configurações › Contas antes de lançar receitas.
@@ -198,19 +199,33 @@ export const NewIncome = ({
         </S.Notice>
       )}
       <S.Row>
-        <FormInput.Select
-          label="Tipo"
-          options={IncomeKindOptions}
-          required
-          error={errors.tipo?.message}
-          {...tipo}
+        <Controller
+          name="tipo"
+          control={control}
+          rules={{ required: requiredMessage }}
+          render={({ field }) => (
+            <FormInput.Select
+              label="Tipo"
+              options={IncomeKindOptions}
+              required
+              error={errors.tipo?.message}
+              {...field}
+            />
+          )}
         />
-        <FormInput.Select
-          label="Status"
-          options={IncomeStatusOptions}
-          required
-          error={errors.status?.message}
-          {...status}
+        <Controller
+          name="status"
+          control={control}
+          rules={{ required: requiredMessage }}
+          render={({ field }) => (
+            <FormInput.Select
+              label="Status"
+              options={IncomeStatusOptions}
+              required
+              error={errors.status?.message}
+              {...field}
+            />
+          )}
         />
       </S.Row>
       <S.Row>
@@ -278,25 +293,10 @@ export const NewIncome = ({
         {...observacoes}
       />
       <S.Actions>
+        <Button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</Button>
         <Button
-          type="submit"
-          rounded="0.5rem"
-          height="2.5rem"
-          color="textPrimary"
-          width="100%"
-        >
-          {isEditMode ? "Atualizar" : "Salvar"}
-        </Button>
-        <Button
-          type="button"
+          variant="cancel"
           onClick={onClose}
-          rounded="0.5rem"
-          height="2.5rem"
-          border
-          hover="danger"
-          background="transparent"
-          color="textPrimary"
-          width="100%"
         >
           Cancelar
         </Button>

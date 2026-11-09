@@ -1,14 +1,14 @@
 "use client";
 
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { PageWrapper } from "@/components/Molecules/PageWrapper";
 
 export const InvestimentosPage = () => {
   return (
-    <SettingsWrapper
+    <PageWrapper
       title="Investimentos"
       description="Acompanhe seus investimentos"
     >
       <p>Em breve.</p>
-    </SettingsWrapper>
+    </PageWrapper>
   );
 };

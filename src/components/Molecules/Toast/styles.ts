@@ -18,7 +18,8 @@ export const Wrapper = styled.div<{ $type: ToastType; $leaving: boolean }>`
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  animation: ${({ $leaving }) => $leaving ? slideOut : slideIn} 0.3s ease forwards;
+  animation: ${({ $leaving }) => ($leaving ? slideOut : slideIn)} 0.3s ease
+    forwards;
 
   display: flex;
   align-items: center;
@@ -34,7 +35,8 @@ export const Wrapper = styled.div<{ $type: ToastType; $leaving: boolean }>`
         : $type === "warning"
           ? theme.colors.warning
           : theme.colors.info};
-  color: ${({ theme }) => theme.colors.textPrimary};
-  font-size: 1rem;
-  font-weight: 500;
+  color: ${({ theme, $type }) =>
+    $type === "error" ? theme.colors.onDanger : theme.colors.textPrimary};
+  font-size: 0.95rem;
+  font-weight: 600;
 `;

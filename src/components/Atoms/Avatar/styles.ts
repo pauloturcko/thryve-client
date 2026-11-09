@@ -14,7 +14,7 @@ export const AvatarWrapper = styled.div<{
   border: 1px solid ${({ theme }) => theme.colors.border};
   background: ${({ $src, theme }) =>
     $src ? `url(${$src}) center / cover no-repeat` : theme.colors.primarySoft};
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primaryText};
   font-size: calc(${({ $size }) => $size} * 0.36);
   font-weight: 700;
   user-select: none;

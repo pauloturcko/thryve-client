@@ -1,6 +1,6 @@
 "use client";
 
-import { SettingsWrapper } from "@/components/Molecules/SettingsWrapper";
+import { SettingsPanel } from "@/components/Molecules/SettingsPanel";
 import { ToggleItem } from "@/components/Molecules/ToggleItem";
 import { usePaymentPreference } from "@/hooks/usePaymentPreference";
 import * as S from "./styles";
@@ -10,14 +10,16 @@ export const FormasPagamentoPage = () => {
     usePaymentPreference();
 
   return (
-    <SettingsWrapper
+    <SettingsPanel
       title="Formas de Pagamento"
       description="Escolha quais formas de pagamento aparecem nos seus lançamentos"
     >
       <S.PreferencesList>
-        {loadPaymentPreferences.isLoading && <p>Carregando...</p>}
+        {loadPaymentPreferences.isLoading && (
+          <S.Message>Carregando...</S.Message>
+        )}
         {loadPaymentPreferences.data?.length === 0 && (
-          <p>Nenhuma forma de pagamento encontrada.</p>
+          <S.Message>Nenhuma forma de pagamento encontrada.</S.Message>
         )}
         {loadPaymentPreferences.data?.map((preference) => (
           <ToggleItem
@@ -35,6 +37,6 @@ export const FormasPagamentoPage = () => {
           />
         ))}
       </S.PreferencesList>
-    </SettingsWrapper>
+    </SettingsPanel>
   );
 };

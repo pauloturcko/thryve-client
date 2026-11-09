@@ -16,7 +16,7 @@ export const AccountTypeLabels: Record<AccountType, string> = {
 
 export const AccountTypeOptions = Object.entries(AccountType)
   .filter(([key]) => isNaN(Number(key)))
-  .map(([_, value]) => ({
+  .map(([, value]) => ({
     value,
     label: AccountTypeLabels[value as AccountType],
   }));
