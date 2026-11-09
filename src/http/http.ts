@@ -4,7 +4,7 @@ import { AUTH_COOKIE } from "@/constants/storage-keys";
 
 export const http = axios.create({
   baseURL:
-    process.env.NEXT_PUBLIC_API_URL || "https://apiwhaidata.pauloturcko.dev",
+    process.env.NEXT_PUBLIC_API_URL || "https://apithryve.pauloturcko.dev",
 });
 
 http.interceptors.request.use((config) => {
