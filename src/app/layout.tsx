@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Thryve",
   description: "Thryve Finance Dashboard",
   icons: {
-    icon: "/thryve-logo.svg",
+    icon: { url: "/favicon.svg", type: "image/svg+xml" },
   },
 };
 
