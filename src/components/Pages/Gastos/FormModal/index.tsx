@@ -10,6 +10,12 @@ import {
   ExpenseStatusOptions,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
+import { CardType } from "@/constants/enums/card-type-enum";
+import { PaymentMethod } from "@/constants/enums/payment-method-enum";
+import {
+  PurchaseMode,
+  PurchaseModeOptions,
+} from "@/constants/enums/purchase-mode-enum";
 import { useBankAccount } from "@/hooks/useBankAccount";
 import { useCard } from "@/hooks/useCard";
 import { useCategory } from "@/hooks/useCategory";
@@ -29,6 +35,7 @@ type NewExpenseFormData = {
   descricao: string;
   tipo: string;
   valor: string;
+  compra?: string;
   parcelas: string;
   data: string;
   vencimento: string;
@@ -68,7 +75,8 @@ export const NewExpense = ({
           descricao: expense.description,
           tipo: String(expense.expenseKind),
           valor: formatCurrencyInput(Number(expense.amount)),
-          parcelas: "1",
+          compra: String(PurchaseMode.AVista),
+          parcelas: "2",
           data: expense.date,
           vencimento: expense.dueDate ?? "",
           status: String(expense.status),
@@ -84,7 +92,8 @@ export const NewExpense = ({
           descricao: "",
           tipo: String(ExpenseKind.Variavel),
           valor: "",
-          parcelas: "1",
+          compra: String(PurchaseMode.AVista),
+          parcelas: "2",
           data: todayISO(),
           vencimento: "",
           status: String(TransactionStatus.Pendente),
@@ -106,8 +115,13 @@ export const NewExpense = ({
       parseCurrencyInput(value) > 0 || "Informe um valor maior que zero",
   });
   const parcelas = register("parcelas", {
-    min: { value: 1, message: "Mínimo de 1 parcela" },
-    max: { value: 48, message: "Máximo de 48 parcelas" },
+    validate: (value, formValues) => {
+      if (Number(formValues.compra) !== PurchaseMode.Parcelado) return true;
+      const total = Number(value);
+      if (!Number.isInteger(total) || total < 2) return "Mínimo de 2 parcelas";
+      if (total > 48) return "Máximo de 48 parcelas";
+      return true;
+    },
   });
   const data = register("data", { required: requiredMessage });
   const vencimento = register("vencimento");
@@ -116,7 +130,8 @@ export const NewExpense = ({
   });
 
   const selectedPaymentMethodId = useWatch({ control, name: "formaPagamento" });
-  const installments = Number(useWatch({ control, name: "parcelas" })) || 1;
+  const purchaseMode = useWatch({ control, name: "compra" });
+  const installments = Number(useWatch({ control, name: "parcelas" })) || 0;
   const amount = parseCurrencyInput(useWatch({ control, name: "valor" }));
 
   const preferences = loadPaymentPreferences.data ?? [];
@@ -124,7 +139,12 @@ export const NewExpense = ({
     (preference) =>
       preference.paymentMethodId === Number(selectedPaymentMethodId)
   );
+  const selectedMethod = selectedPreference?.paymentMethodId;
   const requiresCard = !!selectedPreference?.paymentMethod.requiresCard;
+  const isCreditCard = selectedMethod === PaymentMethod.CartaoCredito;
+  const showPurchaseMode = isCreditCard && !isEditMode;
+  const isInstallment =
+    showPurchaseMode && Number(purchaseMode) === PurchaseMode.Parcelado;
 
   const expenseCategories = (loadAllCategories.data ?? []).filter(
     (category) => category.type === CategoryType.Despesa
@@ -156,12 +176,23 @@ export const NewExpense = ({
         label: preference.paymentMethod.name,
       })),
   ];
+  const incompatibleCardType =
+    selectedMethod === PaymentMethod.CartaoCredito
+      ? CardType.Debito
+      : selectedMethod === PaymentMethod.CartaoDebito
+        ? CardType.Credito
+        : null;
   const cardOptions = [
     placeholderOption,
-    ...(loadAllCards.data ?? []).map((card) => ({
-      value: card.id,
-      label: `${card.name} •••• ${card.lastFourDigits}`,
-    })),
+    ...(loadAllCards.data ?? [])
+      .filter(
+        (card) =>
+          card.cardType !== incompatibleCardType || card.id === expense?.cardId
+      )
+      .map((card) => ({
+        value: card.id,
+        label: `${card.name} •••• ${card.lastFourDigits}`,
+      })),
   ];
 
   const missingAccounts = loadAllBankAccounts.data?.length === 0;
@@ -169,6 +200,39 @@ export const NewExpense = ({
     loadAllCategories.isSuccess && expenseCategories.length === 0;
 
   const handleInvalid = useInvalidFormToast();
+
+  const cardSelect = (
+    <Controller
+      name="cartao"
+      control={control}
+      shouldUnregister
+      rules={{ required: requiredMessage }}
+      render={({ field }) => (
+        <FormInput.Select
+          label="Cartão"
+          options={cardOptions}
+          required
+          error={errors.cartao?.message}
+          {...field}
+        />
+      )}
+    />
+  );
+  const purchaseModeSelect = (
+    <Controller
+      name="compra"
+      control={control}
+      shouldUnregister
+      render={({ field }) => (
+        <FormInput.Select
+          label="Compra"
+          options={PurchaseModeOptions}
+          {...field}
+          value={field.value ?? String(PurchaseMode.AVista)}
+        />
+      )}
+    />
+  );
 
   const onSubmit: SubmitHandler<NewExpenseFormData> = (formData) => {
     const payload = {
@@ -193,11 +257,10 @@ export const NewExpense = ({
       return;
     }
 
-    const totalInstallments = Number(formData.parcelas) || 1;
     createExpense.mutate(
       {
         ...payload,
-        installments: totalInstallments > 1 ? totalInstallments : undefined,
+        installments: isInstallment ? Number(formData.parcelas) : undefined,
       },
       { onSuccess: () => onClose() }
     );
@@ -222,36 +285,18 @@ export const NewExpense = ({
         error={errors.descricao?.message}
         {...descricao}
       />
-      <S.Row>
-        <FormInput.Text
-          label={isEditMode ? "Valor" : "Valor total"}
-          placeholder="Ex: 1.200,00"
-          inputMode="numeric"
-          required
-          error={errors.valor?.message}
-          {...valor}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            event.target.value = maskCurrency(event.target.value);
-            valor.onChange(event);
-          }}
-        />
-        {!isEditMode && (
-          <FormInput.Text
-            label="Parcelas"
-            type="number"
-            min={1}
-            max={48}
-            error={errors.parcelas?.message}
-            {...parcelas}
-          />
-        )}
-      </S.Row>
-      {!isEditMode && installments > 1 && amount > 0 && (
-        <S.Hint>
-          {installments}x de {formatCurrencyBRL(amount / installments)}, uma por
-          mês a partir da data do gasto.
-        </S.Hint>
-      )}
+      <FormInput.Text
+        label={isInstallment ? "Valor total" : "Valor"}
+        placeholder="Ex: 1.200,00"
+        inputMode="numeric"
+        required
+        error={errors.valor?.message}
+        {...valor}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          event.target.value = maskCurrency(event.target.value);
+          valor.onChange(event);
+        }}
+      />
       {isEditMode && expense?.installmentTotal && (
         <S.Hint>
           Parcela {expense.installmentNumber} de {expense.installmentTotal}: as
@@ -348,24 +393,30 @@ export const NewExpense = ({
             />
           )}
         />
-        {requiresCard && (
-          <Controller
-            name="cartao"
-            control={control}
-            shouldUnregister
-            rules={{ required: requiredMessage }}
-            render={({ field }) => (
-              <FormInput.Select
-                label="Cartão"
-                options={cardOptions}
-                required
-                error={errors.cartao?.message}
-                {...field}
-              />
-            )}
-          />
-        )}
+        {showPurchaseMode ? purchaseModeSelect : requiresCard && cardSelect}
       </S.Row>
+      {showPurchaseMode && (
+        <S.Row>
+          {cardSelect}
+          {isInstallment && (
+            <FormInput.Text
+              label="Parcelas"
+              type="number"
+              min={2}
+              max={48}
+              required
+              error={errors.parcelas?.message}
+              {...parcelas}
+            />
+          )}
+        </S.Row>
+      )}
+      {isInstallment && installments >= 2 && amount > 0 && (
+        <S.Hint>
+          {installments}x de {formatCurrencyBRL(amount / installments)}, uma por
+          mês a partir da data do gasto.
+        </S.Hint>
+      )}
       <FormInput.Text
         label="Observações"
         placeholder="Opcional"

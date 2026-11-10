@@ -8,7 +8,7 @@ import { Card } from "@/services/card-service";
 import { formatCurrencyInput, formatExpiryDate } from "@/utils/format";
 import { maskCurrency, maskDigitsOnly, maskExpiryDate } from "@/utils/masks";
 import { ChangeEvent } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import * as S from "./styles";
 import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
 
@@ -46,17 +46,24 @@ export const NewCard = ({
           bandeira: card.cardFlag,
           tipo: card.cardType,
           validade: formatExpiryDate(card.expiresIn),
-          limite: formatCurrencyInput(Number(card.limit)),
+          limite:
+            card.limit !== null ? formatCurrencyInput(Number(card.limit)) : "",
         }
-      : { bandeira: CardFlag.Visa, tipo: CardType.Credito },
+      : { bandeira: CardFlag.Visa, tipo: CardType.Credito, limite: "" },
   });
+
+  const selectedCardType = Number(useWatch({ control, name: "tipo" }));
+  const hasCredit = selectedCardType !== CardType.Debito;
 
   const nome = register("nome", { required: requiredMessage });
   const ultimosDigitos = register("ultimosDigitos", {
     required: requiredMessage,
   });
   const validade = register("validade", { required: requiredMessage });
-  const limite = register("limite", { required: requiredMessage });
+  const limite = register("limite", {
+    validate: (value, formValues) =>
+      Number(formValues.tipo) === CardType.Debito || !!value || requiredMessage,
+  });
 
   const handleInvalid = useInvalidFormToast();
 
@@ -67,7 +74,9 @@ export const NewCard = ({
       cardFlag: Number(data.bandeira),
       expiresIn: data.validade,
       lastFourDigits: data.ultimosDigitos,
-      limit: Number(data.limite.replace(/\./g, "").replace(",", ".")) || 0,
+      limit: hasCredit
+        ? Number(data.limite.replace(/\./g, "").replace(",", "."))
+        : null,
     };
 
     if (isEditMode && card) {
@@ -150,18 +159,20 @@ export const NewCard = ({
           validade.onChange(event);
         }}
       />
-      <FormInput.Text
-        label="Limite"
-        placeholder="Ex: 4.000,00"
-        inputMode="numeric"
-        required
-        error={errors.limite?.message}
-        {...limite}
-        onChange={(event: ChangeEvent<HTMLInputElement>) => {
-          event.target.value = maskCurrency(event.target.value);
-          limite.onChange(event);
-        }}
-      />
+      {hasCredit && (
+        <FormInput.Text
+          label="Limite"
+          placeholder="Ex: 4.000,00"
+          inputMode="numeric"
+          required
+          error={errors.limite?.message}
+          {...limite}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            event.target.value = maskCurrency(event.target.value);
+            limite.onChange(event);
+          }}
+        />
+      )}
       <S.Actions>
         <Button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</Button>
         <Button

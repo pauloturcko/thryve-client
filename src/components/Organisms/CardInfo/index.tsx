@@ -55,10 +55,12 @@ export const CardInfo = ({ card, onEdit, onDelete }: CardInfoProps) => {
           <p>Validade</p>
           <span>{formatExpiryDate(card.expiresIn)}</span>
         </S.InfoRow>
-        <S.InfoRow>
-          <p>Limite</p>
-          <span>{formatCurrencyBRL(Number(card.limit))}</span>
-        </S.InfoRow>
+        {card.limit !== null && (
+          <S.InfoRow>
+            <p>Limite</p>
+            <span>{formatCurrencyBRL(Number(card.limit))}</span>
+          </S.InfoRow>
+        )}
       </S.CardInfoWrapper>
     </S.CardWrapper>
   );
