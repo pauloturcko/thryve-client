@@ -5,7 +5,7 @@ type CreateCardParams = {
   cardType: number;
   cardFlag: number;
   expiresIn: string;
-  limit: number;
+  limit: number | null;
   lastFourDigits: string;
 };
 
@@ -13,7 +13,7 @@ export type Card = {
   id: number;
   userId: number;
   name: string;
-  limit: string;
+  limit: string | null;
   cardType: number;
   cardFlag: number;
   expiresIn: string;
