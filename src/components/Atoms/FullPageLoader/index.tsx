@@ -1,14 +1,17 @@
 "use client";
 
-import { useIsFetching, useIsMutating } from "@tanstack/react-query";
+import { Query, useIsFetching, useIsMutating } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import * as S from "./styles";
 
-// Evita piscar o loader em requests que terminam quase na hora.
 const SHOW_DELAY_MS = 150;
 
+const isInitialLoad = (query: Query) =>
+  query.observers.some((observer) => observer.getCurrentResult().isLoading);
+
 export const FullPageLoader = () => {
-  const busy = useIsFetching() + useIsMutating() > 0;
+  const busy =
+    useIsFetching({ predicate: isInitialLoad }) + useIsMutating() > 0;
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
