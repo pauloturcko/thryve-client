@@ -5,18 +5,14 @@ import {
   ChartLineData02Icon,
   DashboardSquare02Icon,
   Logout03Icon,
-  Moon02Icon,
   MoneyReceiveSquareIcon,
   MoneySendSquareIcon,
   MoneyBag02Icon,
   Settings02Icon,
-  Sun03Icon,
 } from "@hugeicons/core-free-icons";
 import { usePathname } from "next/navigation";
 import { Dock, DockEntry } from "@/components/Organisms/Dock";
 import { useAuth } from "@/hooks/useAuth";
-import { useThemeMode } from "@/contexts/ThemeModeContext";
-import { useSystemPreferences } from "@/hooks/useSystemPreferences";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: DashboardSquare02Icon },
@@ -37,8 +33,6 @@ const icon = (svg: typeof Settings02Icon) => (
 export const AppDock = () => {
   const pathname = usePathname();
   const { logout } = useAuth();
-  const { mode } = useThemeMode();
-  const { changeThemeMode } = useSystemPreferences();
 
   const items: DockEntry[] = [
     ...navItems.map(
@@ -51,12 +45,6 @@ export const AppDock = () => {
       })
     ),
     { kind: "separator" },
-    {
-      kind: "action",
-      label: mode === "dark" ? "Tema claro" : "Tema escuro",
-      icon: icon(mode === "dark" ? Sun03Icon : Moon02Icon),
-      onClick: () => changeThemeMode(mode === "dark" ? "light" : "dark"),
-    },
     {
       kind: "action",
       label: "Sair",

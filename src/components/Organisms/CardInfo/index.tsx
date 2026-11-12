@@ -4,8 +4,9 @@ import visa from "@/assets/visa.svg";
 import { CardFlag } from "@/constants/enums/card-flag-enum";
 import { CardType, CardTypeLabels } from "@/constants/enums/card-type-enum";
 import { Card } from "@/services/card-service";
-import { formatCurrencyBRL, formatExpiryDate } from "@/utils/format";
+import { formatExpiryDate } from "@/utils/format";
 import * as S from "./styles";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 const flagIcons: Partial<Record<number, StaticImageData>> = {
   [CardFlag.Visa]: visa,
@@ -18,7 +19,12 @@ type CardInfoProps = {
   onSelect: () => void;
 };
 
-export const CardInfo = ({ card, selected = false, onSelect }: CardInfoProps) => {
+export const CardInfo = ({
+  card,
+  selected = false,
+  onSelect,
+}: CardInfoProps) => {
+  const formatCurrency = useFormatCurrency();
   const flagIcon = flagIcons[card.cardFlag];
 
   return (
@@ -56,7 +62,7 @@ export const CardInfo = ({ card, selected = false, onSelect }: CardInfoProps) =>
         {card.limit !== null && (
           <S.InfoRow>
             <p>Limite</p>
-            <span>{formatCurrencyBRL(Number(card.limit))}</span>
+            <span>{formatCurrency(Number(card.limit))}</span>
           </S.InfoRow>
         )}
       </S.CardInfoWrapper>

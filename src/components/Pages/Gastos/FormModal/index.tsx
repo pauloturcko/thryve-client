@@ -23,13 +23,14 @@ import { useExpense } from "@/hooks/useExpense";
 import { usePaymentPreference } from "@/hooks/usePaymentPreference";
 import { Expense } from "@/services/expense-service";
 import { todayISO } from "@/utils/date";
-import { formatCurrencyBRL, formatCurrencyInput } from "@/utils/format";
+import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";
 import { parseCurrencyInput } from "@/utils/parse";
 import { ChangeEvent } from "react";
 import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import * as S from "./styles";
 import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 type NewExpenseFormData = {
   descricao: string;
@@ -57,6 +58,7 @@ export const NewExpense = ({
   onClose: () => void;
   expense?: Expense;
 }) => {
+  const formatCurrency = useFormatCurrency();
   const { createExpense, updateExpense } = useExpense();
   const { loadAllCategories } = useCategory();
   const { loadAllBankAccounts } = useBankAccount();
@@ -413,7 +415,7 @@ export const NewExpense = ({
       )}
       {isInstallment && installments >= 2 && amount > 0 && (
         <S.Hint>
-          {installments}x de {formatCurrencyBRL(amount / installments)}, uma por
+          {installments}x de {formatCurrency(amount / installments)}, uma por
           mês a partir da data do gasto.
         </S.Hint>
       )}

@@ -15,3 +15,14 @@ export const CurrencyLabels: Record<Currency, string> = {
   [Currency.Euro]: "Euro (€)",
   [Currency.Libra]: "Libra esterlina (£)",
 };
+
+// Símbolos fixos, sem depender do idioma: o Intl mostra só "$" para o dólar em inglês e
+// "1234,50 BRL" em espanhol, o que deixaria a moeda ambígua.
+export const CurrencySymbols: Record<Currency, string> = {
+  [Currency.Real]: "R$",
+  [Currency.DolarAmericano]: "US$",
+  [Currency.DolarAustraliano]: "A$",
+  [Currency.DolarNeozelandes]: "NZ$",
+  [Currency.Euro]: "€",
+  [Currency.Libra]: "£",
+};

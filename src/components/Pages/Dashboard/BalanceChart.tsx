@@ -2,8 +2,8 @@
 
 import { PointerEvent, useId, useRef, useState } from "react";
 import { styled, useTheme } from "styled-components";
-import { formatCurrencyBRL } from "@/utils/format";
 import { BalancePoint } from "./useDashboardData";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 const WIDTH = 600;
 const HEIGHT = 200;
@@ -28,6 +28,7 @@ const smoothPath = (coords: [number, number][]) => {
 };
 
 export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
+  const formatCurrency = useFormatCurrency();
   const theme = useTheme();
   const gradientId = useId();
   const plotRef = useRef<HTMLDivElement>(null);
@@ -79,7 +80,7 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           preserveAspectRatio="none"
           role="img"
-          aria-label={`Saldo acumulado em ${monthLabel}: ${formatCurrencyBRL(values[lastIndex])} no dia ${points[lastIndex].day}`}
+          aria-label={`Saldo acumulado em ${monthLabel}: ${formatCurrency(values[lastIndex])} no dia ${points[lastIndex].day}`}
         >
           <defs>
             <linearGradient
@@ -160,7 +161,7 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
         >
           <span>Dia {activePoint.day}</span>
           <strong data-positive={positive}>
-            {formatCurrencyBRL(activePoint.balance)}
+            {formatCurrency(activePoint.balance)}
           </strong>
         </Tooltip>
       </Plot>

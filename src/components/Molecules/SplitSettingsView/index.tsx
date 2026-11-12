@@ -9,6 +9,8 @@ type SplitSettingsViewProps = {
   message?: string;
   list: ReactNode;
   details: ReactNode;
+  equalColumns?: boolean;
+  listGap?: string;
 };
 
 export const SplitSettingsView = ({
@@ -18,6 +20,8 @@ export const SplitSettingsView = ({
   message,
   list,
   details,
+  equalColumns = false,
+  listGap,
 }: SplitSettingsViewProps) => (
   <S.Page>
     <S.Header>
@@ -30,9 +34,11 @@ export const SplitSettingsView = ({
     {message ? (
       <S.Message>{message}</S.Message>
     ) : (
-      <S.Layout>
-        <ScrollPanel>{list}</ScrollPanel>
-        <ScrollPanel gap="1.25rem">{details}</ScrollPanel>
+      <S.Layout $equalColumns={equalColumns}>
+        <ScrollPanel gap={listGap}>{list}</ScrollPanel>
+        <ScrollPanel gap={equalColumns ? listGap : "1.25rem"}>
+          {details}
+        </ScrollPanel>
       </S.Layout>
     )}
   </S.Page>
