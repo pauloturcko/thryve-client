@@ -2,10 +2,13 @@
 
 import { AppDock } from "@/components/Organisms/AppDock";
 import { TopBar } from "@/components/Organisms/TopBar";
+import { useSyncThemeWithPreferences } from "@/hooks/useSystemPreferences";
 import styled from "styled-components";
 import { ReactNode } from "react";
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
+  useSyncThemeWithPreferences();
+
   return (
     <LayoutContainer>
       <ContentContainer>

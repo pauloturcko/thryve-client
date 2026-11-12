@@ -61,6 +61,11 @@ export const GlobalStyles = createGlobalStyle`
         appearance: none;
     }
 
+    /* O "all: unset" acima anula o display: none que o navegador dá ao hidden */
+    [hidden] {
+        display: none !important;
+    }
+
     a {
         color: inherit;
         text-decoration: none;

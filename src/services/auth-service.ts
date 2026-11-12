@@ -1,3 +1,6 @@
+import { Currency } from "@/constants/enums/currency-enum";
+import { Language } from "@/constants/enums/language-enum";
+import { SystemTheme } from "@/constants/enums/system-theme-enum";
 import { http } from "@/http/http";
 
 type CreateAccoutParams = {
@@ -20,12 +23,12 @@ export type UserData = {
 };
 
 export type SystemPreferences = {
-  theme: number;
-  language: number;
-  currency: number;
+  theme: SystemTheme;
+  language: Language;
+  currency: Currency;
 };
 
-type LoggedUserResponse = {
+export type LoggedUserResponse = {
   user: UserData;
   systemPreferences: SystemPreferences | null;
 };

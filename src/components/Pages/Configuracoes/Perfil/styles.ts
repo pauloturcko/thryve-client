@@ -52,6 +52,9 @@ export const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
+  max-width: 20rem;
+  margin: 0 auto;
 `;
 
 export const SectionTitle = styled.h4`
@@ -62,32 +65,26 @@ export const SectionTitle = styled.h4`
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 
-export const InfoList = styled.dl`
-  display: flex;
-  flex-direction: column;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.md};
-  overflow: hidden;
+export const AvatarWrapper = styled.div<{ $busy: boolean }>`
+  opacity: ${({ $busy }) => ($busy ? 0.5 : 1)};
+  transition: opacity 0.2s ease;
 `;
 
-export const InfoRow = styled.div`
+export const PictureActions = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+`;
+
+export const Hint = styled.p`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textMuted};
+`;
+
+export const PreferencesList = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  padding: 0.85rem 1rem;
-  font-size: 0.95rem;
-
-  & + & {
-    border-top: 1px solid ${({ theme }) => theme.colors.border};
-  }
-
-  dt {
-    color: ${({ theme }) => theme.colors.textSecondary};
-  }
-
-  dd {
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.textPrimary};
-  }
 `;

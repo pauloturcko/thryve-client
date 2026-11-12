@@ -14,7 +14,7 @@ const greeting = () => {
 };
 
 export const TopBar = () => {
-  const { user } = useUser();
+  const { user, profilePictureUrl } = useUser();
   const firstName = user?.name?.split(" ")[0];
 
   return (
@@ -33,7 +33,7 @@ export const TopBar = () => {
           </Hello>
           <Avatar
             name={user.name}
-            src={user.profilePicture}
+            src={profilePictureUrl}
             size="2.5rem"
           />
         </UserChip>
