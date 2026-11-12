@@ -2,6 +2,8 @@ import { createElement } from "react";
 import { ConfirmDialog } from "@/components/Molecules/ConfirmDialog";
 import { useModalContext } from "@/contexts/ModalContext";
 
+type ConfirmStep = Omit<ConfirmOptions, "onConfirm">;
+
 type ConfirmOptions = {
   title?: string;
   message: string;
@@ -25,5 +27,15 @@ export const useConfirm = () => {
     });
   };
 
-  return { confirm };
+  const confirmSteps = (steps: ConfirmStep[], onConfirm: () => void) => {
+    const [step, ...nextSteps] = steps;
+    if (!step) return onConfirm();
+
+    confirm({
+      ...step,
+      onConfirm: () => confirmSteps(nextSteps, onConfirm),
+    });
+  };
+
+  return { confirm, confirmSteps };
 };

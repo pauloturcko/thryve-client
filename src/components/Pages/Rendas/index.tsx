@@ -28,6 +28,7 @@ import { CircleCheck, Clock, Plus, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "styled-components";
 import { NewIncome } from "./FormModal";
+import { IncomesTable } from "./IncomesTable";
 
 type FilterState = {
   status: string;
@@ -204,6 +205,15 @@ export const RendasPage = () => {
         count={incomes.length}
         isLoading={loadIncomes.isLoading}
         emptyMessage="Nenhuma receita lançada neste mês."
+        table={
+          <IncomesTable
+            incomes={incomes}
+            emptyMessage="Nenhuma receita lançada neste mês."
+            onToggleStatus={handleToggleStatus}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        }
       >
         {incomes.map((income) => {
           const title = income.source || income.category.name;

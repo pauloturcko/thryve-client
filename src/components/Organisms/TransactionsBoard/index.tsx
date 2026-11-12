@@ -1,8 +1,9 @@
 "use client";
+import { RubberSegment } from "@/components/Atoms/RubberSegment";
 import { MonthNavigator } from "@/components/Molecules/MonthNavigator";
 import { MagicBento } from "@/components/Organisms/MagicBento";
-import { Inbox } from "lucide-react";
-import { ReactNode } from "react";
+import { Inbox, List, Table2 } from "lucide-react";
+import { ReactNode, useState } from "react";
 import * as S from "./styles";
 
 export type SummaryItem = {
@@ -22,8 +23,31 @@ type TransactionsBoardProps = {
   count: number;
   isLoading: boolean;
   emptyMessage: string;
+  table: ReactNode;
   children: ReactNode;
 };
+
+// A lista é a visão padrão; a tabela fica disponível pelo seletor.
+type ListView = "table" | "list";
+
+const viewItems = [
+  {
+    value: "list",
+    label: (
+      <S.ViewLabel>
+        <List size={15} /> Lista
+      </S.ViewLabel>
+    ),
+  },
+  {
+    value: "table",
+    label: (
+      <S.ViewLabel>
+        <Table2 size={15} /> Tabela
+      </S.ViewLabel>
+    ),
+  },
+];
 
 export const TransactionsBoard = ({
   month,
@@ -34,8 +58,11 @@ export const TransactionsBoard = ({
   count,
   isLoading,
   emptyMessage,
+  table,
   children,
 }: TransactionsBoardProps) => {
+  const [view, setView] = useState<ListView>("list");
+
   return (
     <>
       <S.Toolbar>
@@ -74,17 +101,26 @@ export const TransactionsBoard = ({
         />
       </S.SummaryGrid>
       <S.Section>
-        <S.SectionTitle>
-          {listTitle} <span>{count}</span>
-        </S.SectionTitle>
+        <S.SectionHeader>
+          <S.SectionTitle>
+            {listTitle} <span>{count}</span>
+          </S.SectionTitle>
+          <RubberSegment
+            aria-label="Modo de exibição"
+            items={viewItems}
+            value={view}
+            onChange={(value) => setView(value as ListView)}
+          />
+        </S.SectionHeader>
         {isLoading && <p>Carregando...</p>}
-        {!isLoading && count === 0 && (
+        {!isLoading && view === "table" && table}
+        {!isLoading && view === "list" && count === 0 && (
           <S.EmptyState>
             <Inbox size={28} />
             <p>{emptyMessage}</p>
           </S.EmptyState>
         )}
-        <S.List>{children}</S.List>
+        {view === "list" && <S.List>{children}</S.List>}
       </S.Section>
     </>
   );

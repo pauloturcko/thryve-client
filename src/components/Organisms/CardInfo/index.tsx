@@ -1,7 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import mastercard from "@/assets/mastercard.svg";
 import visa from "@/assets/visa.svg";
-import { ItemActions } from "@/components/Atoms/ItemActions";
 import { CardFlag } from "@/constants/enums/card-flag-enum";
 import { CardType, CardTypeLabels } from "@/constants/enums/card-type-enum";
 import { Card } from "@/services/card-service";
@@ -15,23 +14,22 @@ const flagIcons: Partial<Record<number, StaticImageData>> = {
 
 type CardInfoProps = {
   card: Card;
-  onEdit: () => void;
-  onDelete: () => void;
+  selected?: boolean;
+  onSelect: () => void;
 };
 
-export const CardInfo = ({ card, onEdit, onDelete }: CardInfoProps) => {
+export const CardInfo = ({ card, selected = false, onSelect }: CardInfoProps) => {
   const flagIcon = flagIcons[card.cardFlag];
 
   return (
-    <S.CardWrapper>
+    <S.CardWrapper
+      type="button"
+      aria-pressed={selected}
+      $selected={selected}
+      onClick={onSelect}
+    >
       <S.CardHeader>
         <p>{card.name}</p>
-        <ItemActions
-          itemName={card.name}
-          iconSize={30}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
       </S.CardHeader>
       <S.CardInfoWrapper>
         <S.InfoRow>

@@ -1,20 +1,31 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { SpecularButton } from "@/components/Atoms/SpecularButton";
-import { SettingsPanel } from "@/components/Molecules/SettingsPanel";
+import { SplitSettingsView } from "@/components/Molecules/SplitSettingsView";
 import { CardInfo } from "@/components/Organisms/CardInfo";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useCard } from "@/hooks/useCard";
 import { useConfirm } from "@/hooks/useConfirm";
+import { useExpensesList } from "@/hooks/useExpense";
 import { Card } from "@/services/card-service";
+import { CardDetails } from "./CardDetails";
 import { NewCard } from "./FormModal";
-import * as S from "./styles";
 
 export const CartoesPage = () => {
   const { openModal } = useModalContext();
-  const { confirm } = useConfirm();
+  const { confirmSteps } = useConfirm();
   const { loadAllCards, deleteCard } = useCard();
+  const loadExpenses = useExpensesList();
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
+
+  const cards = loadAllCards.data ?? [];
+  const selectedCard =
+    cards.find((card) => card.id === selectedCardId) ?? cards[0];
+  const selectedCardExpenses = (loadExpenses.data ?? []).filter(
+    (expense) => expense.cardId === selectedCard?.id
+  );
 
   const handleCreate = () => {
     openModal({
@@ -36,19 +47,36 @@ export const CartoesPage = () => {
   };
 
   const handleDelete = (card: Card) => {
-    confirm({
-      title: "Excluir cartão",
-      message: `Tem certeza que deseja excluir o cartão "${card.name}"? Essa ação não pode ser desfeita.`,
-      confirmLabel: "Excluir",
-      danger: true,
-      onConfirm: () => deleteCard.mutate({ id: card.id }),
-    });
+    confirmSteps(
+      [
+        {
+          title: "Excluir cartão",
+          message: `Ao excluir o cartão "${card.name}", todas as transações vinculadas a ele também serão excluídas.`,
+          confirmLabel: "Estou ciente, prosseguir",
+          danger: true,
+        },
+        {
+          title: "Confirmar exclusão",
+          message: `Tem certeza que deseja excluir definitivamente o cartão "${card.name}" e suas transações? Esta ação não é reversível.`,
+          confirmLabel: "Excluir cartão",
+          danger: true,
+        },
+      ],
+      () => deleteCard.mutate({ id: card.id })
+    );
   };
 
+  const listMessage = loadAllCards.isLoading
+    ? "Carregando..."
+    : !selectedCard
+      ? "Nenhum cartão cadastrado."
+      : undefined;
+
   return (
-    <SettingsPanel
+    <SplitSettingsView
       title="Cartões"
       description="Configure seus cartões"
+      message={listMessage}
       action={
         <SpecularButton
           size="sm"
@@ -57,21 +85,25 @@ export const CartoesPage = () => {
           <Plus size={18} /> Novo Cartão
         </SpecularButton>
       }
-    >
-      <S.CardsList>
-        {loadAllCards.isLoading && <S.Message>Carregando...</S.Message>}
-        {loadAllCards.data?.length === 0 && (
-          <S.Message>Nenhum cartão cadastrado.</S.Message>
-        )}
-        {loadAllCards.data?.map((card) => (
-          <CardInfo
-            key={card.id}
-            card={card}
-            onEdit={() => handleEdit(card)}
-            onDelete={() => handleDelete(card)}
+      list={cards.map((card) => (
+        <CardInfo
+          key={card.id}
+          card={card}
+          selected={card.id === selectedCard?.id}
+          onSelect={() => setSelectedCardId(card.id)}
+        />
+      ))}
+      details={
+        selectedCard && (
+          <CardDetails
+            card={selectedCard}
+            expenses={selectedCardExpenses}
+            isLoading={loadExpenses.isLoading}
+            onEdit={() => handleEdit(selectedCard)}
+            onDelete={() => handleDelete(selectedCard)}
           />
-        ))}
-      </S.CardsList>
-    </SettingsPanel>
+        )
+      }
+    />
   );
 };

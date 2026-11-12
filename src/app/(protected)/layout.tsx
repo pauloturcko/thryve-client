@@ -45,6 +45,8 @@ const ContentContainer = styled.main`
   width: 100%;
   max-width: 1440px;
   min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
   padding: 1.5rem 2rem 8rem;
   display: flex;

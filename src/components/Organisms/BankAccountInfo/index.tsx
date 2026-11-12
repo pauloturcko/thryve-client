@@ -1,4 +1,3 @@
-import { ItemActions } from "@/components/Atoms/ItemActions";
 import {
   AccountType,
   AccountTypeLabels,
@@ -9,26 +8,26 @@ import * as S from "./styles";
 
 type BankAccountInfoProps = {
   bankAccount: BankAccount;
-  onEdit: () => void;
-  onDelete: () => void;
+  selected?: boolean;
+  onSelect: () => void;
 };
 
 export const BankAccountInfo = ({
   bankAccount,
-  onEdit,
-  onDelete,
+  selected = false,
+  onSelect,
 }: BankAccountInfoProps) => {
   const balance = Number(bankAccount.balance);
 
   return (
-    <S.AccountWrapper>
+    <S.AccountWrapper
+      type="button"
+      aria-pressed={selected}
+      $selected={selected}
+      onClick={onSelect}
+    >
       <S.AccountHeader>
         <p>{bankAccount.name}</p>
-        <ItemActions
-          itemName={bankAccount.name}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
       </S.AccountHeader>
       <S.AccountInfoWrapper>
         <S.AccountType>

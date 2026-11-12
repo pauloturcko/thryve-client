@@ -21,8 +21,8 @@ export const ConfirmDialog = ({
   danger = false,
 }: ConfirmDialogProps) => {
   const handleConfirm = () => {
-    onConfirm();
     onClose();
+    onConfirm();
   };
 
   return (

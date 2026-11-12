@@ -28,6 +28,7 @@ import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingDown } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "styled-components";
+import { ExpensesTable } from "./ExpensesTable";
 import { NewExpense } from "./FormModal";
 
 type FilterState = {
@@ -239,6 +240,15 @@ export const GastosPage = () => {
         count={expenses.length}
         isLoading={loadExpenses.isLoading}
         emptyMessage="Nenhum gasto lançado neste mês."
+        table={
+          <ExpensesTable
+            expenses={expenses}
+            emptyMessage="Nenhum gasto lançado neste mês."
+            onToggleStatus={handleToggleStatus}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        }
       >
         {expenses.map((expense) => {
           const isPaid = expense.status === TransactionStatus.Pago;

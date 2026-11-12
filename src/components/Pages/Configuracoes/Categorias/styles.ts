@@ -1,7 +1,19 @@
 import styled from "styled-components";
 
+export const Columns = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 export const Section = styled.section`
   width: 100%;
+  min-width: 0;
 `;
 
 export const SectionTitle = styled.h3`

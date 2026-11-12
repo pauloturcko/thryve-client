@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const AccountWrapper = styled.div`
+export const AccountWrapper = styled.button<{ $selected: boolean }>`
   width: 100%;
   max-width: 30rem;
   min-width: 0;
@@ -8,12 +8,42 @@ export const AccountWrapper = styled.div`
   height: auto;
   background: ${({ theme }) =>
     `linear-gradient(150deg, ${theme.colors.background} 0%, ${theme.colors.background} 55%, ${theme.colors.primarySoft} 100%)`};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid
+    ${({ theme, $selected }) =>
+      $selected ? theme.colors.ringAccent : theme.colors.border};
   border-radius: 1rem;
+  opacity: ${({ $selected }) => ($selected ? 1 : 0.6)};
   padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 1rem;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: ${({ theme, $selected }) =>
+    $selected
+      ? `0 16px 32px -20px rgba(${theme.colors.shadowRgb}, 0.7)`
+      : "none"};
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primaryText};
+    outline-offset: 2px;
+  }
 
   @media (max-width: 1280px) {
     padding: 0.875rem 1rem;
