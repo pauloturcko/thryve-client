@@ -2,10 +2,10 @@
 import { ItemActions } from "@/components/Atoms/ItemActions";
 import { getCategoryIcon } from "@/constants/categoryIcons";
 import { Category } from "@/services/category-service";
-import { formatCurrencyBRL } from "@/utils/format";
 import { CircleCheck, Clock } from "lucide-react";
 import { createElement } from "react";
 import * as S from "./styles";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 type TransactionInfoProps = {
   title: string;
@@ -34,6 +34,7 @@ export const TransactionInfo = ({
   onEdit,
   onDelete,
 }: TransactionInfoProps) => {
+  const formatCurrency = useFormatCurrency();
   const signal = variant === "income" ? "+" : "-";
 
   return (
@@ -56,7 +57,7 @@ export const TransactionInfo = ({
           {statusLabel}
         </S.StatusButton>
         <S.Amount $variant={variant}>
-          {signal} {formatCurrencyBRL(amount)}
+          {signal} {formatCurrency(amount)}
         </S.Amount>
       </S.Footer>
       <S.Actions>

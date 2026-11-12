@@ -16,7 +16,7 @@ import { useExpensesList } from "@/hooks/useExpense";
 import { useIncome } from "@/hooks/useIncome";
 import { Income } from "@/services/income-service";
 import { formatDateBR, todayISO } from "@/utils/date";
-import { formatCurrencyBRL, formatCurrencyInput } from "@/utils/format";
+import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";
 import { parseCurrencyInput, parseOptionalNumber } from "@/utils/parse";
 import { ChangeEvent } from "react";
@@ -29,6 +29,7 @@ import {
 } from "react-hook-form";
 import * as S from "./styles";
 import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 type NewIncomeFormData = {
   tipo: string;
@@ -50,13 +51,14 @@ const LinkedExpenseField = ({
 }: {
   control: Control<NewIncomeFormData>;
 }) => {
+  const formatCurrency = useFormatCurrency();
   const loadExpenses = useExpensesList();
 
   const expenseOptions = [
     { value: "", label: "Nenhum" },
     ...(loadExpenses.data ?? []).map((expense) => ({
       value: expense.id,
-      label: `${expense.description} • ${formatDateBR(expense.date)} • ${formatCurrencyBRL(Number(expense.amount))}`,
+      label: `${expense.description} • ${formatDateBR(expense.date)} • ${formatCurrency(Number(expense.amount))}`,
     })),
   ];
 

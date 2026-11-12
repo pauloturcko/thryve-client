@@ -17,8 +17,10 @@ import {
 import { Card } from "@/services/card-service";
 import { Expense } from "@/services/expense-service";
 import { currentMonth, formatDateBR, todayISO } from "@/utils/date";
-import { formatCurrencyBRL, formatExpiryDate } from "@/utils/format";
+import { formatExpiryDate } from "@/utils/format";
 import { sumAmounts } from "@/utils/parse";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
+import { Money } from "@/components/Atoms/Money";
 
 const RECENT_TRANSACTIONS_LIMIT = 5;
 
@@ -61,12 +63,16 @@ const columns = column.columns([
   }),
   column.accessor("amount", {
     header: "Valor",
-    cell: (info) => formatCurrencyBRL(Number(info.getValue())),
+    cell: (info) => <Money value={Number(info.getValue())} />,
     meta: { align: "right" },
   }),
 ]);
 
-const thirdStat = (card: Card, monthCount: number) => {
+const thirdStat = (
+  card: Card,
+  monthCount: number,
+  formatCurrency: (value: number) => string
+) => {
   if (card.cardType === CardType.Debito) {
     return { label: "Compras no mês", value: String(monthCount) };
   }
@@ -75,7 +81,7 @@ const thirdStat = (card: Card, monthCount: number) => {
     label: "Limite",
     value:
       card.limit !== null
-        ? formatCurrencyBRL(Number(card.limit))
+        ? formatCurrency(Number(card.limit))
         : "Não informado",
   };
 };
@@ -95,6 +101,7 @@ export const CardDetails = ({
   onEdit,
   onDelete,
 }: CardDetailsProps) => {
+  const formatCurrency = useFormatCurrency();
   const today = todayISO();
   const month = currentMonth();
 
@@ -119,9 +126,9 @@ export const CardDetails = ({
       />
       <EntityDetailsStats
         stats={[
-          { label: "Gasto no mês", value: formatCurrencyBRL(monthTotal) },
-          { label: "Pendente", value: formatCurrencyBRL(pendingTotal) },
-          thirdStat(card, monthExpenses.length),
+          { label: "Gasto no mês", value: formatCurrency(monthTotal) },
+          { label: "Pendente", value: formatCurrency(pendingTotal) },
+          thirdStat(card, monthExpenses.length, formatCurrency),
         ]}
       />
       <EntityDetailsSection

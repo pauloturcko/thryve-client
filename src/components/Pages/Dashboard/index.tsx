@@ -12,11 +12,11 @@ import {
   Wallet01Icon,
 } from "@hugeicons/core-free-icons";
 import { MagicBento, MagicBentoItem } from "@/components/Organisms/MagicBento";
-import { formatCurrencyBRL } from "@/utils/format";
 import { formatDateBR, formatMonthLabel } from "@/utils/date";
 import { BalanceChart } from "./BalanceChart";
 import { useDashboardData } from "./useDashboardData";
 import * as S from "./styles";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 const pluralize = (count: number, singular: string, plural: string) =>
   `${count} ${count === 1 ? singular : plural}`;
@@ -24,6 +24,7 @@ const pluralize = (count: number, singular: string, plural: string) =>
 const percent = (value: number) => `${Math.round(value * 100)}%`;
 
 export const DashboardPage = () => {
+  const formatCurrency = useFormatCurrency();
   const theme = useTheme();
   const router = useRouter();
   const { month, totals, changes, counts, balanceSeries, slices, upcoming } =
@@ -61,7 +62,7 @@ export const DashboardPage = () => {
               $size="xl"
               $color={totals.balance < 0 ? theme.colors.danger : undefined}
             >
-              {formatCurrencyBRL(totals.balance)}
+              {formatCurrency(totals.balance)}
             </MagicBento.Figure>
             <MagicBento.Note>
               Receitas menos gastos lançados no mês
@@ -85,15 +86,21 @@ export const DashboardPage = () => {
               }}
             />
           </S.Split>
-          <S.Legend>
-            <span>
-              <i style={{ background: theme.colors.success }} />
-              Receitas {formatCurrencyBRL(totals.incomes)}
-            </span>
-            <span>
-              <i style={{ background: theme.colors.danger }} />
-              Gastos {formatCurrencyBRL(totals.expenses)}
-            </span>
+          <S.Legend $columns={2}>
+            <S.LegendItem>
+              <S.LegendLabel>
+                <i style={{ background: theme.colors.success }} />
+                <span>Receitas</span>
+              </S.LegendLabel>
+              <S.LegendValue>{formatCurrency(totals.incomes)}</S.LegendValue>
+            </S.LegendItem>
+            <S.LegendItem>
+              <S.LegendLabel>
+                <i style={{ background: theme.colors.danger }} />
+                <span>Gastos</span>
+              </S.LegendLabel>
+              <S.LegendValue>{formatCurrency(totals.expenses)}</S.LegendValue>
+            </S.LegendItem>
           </S.Legend>
         </>
       ),
@@ -112,7 +119,7 @@ export const DashboardPage = () => {
           </MagicBento.Header>
           <MagicBento.Footer>
             <MagicBento.Figure $size="lg">
-              {formatCurrencyBRL(totals.incomes)}
+              {formatCurrency(totals.incomes)}
             </MagicBento.Figure>
             {delta(changes.incomes, true)}
           </MagicBento.Footer>
@@ -133,7 +140,7 @@ export const DashboardPage = () => {
           </MagicBento.Header>
           <MagicBento.Footer>
             <MagicBento.Figure $size="lg">
-              {formatCurrencyBRL(totals.expenses)}
+              {formatCurrency(totals.expenses)}
             </MagicBento.Figure>
             {delta(changes.expenses, false)}
           </MagicBento.Footer>
@@ -154,7 +161,7 @@ export const DashboardPage = () => {
           </MagicBento.Header>
           <MagicBento.Footer>
             <MagicBento.Figure $size="lg">
-              {formatCurrencyBRL(totals.pending)}
+              {formatCurrency(totals.pending)}
             </MagicBento.Figure>
             <MagicBento.Note>
               {totals.pendingCount > 0
@@ -224,20 +231,24 @@ export const DashboardPage = () => {
                   />
                 ))}
               </S.Stack>
-              <S.CategoryList>
+              <S.Legend $columns={slices.length}>
                 {slices.map((slice) => (
-                  <li key={slice.id}>
-                    <i
-                      style={{
-                        background: slice.color || theme.colors.textMuted,
-                      }}
-                    />
-                    <span>{slice.name}</span>
-                    <strong>{formatCurrencyBRL(slice.total)}</strong>
-                    <em>{percent(slice.share)}</em>
-                  </li>
+                  <S.LegendItem key={slice.id}>
+                    <S.LegendLabel>
+                      <i
+                        style={{
+                          background: slice.color || theme.colors.textMuted,
+                        }}
+                      />
+                      <span>{slice.name}</span>
+                    </S.LegendLabel>
+                    <S.LegendValue>
+                      {formatCurrency(slice.total)}
+                      <small>{percent(slice.share)}</small>
+                    </S.LegendValue>
+                  </S.LegendItem>
                 ))}
-              </S.CategoryList>
+              </S.Legend>
             </MagicBento.Footer>
           )}
         </>
@@ -276,7 +287,7 @@ export const DashboardPage = () => {
                     <small>{expense.category.name}</small>
                   </S.DueInfo>
                   <S.DueAmount>
-                    {formatCurrencyBRL(Number(expense.amount))}
+                    {formatCurrency(Number(expense.amount))}
                   </S.DueAmount>
                 </li>
               ))}

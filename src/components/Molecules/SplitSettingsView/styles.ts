@@ -28,10 +28,13 @@ export const Heading = styled.div`
   }
 `;
 
-export const Layout = styled.div`
+export const Layout = styled.div<{ $equalColumns: boolean }>`
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
+  grid-template-columns: ${({ $equalColumns }) =>
+    $equalColumns
+      ? "repeat(2, minmax(0, 1fr))"
+      : "minmax(0, 35fr) minmax(0, 65fr)"};
   min-height: 22rem;
   gap: 1.25rem;
 

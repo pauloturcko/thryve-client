@@ -3,8 +3,8 @@ import { createElement } from "react";
 import { ItemActions } from "@/components/Atoms/ItemActions";
 import { getCategoryIcon } from "@/constants/categoryIcons";
 import { Category } from "@/services/category-service";
-import { formatCurrencyBRL } from "@/utils/format";
 import * as S from "./styles";
+import { Money } from "@/components/Atoms/Money";
 
 // Células compartilhadas pelas tabelas de gastos e de receitas.
 
@@ -57,7 +57,7 @@ export const AmountCell = ({
   variant: "income" | "expense";
 }) => (
   <S.Amount $variant={variant}>
-    {variant === "income" ? "+" : "-"} {formatCurrencyBRL(amount)}
+    {variant === "income" ? "+" : "-"} <Money value={amount} />
   </S.Amount>
 );
 

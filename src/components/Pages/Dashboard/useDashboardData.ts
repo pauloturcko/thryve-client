@@ -80,9 +80,11 @@ export const useDashboardData = () => {
     byCategory.set(expense.categoryId, slice);
   });
   const sorted = [...byCategory.values()].sort((a, b) => b.total - a.total);
-  const top = sorted.slice(0, MAX_SLICES);
+  // Com mais categorias que o limite, uma das vagas vira "Outras"
+  const visibleCount = sorted.length > MAX_SLICES ? MAX_SLICES - 1 : MAX_SLICES;
+  const top = sorted.slice(0, visibleCount);
   const rest = sorted
-    .slice(MAX_SLICES)
+    .slice(visibleCount)
     .reduce((sum, slice) => sum + slice.total, 0);
   const slices: CategorySlice[] = [
     ...top,

@@ -22,13 +22,13 @@ import { useConfirm } from "@/hooks/useConfirm";
 import { useIncome, useIncomesList } from "@/hooks/useIncome";
 import { Income } from "@/services/income-service";
 import { currentMonth, formatDateBR } from "@/utils/date";
-import { formatCurrencyBRL } from "@/utils/format";
 import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "styled-components";
 import { NewIncome } from "./FormModal";
 import { IncomesTable } from "./IncomesTable";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 type FilterState = {
   status: string;
@@ -48,6 +48,7 @@ const pluralize = (count: number, singular: string, plural: string) =>
   `${count} ${count === 1 ? singular : plural}`;
 
 export const RendasPage = () => {
+  const formatCurrency = useFormatCurrency();
   const theme = useTheme();
   const { openModal } = useModalContext();
   const { confirm } = useConfirm();
@@ -163,7 +164,7 @@ export const RendasPage = () => {
         summary={[
           {
             title: "Total do Mês",
-            value: formatCurrencyBRL(total),
+            value: formatCurrency(total),
             description: pluralize(incomes.length, "receita", "receitas"),
             icon: (
               <TrendingUp
@@ -175,7 +176,7 @@ export const RendasPage = () => {
           },
           {
             title: "Recebido",
-            value: formatCurrencyBRL(received),
+            value: formatCurrency(received),
             description: `${receivedShare}% do total`,
             icon: (
               <CircleCheck
@@ -186,7 +187,7 @@ export const RendasPage = () => {
           },
           {
             title: "A Receber",
-            value: formatCurrencyBRL(pending),
+            value: formatCurrency(pending),
             description: pluralize(
               pendingIncomes.length,
               "pendente",

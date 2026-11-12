@@ -22,9 +22,10 @@ import { BankAccount } from "@/services/bank-account-service";
 import { Expense } from "@/services/expense-service";
 import { Income } from "@/services/income-service";
 import { currentMonth, formatDateBR, todayISO } from "@/utils/date";
-import { formatCurrencyBRL } from "@/utils/format";
 import { sumAmounts } from "@/utils/parse";
 import * as S from "./styles";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
+import { Money } from "@/components/Atoms/Money";
 
 const RECENT_TRANSACTIONS_LIMIT = 5;
 
@@ -100,7 +101,7 @@ const columns = column.columns([
     cell: ({ row }) => (
       <S.Amount $isIncome={row.original.isIncome}>
         {row.original.isIncome ? "+ " : "− "}
-        {formatCurrencyBRL(row.original.amount)}
+        <Money value={row.original.amount} />
       </S.Amount>
     ),
     meta: { align: "right" },
@@ -124,6 +125,7 @@ export const AccountDetails = ({
   onEdit,
   onDelete,
 }: AccountDetailsProps) => {
+  const formatCurrency = useFormatCurrency();
   const today = todayISO();
   const month = currentMonth();
   const balance = Number(bankAccount.balance);
@@ -149,16 +151,16 @@ export const AccountDetails = ({
         stats={[
           {
             label: "Saldo atual",
-            value: formatCurrencyBRL(balance),
+            value: formatCurrency(balance),
             negative: balance < 0,
           },
           {
             label: "Entradas no mês",
-            value: formatCurrencyBRL(sumAmounts(incomes.filter(isInMonth))),
+            value: formatCurrency(sumAmounts(incomes.filter(isInMonth))),
           },
           {
             label: "Saídas no mês",
-            value: formatCurrencyBRL(sumAmounts(expenses.filter(isInMonth))),
+            value: formatCurrency(sumAmounts(expenses.filter(isInMonth))),
           },
         ]}
       />

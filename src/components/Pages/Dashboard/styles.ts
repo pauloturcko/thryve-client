@@ -62,24 +62,79 @@ export const SplitBar = styled.span`
   border-radius: 999px;
 `;
 
-export const Legend = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1.25rem;
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-  color: ${({ theme }) => theme.colors.textSecondary};
+export const Legend = styled.ul<{ $columns: number }>`
+  display: grid;
+  grid-template-columns: repeat(${({ $columns }) => $columns}, minmax(0, 1fr));
+  margin-top: 0.25rem;
 
-  span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(
+      ${({ $columns }) => Math.min($columns, 2)},
+      minmax(0, 1fr)
+    );
+    row-gap: 0.75rem;
+  }
+`;
+
+export const LegendItem = styled.li`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  padding: 0 1rem;
+
+  &:first-child {
+    padding-left: 0;
   }
 
+  & + & {
+    border-left: 1px solid ${({ theme }) => theme.colors.border};
+  }
+
+  @media (max-width: 480px) {
+    padding: 0;
+
+    & + & {
+      border-left: none;
+    }
+  }
+`;
+
+export const LegendLabel = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  font-size: 0.75rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
   i {
+    flex-shrink: 0;
     width: 8px;
     height: 8px;
     border-radius: 2px;
+  }
+
+  span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+`;
+
+export const LegendValue = styled.strong`
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  small {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.textMuted};
   }
 `;
 
@@ -133,46 +188,6 @@ export const Stack = styled.div`
 export const StackPart = styled.span`
   flex-basis: 0;
   min-width: 4px;
-`;
-
-export const CategoryList = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 0.5rem 1.25rem;
-  font-size: 0.82rem;
-
-  li {
-    display: grid;
-    grid-template-columns: 8px minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  i {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-  }
-
-  span {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: ${({ theme }) => theme.colors.textSecondary};
-  }
-
-  strong {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-
-  em {
-    width: 2.5rem;
-    text-align: right;
-    font-style: normal;
-    font-variant-numeric: tabular-nums;
-    color: ${({ theme }) => theme.colors.textMuted};
-  }
 `;
 
 export const HeaderNote = styled.span`

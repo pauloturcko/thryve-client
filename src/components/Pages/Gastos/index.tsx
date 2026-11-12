@@ -23,13 +23,13 @@ import { useExpense, useExpensesList } from "@/hooks/useExpense";
 import { usePaymentPreference } from "@/hooks/usePaymentPreference";
 import { Expense } from "@/services/expense-service";
 import { currentMonth, formatDateBR } from "@/utils/date";
-import { formatCurrencyBRL } from "@/utils/format";
 import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingDown } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "styled-components";
 import { ExpensesTable } from "./ExpensesTable";
 import { NewExpense } from "./FormModal";
+import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 
 type FilterState = {
   status: string;
@@ -63,6 +63,7 @@ const installmentLabel = (expense: Expense) =>
     : null;
 
 export const GastosPage = () => {
+  const formatCurrency = useFormatCurrency();
   const theme = useTheme();
   const { openModal } = useModalContext();
   const { confirm } = useConfirm();
@@ -198,7 +199,7 @@ export const GastosPage = () => {
         summary={[
           {
             title: "Total do Mês",
-            value: formatCurrencyBRL(total),
+            value: formatCurrency(total),
             description: pluralize(expenses.length, "gasto", "gastos"),
             icon: (
               <TrendingDown
@@ -210,7 +211,7 @@ export const GastosPage = () => {
           },
           {
             title: "Pago",
-            value: formatCurrencyBRL(paid),
+            value: formatCurrency(paid),
             description: `${paidShare}% do total`,
             icon: (
               <CircleCheck
@@ -221,7 +222,7 @@ export const GastosPage = () => {
           },
           {
             title: "A Pagar",
-            value: formatCurrencyBRL(pending),
+            value: formatCurrency(pending),
             description: pluralize(
               pendingExpenses.length,
               "pendente",
