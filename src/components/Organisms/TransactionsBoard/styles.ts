@@ -47,6 +47,20 @@ export const Section = styled.section`
   margin-top: 1.5rem;
 `;
 
+export const SectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+`;
+
+export const ViewLabel = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+`;
+
 export const SectionTitle = styled.h3`
   display: flex;
   align-items: center;
@@ -54,7 +68,6 @@ export const SectionTitle = styled.h3`
   font-size: 1rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 0.75rem;
 
   span {
     font-size: 0.8rem;

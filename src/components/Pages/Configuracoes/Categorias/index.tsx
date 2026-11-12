@@ -55,6 +55,7 @@ export const CategoriasPage = () => {
     <SettingsPanel
       title="Categorias"
       description="Configure suas categorias"
+      wide
       action={
         <SpecularButton
           size="sm"
@@ -65,34 +66,37 @@ export const CategoriasPage = () => {
       }
     >
       {loadAllCategories.isLoading && <S.Message>Carregando...</S.Message>}
-      {loadAllCategories.data?.length === 0 && (
-        <S.Message>Nenhuma categoria cadastrada.</S.Message>
+      {loadAllCategories.data && (
+        <S.Columns>
+          {categorySections.map(({ type, title }) => {
+            const categories = loadAllCategories.data.filter(
+              (category) => category.type === type
+            );
+
+            return (
+              <S.Section key={type}>
+                <S.SectionTitle>
+                  {title} <span>{categories.length}</span>
+                </S.SectionTitle>
+                {categories.length === 0 ? (
+                  <S.Message>Nenhuma categoria cadastrada.</S.Message>
+                ) : (
+                  <S.CategoriesList>
+                    {categories.map((category) => (
+                      <CategoryInfo
+                        key={category.id}
+                        category={category}
+                        onEdit={() => handleEdit(category)}
+                        onDelete={() => handleDelete(category)}
+                      />
+                    ))}
+                  </S.CategoriesList>
+                )}
+              </S.Section>
+            );
+          })}
+        </S.Columns>
       )}
-      {categorySections.map(({ type, title }) => {
-        const categories = loadAllCategories.data?.filter(
-          (category) => category.type === type
-        );
-
-        if (!categories?.length) return null;
-
-        return (
-          <S.Section key={type}>
-            <S.SectionTitle>
-              {title} <span>{categories.length}</span>
-            </S.SectionTitle>
-            <S.CategoriesList>
-              {categories.map((category) => (
-                <CategoryInfo
-                  key={category.id}
-                  category={category}
-                  onEdit={() => handleEdit(category)}
-                  onDelete={() => handleDelete(category)}
-                />
-              ))}
-            </S.CategoriesList>
-          </S.Section>
-        );
-      })}
     </SettingsPanel>
   );
 };
