@@ -57,8 +57,13 @@ export const StyledButton = styled.button<{ $variant: ButtonVariant }>`
 
   ${({ $variant }) => variants[$variant]};
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   &:focus-visible {

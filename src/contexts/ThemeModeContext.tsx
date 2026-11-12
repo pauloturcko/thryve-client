@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -13,7 +14,7 @@ import { ThemeMode } from "@/styles/theme";
 
 type ThemeModeContextValue = {
   mode: ThemeMode;
-  toggleMode: () => void;
+  setMode: (mode: ThemeMode) => void;
 };
 
 const ThemeModeContext = createContext<ThemeModeContextValue | null>(null);
@@ -30,8 +31,7 @@ const readStoredMode = (): ThemeMode | null => {
 const storeMode = (mode: ThemeMode) => {
   try {
     window.localStorage.setItem(THEME_STORAGE_KEY, mode);
-  } catch {
-  }
+  } catch {}
 };
 
 export const ThemeModeProvider = ({
@@ -39,26 +39,20 @@ export const ThemeModeProvider = ({
 }: {
   children: (mode: ThemeMode) => ReactNode;
 }) => {
-  const [mode, setMode] = useState<ThemeMode>("light");
+  const [mode, setModeState] = useState<ThemeMode>("light");
 
   useEffect(() => {
     const stored = readStoredMode();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (stored) setMode(stored);
+    if (stored) setModeState(stored);
   }, []);
 
-  const value = useMemo(
-    () => ({
-      mode,
-      toggleMode: () =>
-        setMode((current) => {
-          const next = current === "dark" ? "light" : "dark";
-          storeMode(next);
-          return next;
-        }),
-    }),
-    [mode]
-  );
+  const setMode = useCallback((next: ThemeMode) => {
+    storeMode(next);
+    setModeState(next);
+  }, []);
+
+  const value = useMemo(() => ({ mode, setMode }), [mode, setMode]);
 
   return (
     <ThemeModeContext.Provider value={value}>

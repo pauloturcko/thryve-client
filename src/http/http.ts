@@ -2,9 +2,11 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { AUTH_COOKIE } from "@/constants/storage-keys";
 
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://apithryve.pauloturcko.dev";
+
 export const http = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_URL || "https://apithryve.pauloturcko.dev",
+  baseURL: API_URL,
 });
 
 http.interceptors.request.use((config) => {
