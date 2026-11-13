@@ -193,7 +193,7 @@ export const IconBadge = styled.span<{ $color?: string }>`
 `;
 
 const figure = css`
-  font-family: ${({ theme }) => theme.fonts.display};
+  font-family: ${({ theme }) => theme.fonts.sans};
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
   line-height: 1;

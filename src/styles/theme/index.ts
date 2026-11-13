@@ -3,8 +3,9 @@ import { darkColors, lightColors } from "./colors";
 export type ThemeMode = "dark" | "light";
 
 const fonts = {
-  body: "var(--font-body), system-ui, -apple-system, 'Segoe UI', sans-serif",
-  display: "var(--font-display), var(--font-body), system-ui, sans-serif",
+  sans: "var(--font-sans), system-ui, -apple-system, 'Segoe UI', sans-serif",
+  serif: "var(--font-serif), 'Times New Roman', Georgia, serif",
+  mono: "var(--font-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace",
 };
 
 const radii = {

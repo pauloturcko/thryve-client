@@ -12,7 +12,7 @@ export const Heading = styled.div`
   gap: 0.2rem;
 
   h1 {
-    font-family: ${({ theme }) => theme.fonts.display};
+    font-family: ${({ theme }) => theme.fonts.sans};
     font-size: clamp(1.4rem, 2.4vw, 1.9rem);
     font-weight: 600;
     letter-spacing: -0.02em;

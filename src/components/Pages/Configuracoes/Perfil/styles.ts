@@ -17,7 +17,7 @@ export const Identity = styled.div`
 export const Name = styled.p`
   max-width: 100%;
   margin-top: 0.25rem;
-  font-family: ${({ theme }) => theme.fonts.display};
+  font-family: ${({ theme }) => theme.fonts.sans};
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.02em;

@@ -67,8 +67,10 @@ export const CardHeader = styled.div`
 `;
 
 export const CardLastFourDigits = styled.span`
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   color: ${({ theme }) => theme.colors.textPrimary};
   display: flex;
   align-items: center;
