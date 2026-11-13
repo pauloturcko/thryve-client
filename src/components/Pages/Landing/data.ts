@@ -1,4 +1,4 @@
-import { Category } from "@/services/category-service";
+import { Category } from "@/services/configuracoes/CategoryService/types";
 import { BalancePoint } from "@/components/Pages/Dashboard/useDashboardData";
 
 export const demoMonth = {
