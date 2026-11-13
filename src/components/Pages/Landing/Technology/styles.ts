@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { monoLabel, PAPER_NOISE } from "../styles";
+import { PAPER_NOISE } from "../styles";
 
 export const Inner = styled.div`
   display: flex;
@@ -8,10 +8,14 @@ export const Inner = styled.div`
   padding-block: clamp(5rem, 10vw, 9rem);
 `;
 
-export const ImportRow = styled.div`
+export const FeatureRow = styled.div<{ $reverse?: boolean }>`
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr);
-  grid-template-areas: "feature . visual";
+  grid-template-columns: ${({ $reverse }) =>
+    $reverse
+      ? "minmax(0, 7fr) minmax(0, 1fr) minmax(0, 4fr)"
+      : "minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr)"};
+  grid-template-areas: ${({ $reverse }) =>
+    $reverse ? '"visual . feature"' : '"feature . visual"'};
   align-items: center;
 
   @media (max-width: 1024px) {
@@ -42,41 +46,19 @@ export const FeatureTitle = styled.div`
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: ${({ theme }) => theme.colors.textPrimary};
-    text-wrap: balance;
   }
 `;
 
-export const FeatureIndex = styled.span`
-  ${monoLabel};
-  flex: none;
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-export const FeatureSteps = styled.ol`
+export const FeatureSteps = styled.ul`
   display: flex;
   flex-direction: column;
-  counter-reset: step;
 
   li {
-    display: grid;
-    grid-template-columns: 1.75rem minmax(0, 1fr);
-    gap: 0.5rem;
     padding: 0.85rem 0;
     border-top: 1px solid ${({ theme }) => theme.colors.border};
     font-size: 0.98rem;
     line-height: 1.55;
     color: ${({ theme }) => theme.colors.textSecondary};
-    counter-increment: step;
-
-    &::before {
-      content: counter(step, lower-roman) ".";
-      font-family: ${({ theme }) => theme.fonts.serif};
-      font-size: 1.1rem;
-      font-style: italic;
-      line-height: 1.4;
-      color: ${({ theme }) => theme.colors.textPrimary};
-    }
   }
 `;
 
@@ -89,17 +71,22 @@ export const Aside = styled.p`
   color: ${({ theme }) => theme.colors.textPrimary};
 `;
 
-export const ImportVisual = styled.div`
+export const FeatureVisual = styled.div`
   grid-area: visual;
 `;
 
+// Um pouco mais largo que a coluna de conteúdo (e que o header), para o
+// conteúdo se distribuir na horizontal e o palco ficar mais baixo.
 export const Stage = styled.div`
   position: relative;
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: clamp(2rem, 4vw, 3rem);
-  padding: clamp(1.5rem, 5vw, 4rem);
+  width: min(calc(100vw - var(--gutter)), calc(var(--content) + 6rem));
+  margin-inline: calc(
+    (100% - min(100vw - var(--gutter), var(--content) + 6rem)) / 2
+  );
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 5vw, 4.5rem);
   overflow: hidden;
   border-radius: 2rem;
   color: ${({ theme }) => theme.colors.textPrimary};
@@ -110,7 +97,9 @@ export const Stage = styled.div`
       transparent 70%
     ),
     ${({ theme }) => theme.colors.background};
-  box-shadow: 0 60px 120px -60px rgba(11, 13, 16, 0.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 60px 120px -60px rgba(11, 13, 16, 0.6);
 
   &::after {
     content: "";
@@ -124,7 +113,8 @@ export const Stage = styled.div`
     pointer-events: none;
   }
 
-  @media (max-width: 520px) {
+  @media (max-width: 720px) {
+    width: auto;
     margin-inline: calc(var(--gutter) * -0.5);
     border-radius: 1.5rem;
   }

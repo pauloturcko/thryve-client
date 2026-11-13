@@ -73,9 +73,9 @@ export const Steps = styled.ol`
 
 export const Step = styled.li`
   display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr);
-  gap: 1rem;
-  padding: 1.1rem 0;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.95rem 0;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   transition: opacity 0.4s ease;
 
@@ -97,37 +97,21 @@ export const Step = styled.li`
   &[data-state="upcoming"] {
     opacity: 0.6;
   }
-
-  @media (prefers-reduced-motion: no-preference) {
-    &[data-state="active"] span {
-      box-shadow:
-        0 0 0 4px rgba(248, 250, 252, 0.12),
-        0 0 0 1px ${({ theme }) => theme.colors.textPrimary};
-    }
-  }
 `;
 
+// Só o número, sem contorno: a etapa atual se destaca pela cor.
 export const StepNumber = styled.span`
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  font-size: 0.8rem;
-  font-weight: 700;
+  padding-top: 0.1rem;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.85rem;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  box-shadow: inset 0 0 0 1px ${({ theme }) => theme.colors.border};
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    box-shadow 0.35s ease;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  transition: color 0.35s ease;
 
   [data-state="active"] > &,
   [data-state="done"] > & {
-    color: ${({ theme }) => theme.colors.onPrimary};
-    background: ${({ theme }) => theme.colors.primary};
-    box-shadow: none;
+    color: ${({ theme }) => theme.colors.textPrimary};
   }
 `;
 
@@ -205,7 +189,7 @@ export const PhoneColumn = styled.div`
 
 export const Phone = styled.div`
   position: relative;
-  width: clamp(16rem, 72vw, 18.5rem);
+  width: clamp(15rem, 70vw, 16.75rem);
   aspect-ratio: 9 / 19;
   padding: 0.55rem;
   border-radius: 3rem;
@@ -306,7 +290,8 @@ export const ScreenHeader = styled.div`
 
 export const BallTouch = styled.div`
   flex: none;
-  width: 100%;
+  align-self: center;
+  width: 86%;
   aspect-ratio: 1;
   margin-top: 0.25rem;
   cursor: pointer;
@@ -402,6 +387,7 @@ export const Transcript = styled.p`
 
 export const ResultArea = styled.div`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   margin-top: auto;
 
   > * {
@@ -448,8 +434,9 @@ export const Result = styled.div`
 export const ResultHeader = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.35rem 0.5rem;
   margin-bottom: 0.65rem;
 
   > span:first-child {

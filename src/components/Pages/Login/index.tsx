@@ -2,6 +2,7 @@
 
 import * as S from "./styles";
 import Cookies from "js-cookie";
+import { Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -13,6 +14,10 @@ import { RubberSegment } from "@/components/Atoms/RubberSegment";
 import { Logo } from "@/components/Atoms/Logo";
 import { MagicBento } from "@/components/Organisms/MagicBento";
 import { AUTH_COOKIE } from "@/constants/storage-keys";
+
+// Cadastro fechado ao público por enquanto: as contas são criadas direto na
+// API. A API também recusa o cadastro, então isto aqui é só a interface.
+const SIGNUP_ENABLED = process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true";
 
 type LoginFormData = {
   nome: string;
@@ -46,6 +51,14 @@ export const LoginPage = () => {
       return;
     }
 
+    if (!SIGNUP_ENABLED) {
+      dispatchToast({
+        type: "info",
+        message: "A criação de contas está desativada no momento.",
+      });
+      return;
+    }
+
     createAccount.mutate(
       {
         name: data.nome,
@@ -67,6 +80,8 @@ export const LoginPage = () => {
     reset();
   };
 
+  const signupLocked = !isActive && !SIGNUP_ENABLED;
+
   const form = (
     <S.CardBody>
       <S.Brand>
@@ -77,7 +92,9 @@ export const LoginPage = () => {
         <p>
           {isActive
             ? "Entre para ver como está o seu mês."
-            : "Leva menos de um minuto para começar."}
+            : signupLocked
+              ? "Por enquanto, o acesso é liberado apenas por convite."
+              : "Leva menos de um minuto para começar."}
         </p>
       </S.Heading>
       <RubberSegment
@@ -92,11 +109,22 @@ export const LoginPage = () => {
         ]}
       />
       <S.FormWrapper onSubmit={handleSubmit(onSubmit)}>
+        {signupLocked ? (
+          <S.Notice role="status">
+            <Lock
+              aria-hidden="true"
+              size={16}
+              strokeWidth={1.75}
+            />
+            A criação de contas está desativada momentaneamente, por segurança.
+          </S.Notice>
+        ) : null}
         {!isActive ? (
           <FormInput.Text
             label="Nome"
             placeholder="Como podemos te chamar?"
             autoComplete="name"
+            disabled={signupLocked}
             {...register("nome")}
           />
         ) : null}
@@ -105,6 +133,7 @@ export const LoginPage = () => {
           placeholder="voce@email.com"
           type="email"
           autoComplete="email"
+          disabled={signupLocked}
           {...register("email")}
         />
         <FormInput.Text
@@ -112,6 +141,7 @@ export const LoginPage = () => {
           placeholder="Sua senha"
           type="password"
           autoComplete={isActive ? "current-password" : "new-password"}
+          disabled={signupLocked}
           {...register("senha")}
         />
         {isActive ? (

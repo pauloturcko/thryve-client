@@ -1,11 +1,12 @@
 "use client";
 
 import { ThemeProvider } from "styled-components";
+import { ReviewPreview } from "../ReviewPreview";
 import { Section } from "../Section";
 import { SectionHeading } from "../SectionHeading";
-import { StatementImport } from "../StatementImport";
 import { VoiceDemo } from "../VoiceDemo";
 import { Accent, Container, DevelopmentTag } from "../styles";
+import { demoBankSync, demoStatement } from "../data";
 import { landingThemes } from "../theme";
 import { reveal } from "../useReveal";
 import * as S from "./styles";
@@ -14,6 +15,12 @@ const IMPORT_STEPS = [
   "Você envia o arquivo do extrato do banco ou da fatura do cartão.",
   "A Thryve lê as transações e cria pré-cadastros de receitas e despesas.",
   "Você revisa, completa o que faltou e confirma.",
+];
+
+const BANK_STEPS = [
+  "Você autoriza a conexão com o seu banco por meio da Pluggy.",
+  "As novas movimentações da conta chegam à Thryve como pré-cadastros.",
+  "Você revisa, ajusta o que for preciso e confirma o lançamento.",
 ];
 
 export const Technology = () => (
@@ -28,21 +35,27 @@ export const Technology = () => (
       <S.Inner>
         <SectionHeading
           titleId="tecnologia-title"
+          layout="wide"
           status={<DevelopmentTag>Em desenvolvimento</DevelopmentTag>}
           title={
             <>
               Menos digitação.
-              <br />A decisão continua <Accent>sendo sua.</Accent>
+              <br />A decisão continua
+              <br />
+              <Accent>sendo sua.</Accent>
             </>
           }
-          lead="Duas funcionalidades em construção para reduzir o trabalho manual de registrar cada movimentação. Em ambas, nenhum lançamento é confirmado sem passar pela sua revisão."
+          lead="Três funcionalidades em construção para reduzir o trabalho manual de registrar cada movimentação. Em todas, nenhum lançamento é confirmado sem passar pela sua revisão."
         />
 
-        <S.ImportRow>
+        <S.FeatureRow>
           <S.Feature {...reveal(0)}>
             <S.FeatureTitle>
-              <S.FeatureIndex>4.1</S.FeatureIndex>
-              <h3>Importação inteligente de extratos</h3>
+              <h3>
+                Importação inteligente
+                <br />
+                de extratos
+              </h3>
             </S.FeatureTitle>
             <S.FeatureSteps>
               {IMPORT_STEPS.map((step) => (
@@ -50,14 +63,46 @@ export const Technology = () => (
               ))}
             </S.FeatureSteps>
             <S.Aside>
-              Não é uma conexão com o seu banco. Você escolhe o arquivo e decide
-              o que entra.
+              Não depende de conexão com o banco. Você escolhe o arquivo e
+              decide o que entra.
             </S.Aside>
           </S.Feature>
-          <S.ImportVisual {...reveal(1)}>
-            <StatementImport />
-          </S.ImportVisual>
-        </S.ImportRow>
+          <S.FeatureVisual {...reveal(1)}>
+            <ReviewPreview
+              source={demoStatement}
+              origin="file"
+              footer="Nada é salvo antes da sua confirmação."
+            />
+          </S.FeatureVisual>
+        </S.FeatureRow>
+
+        <S.FeatureRow $reverse>
+          <S.Feature {...reveal(0)}>
+            <S.FeatureTitle>
+              <h3>
+                Conexão com o seu banco
+                <br />
+                pela Pluggy
+              </h3>
+            </S.FeatureTitle>
+            <S.FeatureSteps>
+              {BANK_STEPS.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </S.FeatureSteps>
+            <S.Aside>
+              O que você gasta no banco aparece na Thryve, mas só vira
+              lançamento depois da sua confirmação.
+            </S.Aside>
+          </S.Feature>
+          <S.FeatureVisual {...reveal(1)}>
+            <ReviewPreview
+              source={demoBankSync}
+              origin="bank"
+              footer="Cada movimentação espera a sua revisão."
+            />
+          </S.FeatureVisual>
+        </S.FeatureRow>
 
         <ThemeProvider theme={landingThemes.dark}>
           <S.Stage
@@ -68,7 +113,6 @@ export const Technology = () => (
               intro={
                 <S.StageHeader>
                   <S.FeatureTitle>
-                    <S.FeatureIndex>4.2</S.FeatureIndex>
                     <h3>Registro de despesas por voz</h3>
                   </S.FeatureTitle>
                   <S.StageLead>

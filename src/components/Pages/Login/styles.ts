@@ -99,6 +99,28 @@ export const FormWrapper = styled.form`
   width: 100%;
 `;
 
+export const Notice = styled.p`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  background: ${({ theme }) =>
+    `color-mix(in srgb, ${theme.colors.warning} 10%, transparent)`};
+  box-shadow: inset 0 0 0 1px
+    ${({ theme }) =>
+      `color-mix(in srgb, ${theme.colors.warning} 35%, transparent)`};
+
+  svg {
+    flex: none;
+    margin-top: 0.1rem;
+    color: ${({ theme }) => theme.colors.warning};
+  }
+`;
+
 export const ButtonWrapper = styled.div`
   width: 100%;
   margin-top: 0.25rem;

@@ -1,10 +1,23 @@
 import { css, styled } from "styled-components";
 import { displayType } from "../styles";
 
+export type HeadingLayout = "split" | "wide" | "stacked";
+
 const layouts = {
   split: css`
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     column-gap: clamp(2rem, 5vw, 5rem);
+  `,
+  // Título em linhas curtas e texto de apoio largo, alinhado no topo.
+  wide: css`
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    column-gap: clamp(2rem, 4vw, 4rem);
+
+    > p {
+      align-self: start;
+      max-width: 40rem;
+      padding-top: 0.6rem;
+    }
   `,
   stacked: css`
     grid-template-columns: minmax(0, 1fr);
@@ -16,7 +29,7 @@ const layouts = {
   `,
 };
 
-export const Heading = styled.header<{ $layout: "split" | "stacked" }>`
+export const Heading = styled.header<{ $layout: HeadingLayout }>`
   display: grid;
   row-gap: 1.75rem;
   ${({ $layout }) => layouts[$layout]};
