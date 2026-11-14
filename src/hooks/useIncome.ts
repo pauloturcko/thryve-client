@@ -3,10 +3,10 @@ import { BANK_ACCOUNTS_QUERY_KEY } from "@/hooks/useBankAccount";
 import {
   createIncomeService,
   deleteIncomeService,
-  IncomeFilters,
   loadIncomesService,
   updateIncomeService,
-} from "@/services/income-service";
+} from "@/services/rendas/IncomeService/income-service";
+import { IncomeFilters } from "@/services/rendas/IncomeService/types";
 import { getErrorMessage } from "@/utils/get-error-message";
 import {
   keepPreviousData,

@@ -1,16 +1,5 @@
 import { http } from "@/http/http";
-
-export type PaymentPreference = {
-  id: number;
-  paymentMethodId: number;
-  isActive: boolean;
-  paymentMethod: {
-    id: number;
-    name: string;
-    slug: string;
-    requiresCard: boolean;
-  };
-};
+import { PaymentPreference } from "./types";
 
 export const loadPaymentPreferencesService = {
   loadAll: async (): Promise<PaymentPreference[]> => {

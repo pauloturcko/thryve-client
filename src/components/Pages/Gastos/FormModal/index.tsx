@@ -21,7 +21,7 @@ import { useCard } from "@/hooks/useCard";
 import { useCategory } from "@/hooks/useCategory";
 import { useExpense } from "@/hooks/useExpense";
 import { usePaymentPreference } from "@/hooks/usePaymentPreference";
-import { Expense } from "@/services/expense-service";
+import { Expense } from "@/services/gastos/ExpenseService/types";
 import { todayISO } from "@/utils/date";
 import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";

@@ -1,3 +1,5 @@
+import { enumToOptions } from "@/utils/enum-options";
+
 export enum CardType {
   Credito = 1,
   Debito = 2,
@@ -10,9 +12,4 @@ export const CardTypeLabels: Record<CardType, string> = {
   [CardType.DebitoCredito]: "Débito e Crédito",
 };
 
-export const CardTypeOptions = Object.entries(CardType)
-  .filter(([key]) => isNaN(Number(key)))
-  .map(([, value]) => ({
-    value,
-    label: CardTypeLabels[value as CardType],
-  }));
+export const CardTypeOptions = enumToOptions(CardType, CardTypeLabels);

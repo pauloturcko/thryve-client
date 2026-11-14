@@ -14,7 +14,7 @@ import { useBankAccount } from "@/hooks/useBankAccount";
 import { useCategory } from "@/hooks/useCategory";
 import { useExpensesList } from "@/hooks/useExpense";
 import { useIncome } from "@/hooks/useIncome";
-import { Income } from "@/services/income-service";
+import { Income } from "@/services/rendas/IncomeService/types";
 import { formatDateBR, todayISO } from "@/utils/date";
 import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";

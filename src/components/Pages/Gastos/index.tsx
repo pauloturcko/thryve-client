@@ -21,7 +21,7 @@ import { useCategory } from "@/hooks/useCategory";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useExpense, useExpensesList } from "@/hooks/useExpense";
 import { usePaymentPreference } from "@/hooks/usePaymentPreference";
-import { Expense } from "@/services/expense-service";
+import { Expense } from "@/services/gastos/ExpenseService/types";
 import { currentMonth, formatDateBR } from "@/utils/date";
 import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingDown } from "lucide-react";

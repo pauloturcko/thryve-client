@@ -16,7 +16,7 @@ import {
 } from "@/hooks/useProfilePicture";
 import { useSystemPreferences } from "@/hooks/useSystemPreferences";
 import { useUser } from "@/hooks/useUser";
-import { SystemPreferences } from "@/services/auth-service";
+import { SystemPreferences } from "@/services/common/AuthService/types";
 import { formatMonthYear } from "@/utils/format";
 import * as S from "./styles";
 

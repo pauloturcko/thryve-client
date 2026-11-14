@@ -4,7 +4,7 @@ import {
   deleteBankAccountService,
   loadBankAccountsService,
   updateBankAccountService,
-} from "@/services/bank-account-service";
+} from "@/services/configuracoes/BankAccountService/bank-account-service";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

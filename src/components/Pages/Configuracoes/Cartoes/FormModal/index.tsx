@@ -4,7 +4,7 @@ import { FormWrapper } from "@/components/Atoms/FormWrapper";
 import { CardFlag, CardFlagOptions } from "@/constants/enums/card-flag-enum";
 import { CardType, CardTypeOptions } from "@/constants/enums/card-type-enum";
 import { useCard } from "@/hooks/useCard";
-import { Card } from "@/services/card-service";
+import { Card } from "@/services/configuracoes/CardService/types";
 import { formatCurrencyInput, formatExpiryDate } from "@/utils/format";
 import { maskCurrency, maskDigitsOnly, maskExpiryDate } from "@/utils/masks";
 import { ChangeEvent } from "react";

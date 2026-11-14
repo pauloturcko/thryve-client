@@ -1,3 +1,5 @@
+import { enumToOptions } from "@/utils/enum-options";
+
 export enum IncomeKind {
   Recorrente = 0,
   Pontual = 1,
@@ -10,9 +12,4 @@ export const IncomeKindLabels: Record<IncomeKind, string> = {
   [IncomeKind.Reembolso]: "Reembolso",
 };
 
-export const IncomeKindOptions = Object.entries(IncomeKind)
-  .filter(([key]) => isNaN(Number(key)))
-  .map(([, value]) => ({
-    value,
-    label: IncomeKindLabels[value as IncomeKind],
-  }));
+export const IncomeKindOptions = enumToOptions(IncomeKind, IncomeKindLabels);

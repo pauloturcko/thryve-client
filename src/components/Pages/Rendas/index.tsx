@@ -20,7 +20,7 @@ import { useModalContext } from "@/contexts/ModalContext";
 import { useCategory } from "@/hooks/useCategory";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useIncome, useIncomesList } from "@/hooks/useIncome";
-import { Income } from "@/services/income-service";
+import { Income } from "@/services/rendas/IncomeService/types";
 import { currentMonth, formatDateBR } from "@/utils/date";
 import { parseOptionalNumber, sumAmounts } from "@/utils/parse";
 import { CircleCheck, Clock, Plus, TrendingUp } from "lucide-react";

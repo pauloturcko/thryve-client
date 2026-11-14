@@ -10,7 +10,7 @@ import { useBankAccount } from "@/hooks/useBankAccount";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useExpensesList } from "@/hooks/useExpense";
 import { useIncomesList } from "@/hooks/useIncome";
-import { BankAccount } from "@/services/bank-account-service";
+import { BankAccount } from "@/services/configuracoes/BankAccountService/types";
 import { AccountDetails } from "./AccountDetails";
 import { NewBankAccount } from "./FormModal";
 

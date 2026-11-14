@@ -8,7 +8,7 @@ import { CategoryType } from "@/constants/enums/category-type-enum";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useCategory } from "@/hooks/useCategory";
 import { useConfirm } from "@/hooks/useConfirm";
-import { Category } from "@/services/category-service";
+import { Category } from "@/services/configuracoes/CategoryService/types";
 import { NewCategory } from "./FormModal";
 import * as S from "./styles";
 

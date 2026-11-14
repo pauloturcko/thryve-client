@@ -4,7 +4,7 @@ import {
   deleteGoalService,
   loadGoalsService,
   updateGoalService,
-} from "@/services/goal-service";
+} from "@/services/configuracoes/GoalService/goal-service";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

@@ -4,7 +4,7 @@ import {
   deleteCardService,
   loadCardsService,
   updateCardService,
-} from "@/services/card-service";
+} from "@/services/configuracoes/CardService/card-service";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

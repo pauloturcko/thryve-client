@@ -1,32 +1,10 @@
 import { http } from "@/http/http";
-
-type CreateGoalParams = {
-  name: string;
-  targetAmount?: number | null;
-  savedAmount?: number;
-  priority: number;
-  status?: number;
-  deadline?: string | null;
-  notes?: string | null;
-};
-
-export type Goal = {
-  id: number;
-  userId: number;
-  name: string;
-  slug: string;
-  targetAmount: string | null;
-  savedAmount: string;
-  priority: number;
-  status: number;
-  deadline: string | null;
-  completedAt: string | null;
-  notes: string | null;
-};
-
-type LoadAllGoalsResponse = {
-  goals: Goal[];
-};
+import {
+  CreateGoalParams,
+  Goal,
+  LoadAllGoalsResponse,
+  UpdateGoalParams,
+} from "./types";
 
 export const createGoalService = {
   createGoal: (params: CreateGoalParams) =>
@@ -43,10 +21,6 @@ export const loadGoalsService = {
 export const deleteGoalService = {
   deleteGoal: ({ id }: { id: number }) =>
     http.delete("/goals/delete", { data: { id } }),
-};
-
-export type UpdateGoalParams = Partial<CreateGoalParams> & {
-  id: number;
 };
 
 export const updateGoalService = {

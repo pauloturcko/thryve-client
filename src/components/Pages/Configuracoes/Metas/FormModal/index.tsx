@@ -13,7 +13,7 @@ import {
 } from "@/constants/enums/goal-status-enum";
 import { useGoal } from "@/hooks/useGoal";
 import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
-import { Goal } from "@/services/goal-service";
+import { Goal } from "@/services/configuracoes/GoalService/types";
 import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";
 import { parseCurrencyInput } from "@/utils/parse";

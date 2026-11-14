@@ -18,9 +18,9 @@ import {
   IncomeStatusLabels,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
-import { BankAccount } from "@/services/bank-account-service";
-import { Expense } from "@/services/expense-service";
-import { Income } from "@/services/income-service";
+import { BankAccount } from "@/services/configuracoes/BankAccountService/types";
+import { Expense } from "@/services/gastos/ExpenseService/types";
+import { Income } from "@/services/rendas/IncomeService/types";
 import { currentMonth, formatDateBR, todayISO } from "@/utils/date";
 import { sumAmounts } from "@/utils/parse";
 import * as S from "./styles";

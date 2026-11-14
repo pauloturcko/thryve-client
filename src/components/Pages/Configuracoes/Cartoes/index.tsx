@@ -9,7 +9,7 @@ import { useModalContext } from "@/contexts/ModalContext";
 import { useCard } from "@/hooks/useCard";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useExpensesList } from "@/hooks/useExpense";
-import { Card } from "@/services/card-service";
+import { Card } from "@/services/configuracoes/CardService/types";
 import { CardDetails } from "./CardDetails";
 import { NewCard } from "./FormModal";
 

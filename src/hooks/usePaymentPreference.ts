@@ -1,9 +1,9 @@
 import { useToastContext } from "@/contexts/ToastContext";
 import {
   loadPaymentPreferencesService,
-  PaymentPreference,
   togglePaymentPreferenceService,
-} from "@/services/payment-preferences-service";
+} from "@/services/configuracoes/PaymentPreferencesService/payment-preferences-service";
+import { PaymentPreference } from "@/services/configuracoes/PaymentPreferencesService/types";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

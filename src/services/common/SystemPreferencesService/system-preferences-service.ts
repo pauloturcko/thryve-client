@@ -1,11 +1,8 @@
 import { http } from "@/http/http";
-import { SystemPreferences } from "@/services/auth-service";
-
-export type UpdateSystemPreferencesParams = Partial<SystemPreferences>;
-
-type UpdateSystemPreferencesResponse = {
-  systemPreferences: SystemPreferences;
-};
+import {
+  UpdateSystemPreferencesParams,
+  UpdateSystemPreferencesResponse,
+} from "./types";
 
 export const systemPreferencesService = {
   update: async (params: UpdateSystemPreferencesParams) => {

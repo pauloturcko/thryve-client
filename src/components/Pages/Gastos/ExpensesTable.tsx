@@ -18,7 +18,7 @@ import {
   ExpenseStatusLabels,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
-import { Expense } from "@/services/expense-service";
+import { Expense } from "@/services/gastos/ExpenseService/types";
 import { formatDateBR } from "@/utils/date";
 
 const column = createDataTableColumns<Expense>();

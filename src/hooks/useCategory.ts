@@ -4,7 +4,7 @@ import {
   deleteCategoryService,
   loadCategoriesService,
   updateCategoryService,
-} from "@/services/category-service";
+} from "@/services/configuracoes/CategoryService/category-service";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

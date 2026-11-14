@@ -6,7 +6,7 @@ import {
   AccountTypeOptions,
 } from "@/constants/enums/account-type-enum";
 import { useBankAccount } from "@/hooks/useBankAccount";
-import { BankAccount } from "@/services/bank-account-service";
+import { BankAccount } from "@/services/configuracoes/BankAccountService/types";
 import { formatCurrencyInput } from "@/utils/format";
 import { maskCurrency } from "@/utils/masks";
 import { ChangeEvent } from "react";

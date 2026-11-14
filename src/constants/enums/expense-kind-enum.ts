@@ -1,3 +1,5 @@
+import { enumToOptions } from "@/utils/enum-options";
+
 export enum ExpenseKind {
   Fixo = 0,
   Variavel = 1,
@@ -8,9 +10,4 @@ export const ExpenseKindLabels: Record<ExpenseKind, string> = {
   [ExpenseKind.Variavel]: "Variável",
 };
 
-export const ExpenseKindOptions = Object.entries(ExpenseKind)
-  .filter(([key]) => isNaN(Number(key)))
-  .map(([, value]) => ({
-    value,
-    label: ExpenseKindLabels[value as ExpenseKind],
-  }));
+export const ExpenseKindOptions = enumToOptions(ExpenseKind, ExpenseKindLabels);

@@ -8,7 +8,7 @@ import {
   CategoryTypeOptions,
 } from "@/constants/enums/category-type-enum";
 import { useCategory } from "@/hooks/useCategory";
-import { Category } from "@/services/category-service";
+import { Category } from "@/services/configuracoes/CategoryService/types";
 import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import * as S from "./styles";
 import { useInvalidFormToast } from "@/hooks/useInvalidFormToast";
