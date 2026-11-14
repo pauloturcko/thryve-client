@@ -1,10 +1,9 @@
-import { http } from "@/http/http";
-import { BankAccount } from "./bank-account-service";
-import { Card } from "./card-service";
-import { Category } from "./category-service";
-import { PaymentPreference } from "./payment-preferences-service";
+import { BankAccount } from "@/services/configuracoes/BankAccountService/types";
+import { Card } from "@/services/configuracoes/CardService/types";
+import { Category } from "@/services/configuracoes/CategoryService/types";
+import { PaymentPreference } from "@/services/configuracoes/PaymentPreferencesService/types";
 
-type CreateExpenseParams = {
+export type CreateExpenseParams = {
   expenseKind: number;
   description: string;
   amount: number;
@@ -50,37 +49,12 @@ export type ExpenseFilters = {
   paymentMethodId?: number;
 };
 
-type LoadAllExpensesResponse = {
+export type LoadAllExpensesResponse = {
   expenses: Expense[];
-};
-
-export const createExpenseService = {
-  createExpense: (params: CreateExpenseParams) =>
-    http.post("/expenses/register", params),
-};
-
-export const loadExpensesService = {
-  loadAll: async (filters: ExpenseFilters = {}): Promise<Expense[]> => {
-    const response = await http.get<LoadAllExpensesResponse>(
-      "/expenses/user-expenses",
-      { params: filters }
-    );
-    return response.data.expenses;
-  },
-};
-
-export const deleteExpenseService = {
-  deleteExpense: ({ id }: { id: number }) =>
-    http.delete("/expenses/delete", { data: { id } }),
 };
 
 export type UpdateExpenseParams = Partial<
   Omit<CreateExpenseParams, "installments">
 > & {
   id: number;
-};
-
-export const updateExpenseService = {
-  updateExpense: ({ id, ...fields }: UpdateExpenseParams) =>
-    http.patch("/expenses/update", { id, ...fields }),
 };

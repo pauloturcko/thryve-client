@@ -1,7 +1,7 @@
 "use client";
 import { ItemActions } from "@/components/Atoms/ItemActions";
 import { getCategoryIcon } from "@/constants/categoryIcons";
-import { Category } from "@/services/category-service";
+import { Category } from "@/services/configuracoes/CategoryService/types";
 import { CircleCheck, Clock } from "lucide-react";
 import { createElement } from "react";
 import * as S from "./styles";

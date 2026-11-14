@@ -1,24 +1,10 @@
 import { http } from "@/http/http";
-
-type CreateCategoryParams = {
-  name: string;
-  icon: string;
-  color: string;
-  type: number;
-};
-
-export type Category = {
-  id: number;
-  userId: number;
-  name: string;
-  icon: string;
-  color: string;
-  type: number;
-};
-
-type LoadAllCategoriesResponse = {
-  categories: Category[];
-};
+import {
+  CreateCategoryParams,
+  Category,
+  LoadAllCategoriesResponse,
+  UpdateCategoryParams,
+} from "./types";
 
 export const createCategoryService = {
   createCategory: ({ name, icon, color, type }: CreateCategoryParams) =>
@@ -37,10 +23,6 @@ export const loadCategoriesService = {
 export const deleteCategoryService = {
   deleteCategory: ({ id }: { id: number }) =>
     http.delete("/categories/delete", { data: { id } }),
-};
-
-export type UpdateCategoryParams = Partial<CreateCategoryParams> & {
-  id: number;
 };
 
 export const updateCategoryService = {

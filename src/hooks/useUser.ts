@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { userService } from "@/services/auth-service";
+import { userService } from "@/services/common/AuthService/auth-service";
 import { AUTH_COOKIE } from "@/constants/storage-keys";
 import { getProfilePictureUrl } from "@/utils/get-profile-picture-url";
 

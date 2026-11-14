@@ -1,3 +1,5 @@
+import { enumToOptions } from "@/utils/enum-options";
+
 export enum AccountType {
   ContaDigital = 0,
   ContaCorrente = 1,
@@ -14,9 +16,4 @@ export const AccountTypeLabels: Record<AccountType, string> = {
   [AccountType.Dinheiro]: "Dinheiro",
 };
 
-export const AccountTypeOptions = Object.entries(AccountType)
-  .filter(([key]) => isNaN(Number(key)))
-  .map(([, value]) => ({
-    value,
-    label: AccountTypeLabels[value as AccountType],
-  }));
+export const AccountTypeOptions = enumToOptions(AccountType, AccountTypeLabels);

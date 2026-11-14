@@ -1,4 +1,4 @@
-import { Goal } from "@/services/goal-service";
+import { Goal } from "@/services/configuracoes/GoalService/types";
 
 export const goalProgress = (goal: Goal): number | null => {
   const target = Number(goal.targetAmount);

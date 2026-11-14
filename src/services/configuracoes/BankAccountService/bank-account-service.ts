@@ -1,22 +1,10 @@
 import { http } from "@/http/http";
-
-type CreateBankAccountParams = {
-  name: string;
-  accountType: number;
-  balance: number;
-};
-
-export type BankAccount = {
-  id: number;
-  userId: number;
-  name: string;
-  accountType: number;
-  balance: string;
-};
-
-type LoadAllBankAccountsResponse = {
-  bankAccounts: BankAccount[];
-};
+import {
+  CreateBankAccountParams,
+  BankAccount,
+  LoadAllBankAccountsResponse,
+  UpdateBankAccountParams,
+} from "./types";
 
 export const createBankAccountService = {
   createBankAccount: ({
@@ -39,10 +27,6 @@ export const loadBankAccountsService = {
 export const deleteBankAccountService = {
   deleteBankAccount: ({ id }: { id: number }) =>
     http.delete("/bank-accounts/delete", { data: { id } }),
-};
-
-export type UpdateBankAccountParams = Partial<CreateBankAccountParams> & {
-  id: number;
 };
 
 export const updateBankAccountService = {

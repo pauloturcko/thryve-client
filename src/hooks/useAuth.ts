@@ -1,5 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authService, loginService } from "@/services/auth-service";
+import {
+  authService,
+  loginService,
+} from "@/services/common/AuthService/auth-service";
 import { useToastContext } from "@/contexts/ToastContext";
 import { isAxiosError } from "axios";
 import Cookies from "js-cookie";

@@ -18,7 +18,7 @@ import {
   IncomeStatusLabels,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
-import { Income } from "@/services/income-service";
+import { Income } from "@/services/rendas/IncomeService/types";
 import { formatDateBR } from "@/utils/date";
 
 const column = createDataTableColumns<Income>();

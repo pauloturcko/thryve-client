@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToastContext } from "@/contexts/ToastContext";
 import { USER_QUERY_KEY } from "@/hooks/useUser";
-import { LoggedUserResponse } from "@/services/auth-service";
-import { profilePictureService } from "@/services/profile-picture-service";
+import { LoggedUserResponse } from "@/services/common/AuthService/types";
+import { profilePictureService } from "@/services/configuracoes/ProfilePictureService/profile-picture-service";
 import { getErrorMessage } from "@/utils/get-error-message";
 
 export const PROFILE_PICTURE_ACCEPTED_TYPES = [

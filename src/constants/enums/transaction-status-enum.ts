@@ -1,3 +1,5 @@
+import { enumToOptions } from "@/utils/enum-options";
+
 export enum TransactionStatus {
   Pendente = 0,
   Pago = 1,
@@ -13,14 +15,12 @@ export const IncomeStatusLabels: Record<TransactionStatus, string> = {
   [TransactionStatus.Pago]: "Recebido",
 };
 
-const toOptions = (labels: Record<TransactionStatus, string>) =>
-  Object.entries(TransactionStatus)
-    .filter(([key]) => isNaN(Number(key)))
-    .map(([, value]) => ({
-      value,
-      label: labels[value as TransactionStatus],
-    }));
+export const ExpenseStatusOptions = enumToOptions(
+  TransactionStatus,
+  ExpenseStatusLabels
+);
 
-export const ExpenseStatusOptions = toOptions(ExpenseStatusLabels);
-
-export const IncomeStatusOptions = toOptions(IncomeStatusLabels);
+export const IncomeStatusOptions = enumToOptions(
+  TransactionStatus,
+  IncomeStatusLabels
+);

@@ -44,6 +44,27 @@ export const Input = styled.input<{ $hasError?: boolean }>`
     color: ${({ theme }) => theme.colors.textMuted};
   }
 
+  &[type="date"] {
+    height: 2.75rem;
+    line-height: normal;
+  }
+
+  &[type="date"]::-webkit-datetime-edit,
+  &[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+
+  &[type="date"]::-webkit-date-and-time-value {
+    margin: 0;
+    text-align: left;
+  }
+
+  &[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    filter: ${({ theme }) => (theme.mode === "dark" ? "invert(1)" : "none")};
+  }
+
   &:hover {
     border-color: ${({ $hasError, theme }) =>
       $hasError ? theme.colors.danger : theme.colors.textMuted};

@@ -9,7 +9,7 @@ import { GoalStatus } from "@/constants/enums/goal-status-enum";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useConfirm } from "@/hooks/useConfirm";
 import { useGoal } from "@/hooks/useGoal";
-import { Goal } from "@/services/goal-service";
+import { Goal } from "@/services/configuracoes/GoalService/types";
 import { GoalDetails } from "./GoalDetails";
 import { NewGoal } from "./FormModal";
 

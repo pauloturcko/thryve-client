@@ -2,7 +2,7 @@ import {
   AccountType,
   AccountTypeLabels,
 } from "@/constants/enums/account-type-enum";
-import { BankAccount } from "@/services/bank-account-service";
+import { BankAccount } from "@/services/configuracoes/BankAccountService/types";
 import * as S from "./styles";
 import { useFormatCurrency } from "@/hooks/useFormatCurrency";
 

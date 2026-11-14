@@ -14,8 +14,8 @@ import {
   ExpenseStatusLabels,
   TransactionStatus,
 } from "@/constants/enums/transaction-status-enum";
-import { Card } from "@/services/card-service";
-import { Expense } from "@/services/expense-service";
+import { Card } from "@/services/configuracoes/CardService/types";
+import { Expense } from "@/services/gastos/ExpenseService/types";
 import { currentMonth, formatDateBR, todayISO } from "@/utils/date";
 import { formatExpiryDate } from "@/utils/format";
 import { sumAmounts } from "@/utils/parse";

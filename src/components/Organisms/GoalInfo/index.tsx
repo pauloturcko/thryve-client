@@ -7,7 +7,7 @@ import {
   GoalStatusLabels,
 } from "@/constants/enums/goal-status-enum";
 import { useFormatCurrency } from "@/hooks/useFormatCurrency";
-import { Goal } from "@/services/goal-service";
+import { Goal } from "@/services/configuracoes/GoalService/types";
 import { formatPercent, goalProgress } from "@/utils/goal";
 import * as S from "./styles";
 

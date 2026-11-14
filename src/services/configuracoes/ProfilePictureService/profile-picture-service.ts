@@ -1,8 +1,5 @@
 import { http } from "@/http/http";
-
-type UploadProfilePictureResponse = {
-  profilePicture: string;
-};
+import { UploadProfilePictureResponse } from "./types";
 
 export const profilePictureService = {
   upload: async (file: File) => {

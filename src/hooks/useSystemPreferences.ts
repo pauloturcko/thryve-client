@@ -7,11 +7,9 @@ import {
 import { useThemeMode } from "@/contexts/ThemeModeContext";
 import { useToastContext } from "@/contexts/ToastContext";
 import { USER_QUERY_KEY, useUser } from "@/hooks/useUser";
-import { LoggedUserResponse } from "@/services/auth-service";
-import {
-  systemPreferencesService,
-  UpdateSystemPreferencesParams,
-} from "@/services/system-preferences-service";
+import { LoggedUserResponse } from "@/services/common/AuthService/types";
+import { systemPreferencesService } from "@/services/common/SystemPreferencesService/system-preferences-service";
+import { UpdateSystemPreferencesParams } from "@/services/common/SystemPreferencesService/types";
 import { ThemeMode } from "@/styles/theme";
 import { getErrorMessage } from "@/utils/get-error-message";
 

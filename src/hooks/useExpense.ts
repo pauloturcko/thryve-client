@@ -3,10 +3,10 @@ import { BANK_ACCOUNTS_QUERY_KEY } from "@/hooks/useBankAccount";
 import {
   createExpenseService,
   deleteExpenseService,
-  ExpenseFilters,
   loadExpensesService,
   updateExpenseService,
-} from "@/services/expense-service";
+} from "@/services/gastos/ExpenseService/expense-service";
+import { ExpenseFilters } from "@/services/gastos/ExpenseService/types";
 import { getErrorMessage } from "@/utils/get-error-message";
 import {
   keepPreviousData,

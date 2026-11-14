@@ -3,7 +3,7 @@ import mastercard from "@/assets/mastercard.svg";
 import visa from "@/assets/visa.svg";
 import { CardFlag } from "@/constants/enums/card-flag-enum";
 import { CardType, CardTypeLabels } from "@/constants/enums/card-type-enum";
-import { Card } from "@/services/card-service";
+import { Card } from "@/services/configuracoes/CardService/types";
 import { formatExpiryDate } from "@/utils/format";
 import * as S from "./styles";
 import { useFormatCurrency } from "@/hooks/useFormatCurrency";
