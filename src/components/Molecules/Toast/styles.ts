@@ -35,8 +35,7 @@ export const Wrapper = styled.div<{ $type: ToastType; $leaving: boolean }>`
         : $type === "warning"
           ? theme.colors.warning
           : theme.colors.info};
-  color: ${({ theme, $type }) =>
-    $type === "error" ? theme.colors.onDanger : theme.colors.textPrimary};
+  color: #ffffff;
   font-size: 0.95rem;
   font-weight: 600;
 `;
