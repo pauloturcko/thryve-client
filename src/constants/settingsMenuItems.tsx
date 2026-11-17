@@ -18,14 +18,14 @@ export const settingsMenuItems: SettingsMenuItem[] = [
     icon: <CreditCard />,
   },
   {
-    name: "Formas de Pagamento",
-    route: "/configuracoes/formas-de-pagamento",
-    icon: <DollarSign />,
-  },
-  {
     name: "Metas",
     route: "/configuracoes/metas",
     icon: <Target />,
+  },
+  {
+    name: "Formas de Pagamento",
+    route: "/configuracoes/formas-de-pagamento",
+    icon: <DollarSign />,
   },
   {
     name: "Perfil",
