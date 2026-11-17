@@ -60,9 +60,13 @@ export const Page = styled.div`
 
 export const Statement = styled.h2`
   ${serifType};
-  max-width: 13ch;
-  font-size: clamp(3.1rem, 1.2rem + 6.2vw, 7.75rem);
-  line-height: 0.95;
+  font-size: clamp(2.75rem, 1rem + 5vw, 6.5rem);
+  line-height: 0.98;
+
+  /* Duas linhas fixas no desktop: "Prosperar vai além / de acumular dinheiro." */
+  > span {
+    display: block;
+  }
 
   em {
     font-style: italic;
@@ -87,7 +91,7 @@ export const Statement = styled.h2`
 
 export const Columns = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4.25fr) minmax(0, 3.25fr);
   column-gap: clamp(1.5rem, 4vw, 3.5rem);
   row-gap: 2.5rem;
   align-items: start;
@@ -107,6 +111,11 @@ export const Lede = styled.p`
   line-height: 1.4;
   color: ${({ theme }) => theme.colors.textPrimary};
   text-wrap: pretty;
+
+  /* Mantém "futuro." acompanhado na última linha, embaixo da capitular. */
+  span {
+    white-space: nowrap;
+  }
 
   &::first-letter {
     float: left;
@@ -250,7 +259,6 @@ export const Colophon = styled.div`
 `;
 
 export const Footnote = styled.p`
-  max-width: 38rem;
   font-size: 0.85rem;
   line-height: 1.6;
   color: ${({ theme }) => theme.colors.textSecondary};

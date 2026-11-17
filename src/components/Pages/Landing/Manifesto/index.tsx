@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRef } from "react";
-import { ArrowRight } from "lucide-react";
 import { useScroll, useTransform } from "motion/react";
 import { YMark } from "@/components/Atoms/YMark";
 import { Section } from "../Section";
-import { Container, TextLink } from "../styles";
+import { Container } from "../styles";
 import { reveal } from "../useReveal";
 import * as S from "./styles";
 
@@ -39,21 +37,26 @@ export const Manifesto = () => {
             id="manifesto-title"
             {...reveal(1)}
           >
-            <em>Prosperar</em> vai além de acumular dinheiro.
-            <sup>
-              <a
-                href="#manifesto-nota"
-                aria-label="Ver nota sobre a inspiração do manifesto"
-              >
-                1
-              </a>
-            </sup>
+            <span>
+              <em>Prosperar</em> vai além
+            </span>
+            <span>
+              de acumular dinheiro.
+              <sup>
+                <a
+                  href="#manifesto-nota"
+                  aria-label="Ver nota sobre a inspiração do manifesto"
+                >
+                  1
+                </a>
+              </sup>
+            </span>
           </S.Statement>
 
           <S.Columns>
             <S.Lede {...reveal(0)}>
               É ter clareza sobre o presente, coragem para definir objetivos e
-              disciplina para construir o futuro.
+              disciplina para <span>construir o futuro.</span>
             </S.Lede>
             <S.Body {...reveal(1)}>
               <p>
@@ -99,16 +102,6 @@ export const Manifesto = () => {
               presentes em <cite>Pense e Enriqueça</cite> e{" "}
               <cite>Mais Esperto que o Diabo</cite>, de Napoleon Hill.
             </S.Footnote>
-            <TextLink
-              as={Link}
-              href="/login"
-            >
-              Criar conta ou entrar
-              <ArrowRight
-                aria-hidden="true"
-                strokeWidth={1.75}
-              />
-            </TextLink>
           </S.Colophon>
         </S.Page>
       </Container>

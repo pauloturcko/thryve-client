@@ -234,17 +234,37 @@ export const demoGoals: DemoGoal[] = [
   },
 ];
 
-export const demoStatement = {
+export type DemoReviewRow = {
+  id: number;
+  date: string;
+  description: string;
+  amount: number;
+  kind: "income" | "expense";
+  category: string | null;
+  icon: string;
+  color: string;
+  missing: string | null;
+};
+
+export type DemoReviewSource = {
+  title: string;
+  subtitle: string;
+  rows: DemoReviewRow[];
+};
+
+export const demoStatement: DemoReviewSource = {
   title: "Extrato · Conta corrente",
-  period: "Novembro",
+  subtitle: "Novembro · 5 transações encontradas",
   rows: [
     {
       id: 1,
       date: "03/11",
       description: "Padaria Central",
       amount: 18.4,
-      kind: "expense" as const,
+      kind: "expense",
       category: "Alimentação",
+      icon: "utensils",
+      color: "#f97316",
       missing: null,
     },
     {
@@ -252,8 +272,10 @@ export const demoStatement = {
       date: "05/11",
       description: "Salário",
       amount: 8200,
-      kind: "income" as const,
+      kind: "income",
       category: "Salário",
+      icon: "briefcase",
+      color: "#3b82f6",
       missing: null,
     },
     {
@@ -261,8 +283,10 @@ export const demoStatement = {
       date: "07/11",
       description: "Posto Avenida",
       amount: 210,
-      kind: "expense" as const,
+      kind: "expense",
       category: "Combustível",
+      icon: "fuel",
+      color: "#0ea5e9",
       missing: null,
     },
     {
@@ -270,8 +294,10 @@ export const demoStatement = {
       date: "09/11",
       description: "Pix recebido",
       amount: 350,
-      kind: "income" as const,
+      kind: "income",
       category: null,
+      icon: "tag",
+      color: "#64748b",
       missing: "Categoria",
     },
     {
@@ -279,8 +305,61 @@ export const demoStatement = {
       date: "12/11",
       description: "Loja Online · parcela 2/6",
       amount: 129.9,
-      kind: "expense" as const,
+      kind: "expense",
       category: "Compras",
+      icon: "shirt",
+      color: "#ec4899",
+      missing: null,
+    },
+  ],
+};
+
+export const demoBankSync: DemoReviewSource = {
+  title: "Conta corrente",
+  subtitle: "Via Pluggy · 4 movimentações novas",
+  rows: [
+    {
+      id: 1,
+      date: "14/11",
+      description: "Mercado Bom Preço",
+      amount: 286.4,
+      kind: "expense",
+      category: "Mercado",
+      icon: "shopping-cart",
+      color: "#14b8a6",
+      missing: null,
+    },
+    {
+      id: 2,
+      date: "14/11",
+      description: "App de transporte",
+      amount: 23.9,
+      kind: "expense",
+      category: "Transporte",
+      icon: "bus",
+      color: "#0ea5e9",
+      missing: null,
+    },
+    {
+      id: 3,
+      date: "15/11",
+      description: "Pix recebido",
+      amount: 120,
+      kind: "income",
+      category: null,
+      icon: "tag",
+      color: "#64748b",
+      missing: "Categoria",
+    },
+    {
+      id: 4,
+      date: "15/11",
+      description: "Farmácia Central",
+      amount: 58.7,
+      kind: "expense",
+      category: "Saúde",
+      icon: "heart-pulse",
+      color: "#ef4444",
       missing: null,
     },
   ],

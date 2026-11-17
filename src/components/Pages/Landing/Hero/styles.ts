@@ -172,6 +172,19 @@ export const LightBand = styled.div`
   }
 `;
 
+// Mesmas regras de largura do header (padding lateral e largura máxima), para
+// a prévia alinhar exatamente com as bordas dele.
+export const HeaderWidth = styled.div`
+  position: relative;
+  z-index: 1;
+  padding-inline: var(--gutter);
+
+  > * {
+    max-width: calc(var(--content) + 1.5rem);
+    margin-inline: auto;
+  }
+`;
+
 export const Figure = styled.figure`
   ${intro(css`
     animation: ${present} 1.4s cubic-bezier(0.16, 1, 0.3, 1) 550ms both;
@@ -179,7 +192,8 @@ export const Figure = styled.figure`
 `;
 
 export const Frame = styled.div`
-  --scale: 1;
+  /* 1240 / 1180: largura do header sobre a largura da janela. */
+  --scale: 1.0508;
   position: relative;
   height: calc(${PREVIEW_HEIGHT}px * var(--scale));
 

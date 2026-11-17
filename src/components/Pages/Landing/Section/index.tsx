@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { styled, ThemeProvider } from "styled-components";
+import { css, styled, ThemeProvider } from "styled-components";
 import { landingThemes, Tone } from "../theme";
 import { paperGrain } from "../styles";
 
@@ -13,6 +13,8 @@ type SectionProps = {
   surface?: Surface;
   grain?: boolean;
   labelledBy?: string;
+  // Deixa sombras do conteúdo passarem por cima da seção seguinte.
+  raised?: boolean;
   children: ReactNode;
 };
 
@@ -24,6 +26,7 @@ export const Section = ({
   surface = "base",
   grain = false,
   labelledBy,
+  raised = false,
   children,
 }: SectionProps) => (
   <ThemeProvider theme={landingThemes[tone]}>
@@ -33,13 +36,18 @@ export const Section = ({
       aria-labelledby={labelledBy}
       $surface={surface}
       $grain={grain}
+      $raised={raised}
     >
       {children}
     </Root>
   </ThemeProvider>
 );
 
-const Root = styled.section<{ $surface: Surface; $grain: boolean }>`
+const Root = styled.section<{
+  $surface: Surface;
+  $grain: boolean;
+  $raised: boolean;
+}>`
   position: relative;
   isolation: isolate;
   overflow: clip;
@@ -52,4 +60,12 @@ const Root = styled.section<{ $surface: Surface; $grain: boolean }>`
         : theme.colors.surfaceElevated};
 
   ${({ $grain }) => $grain && paperGrain};
+
+  ${({ $raised }) =>
+    $raised &&
+    css`
+      z-index: 2;
+      overflow-x: clip;
+      overflow-y: visible;
+    `}
 `;

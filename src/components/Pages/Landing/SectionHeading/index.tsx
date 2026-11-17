@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { reveal } from "../useReveal";
+import { HeadingLayout } from "./styles";
 import * as S from "./styles";
 
 type SectionHeadingProps = {
@@ -9,7 +10,7 @@ type SectionHeadingProps = {
   title: ReactNode;
   lead?: ReactNode;
   status?: ReactNode;
-  layout?: "split" | "stacked";
+  layout?: HeadingLayout;
 };
 
 export const SectionHeading = ({

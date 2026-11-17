@@ -33,6 +33,7 @@ export const Hero = () => {
     <Section
       id="inicio"
       tone="dark"
+      raised
       labelledBy="hero-title"
     >
       <S.Glow aria-hidden="true" />
@@ -77,7 +78,7 @@ export const Hero = () => {
           data-tone="light"
           aria-hidden="true"
         />
-        <Container>
+        <S.HeaderWidth>
           <S.Figure>
             <S.Frame
               ref={frameRef}
@@ -90,7 +91,7 @@ export const Hero = () => {
               </S.Scaler>
             </S.Frame>
           </S.Figure>
-        </Container>
+        </S.HeaderWidth>
       </S.Stage>
     </Section>
   );
