@@ -21,7 +21,7 @@ export const ProgressHeader = styled.div`
   gap: 1rem;
 
   strong {
-    font-family: ${({ theme }) => theme.fonts.display};
+    font-family: ${({ theme }) => theme.fonts.sans};
     font-size: 1.75rem;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
