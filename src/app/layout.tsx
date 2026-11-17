@@ -2,19 +2,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import StyledComponentsRegistry from "./registry";
 import React from "react";
-import { Bricolage_Grotesque, Manrope } from "next/font/google";
-
-const bodyFont = Manrope({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const displayFont = Bricolage_Grotesque({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
+import { fontVariables } from "@/styles/fonts";
 
 export const metadata: Metadata = {
   title: "Thryve",
@@ -32,7 +20,8 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${bodyFont.variable} ${displayFont.variable}`}
+      className={fontVariables}
+      suppressHydrationWarning
     >
       <body suppressHydrationWarning>
         <StyledComponentsRegistry>

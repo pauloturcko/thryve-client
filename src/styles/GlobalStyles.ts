@@ -16,8 +16,7 @@ export const GlobalStyles = createGlobalStyle`
     body {
         background: ${({ theme }) => theme.colors.background};
         color: ${({ theme }) => theme.colors.textPrimary};
-        font-family: ${({ theme }) => theme.fonts.body};
-        font-feature-settings: "ss01";
+        font-family: ${({ theme }) => theme.fonts.sans};
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -25,7 +24,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     h1, h2, h3, h4 {
-        font-family: ${({ theme }) => theme.fonts.display};
+        font-family: ${({ theme }) => theme.fonts.sans};
         letter-spacing: -0.02em;
         text-wrap: balance;
     }
@@ -61,7 +60,6 @@ export const GlobalStyles = createGlobalStyle`
         appearance: none;
     }
 
-    /* O "all: unset" acima anula o display: none que o navegador dá ao hidden */
     [hidden] {
         display: none !important;
     }

@@ -132,7 +132,7 @@ const Hello = styled.span`
   }
 
   strong {
-    font-family: ${({ theme }) => theme.fonts.display};
+    font-family: ${({ theme }) => theme.fonts.sans};
     font-size: 0.95rem;
     font-weight: 600;
   }

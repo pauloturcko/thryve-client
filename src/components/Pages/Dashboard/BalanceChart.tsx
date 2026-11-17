@@ -15,6 +15,10 @@ type BalanceChartProps = {
   monthLabel: string;
 };
 
+type BalanceChartViewProps = BalanceChartProps & {
+  formatValue: (value: number) => string;
+};
+
 const smoothPath = (coords: [number, number][]) => {
   if (coords.length < 2) return "";
   let d = `M${coords[0][0]},${coords[0][1]}`;
@@ -27,8 +31,22 @@ const smoothPath = (coords: [number, number][]) => {
   return d;
 };
 
-export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
+export const BalanceChart = (props: BalanceChartProps) => {
   const formatCurrency = useFormatCurrency();
+  return (
+    <BalanceChartView
+      {...props}
+      formatValue={formatCurrency}
+    />
+  );
+};
+
+// Versão sem dependência do usuário logado, usada também na landing page.
+export const BalanceChartView = ({
+  points,
+  monthLabel,
+  formatValue,
+}: BalanceChartViewProps) => {
   const theme = useTheme();
   const gradientId = useId();
   const plotRef = useRef<HTMLDivElement>(null);
@@ -80,7 +98,7 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           preserveAspectRatio="none"
           role="img"
-          aria-label={`Saldo acumulado em ${monthLabel}: ${formatCurrency(values[lastIndex])} no dia ${points[lastIndex].day}`}
+          aria-label={`Saldo acumulado em ${monthLabel}: ${formatValue(values[lastIndex])} no dia ${points[lastIndex].day}`}
         >
           <defs>
             <linearGradient
@@ -161,7 +179,7 @@ export const BalanceChart = ({ points, monthLabel }: BalanceChartProps) => {
         >
           <span>Dia {activePoint.day}</span>
           <strong data-positive={positive}>
-            {formatCurrency(activePoint.balance)}
+            {formatValue(activePoint.balance)}
           </strong>
         </Tooltip>
       </Plot>

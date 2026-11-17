@@ -221,7 +221,7 @@ export const DueDate = styled.span`
   line-height: 1;
 
   strong {
-    font-family: ${({ theme }) => theme.fonts.display};
+    font-family: ${({ theme }) => theme.fonts.sans};
     font-size: 0.95rem;
     font-variant-numeric: tabular-nums;
   }
