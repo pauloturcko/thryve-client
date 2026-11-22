@@ -8,32 +8,6 @@ export const Inner = styled.div`
   padding-block: clamp(5rem, 10vw, 9rem);
 `;
 
-export const FeatureRow = styled.div<{ $reverse?: boolean }>`
-  display: grid;
-  grid-template-columns: ${({ $reverse }) =>
-    $reverse
-      ? "minmax(0, 7fr) minmax(0, 1fr) minmax(0, 4fr)"
-      : "minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr)"};
-  grid-template-areas: ${({ $reverse }) =>
-    $reverse ? '"visual . feature"' : '"feature . visual"'};
-  align-items: center;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "feature"
-      "visual";
-    row-gap: 2rem;
-  }
-`;
-
-export const Feature = styled.div`
-  grid-area: feature;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
-
 export const FeatureTitle = styled.div`
   display: flex;
   align-items: baseline;
@@ -47,32 +21,6 @@ export const FeatureTitle = styled.div`
     letter-spacing: -0.02em;
     color: ${({ theme }) => theme.colors.textPrimary};
   }
-`;
-
-export const FeatureSteps = styled.ul`
-  display: flex;
-  flex-direction: column;
-
-  li {
-    padding: 0.85rem 0;
-    border-top: 1px solid ${({ theme }) => theme.colors.border};
-    font-size: 0.98rem;
-    line-height: 1.55;
-    color: ${({ theme }) => theme.colors.textSecondary};
-  }
-`;
-
-export const Aside = styled.p`
-  padding-left: 0.9rem;
-  border-left: 2px solid ${({ theme }) => theme.colors.textPrimary};
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1.55;
-  color: ${({ theme }) => theme.colors.textPrimary};
-`;
-
-export const FeatureVisual = styled.div`
-  grid-area: visual;
 `;
 
 // Um pouco mais largo que a coluna de conteúdo (e que o header), para o
