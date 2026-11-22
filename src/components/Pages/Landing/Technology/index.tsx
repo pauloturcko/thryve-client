@@ -1,27 +1,13 @@
 "use client";
 
 import { ThemeProvider } from "styled-components";
-import { ReviewPreview } from "../ReviewPreview";
 import { Section } from "../Section";
 import { SectionHeading } from "../SectionHeading";
 import { VoiceDemo } from "../VoiceDemo";
 import { Accent, Container, DevelopmentTag } from "../styles";
-import { demoBankSync, demoStatement } from "../data";
 import { landingThemes } from "../theme";
 import { reveal } from "../useReveal";
 import * as S from "./styles";
-
-const IMPORT_STEPS = [
-  "Você envia o arquivo do extrato do banco ou da fatura do cartão.",
-  "A Thryve lê as transações e cria pré-cadastros de receitas e despesas.",
-  "Você revisa, completa o que faltou e confirma.",
-];
-
-const BANK_STEPS = [
-  "Você autoriza a conexão com o seu banco por meio da Pluggy.",
-  "As novas movimentações da conta chegam à Thryve como pré-cadastros.",
-  "Você revisa, ajusta o que for preciso e confirma o lançamento.",
-];
 
 export const Technology = () => (
   <Section
@@ -45,64 +31,8 @@ export const Technology = () => (
               <Accent>sendo sua.</Accent>
             </>
           }
-          lead="Três funcionalidades em construção para reduzir o trabalho manual de registrar cada movimentação. Em todas, nenhum lançamento é confirmado sem passar pela sua revisão."
+          lead="Um aplicativo em construção para reduzir o trabalho manual de registrar cada gasto. Nenhum lançamento é confirmado sem passar pela sua revisão."
         />
-
-        <S.FeatureRow>
-          <S.Feature {...reveal(0)}>
-            <S.FeatureTitle>
-              <h3>
-                Importação inteligente
-                <br />
-                de extratos
-              </h3>
-            </S.FeatureTitle>
-            <S.FeatureSteps>
-              {IMPORT_STEPS.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </S.FeatureSteps>
-            <S.Aside>
-              Não depende de conexão com o banco. Você escolhe o arquivo e
-              decide o que entra.
-            </S.Aside>
-          </S.Feature>
-          <S.FeatureVisual {...reveal(1)}>
-            <ReviewPreview
-              source={demoStatement}
-              origin="file"
-              footer="Nada é salvo antes da sua confirmação."
-            />
-          </S.FeatureVisual>
-        </S.FeatureRow>
-
-        <S.FeatureRow $reverse>
-          <S.Feature {...reveal(0)}>
-            <S.FeatureTitle>
-              <h3>
-                Conexão com o seu banco
-                <br />
-                pela Pluggy
-              </h3>
-            </S.FeatureTitle>
-            <S.FeatureSteps>
-              {BANK_STEPS.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </S.FeatureSteps>
-            <S.Aside>
-              O que você gasta no banco aparece na Thryve, mas só vira
-              lançamento depois da sua confirmação.
-            </S.Aside>
-          </S.Feature>
-          <S.FeatureVisual {...reveal(1)}>
-            <ReviewPreview
-              source={demoBankSync}
-              origin="bank"
-              footer="Cada movimentação espera a sua revisão."
-            />
-          </S.FeatureVisual>
-        </S.FeatureRow>
 
         <ThemeProvider theme={landingThemes.dark}>
           <S.Stage

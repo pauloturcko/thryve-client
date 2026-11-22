@@ -1,11 +1,10 @@
 "use client";
 
-import { Landmark, Plus } from "lucide-react";
-import { useCallback, useState } from "react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import { SpecularButton } from "@/components/Atoms/SpecularButton";
 import { SplitSettingsView } from "@/components/Molecules/SplitSettingsView";
 import { BankAccountInfo } from "@/components/Organisms/BankAccountInfo";
-import { OpenFinanceConnect } from "@/components/Organisms/OpenFinanceConnect";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useBankAccount } from "@/hooks/useBankAccount";
 import { useConfirm } from "@/hooks/useConfirm";
@@ -14,7 +13,6 @@ import { useIncomesList } from "@/hooks/useIncome";
 import { BankAccount } from "@/services/configuracoes/BankAccountService/types";
 import { AccountDetails } from "./AccountDetails";
 import { NewBankAccount } from "./FormModal";
-import * as S from "./styles";
 
 export const ContasPage = () => {
   const { openModal } = useModalContext();
@@ -25,8 +23,6 @@ export const ContasPage = () => {
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(
     null
   );
-  const [isConnectingBank, setIsConnectingBank] = useState(false);
-  const closeBankConnection = useCallback(() => setIsConnectingBank(false), []);
 
   const bankAccounts = loadAllBankAccounts.data ?? [];
   const selectedAccount =
@@ -86,23 +82,12 @@ export const ContasPage = () => {
       description="Configure suas contas"
       message={listMessage}
       action={
-        <S.Actions>
-          <SpecularButton
-            size="sm"
-            onClick={() => setIsConnectingBank(true)}
-          >
-            <Landmark size={18} /> Conectar banco
-          </SpecularButton>
-          <SpecularButton
-            size="sm"
-            onClick={handleCreate}
-          >
-            <Plus size={18} /> Nova Conta
-          </SpecularButton>
-          {isConnectingBank && (
-            <OpenFinanceConnect onClose={closeBankConnection} />
-          )}
-        </S.Actions>
+        <SpecularButton
+          size="sm"
+          onClick={handleCreate}
+        >
+          <Plus size={18} /> Nova Conta
+        </SpecularButton>
       }
       list={bankAccounts.map((bankAccount) => (
         <BankAccountInfo
