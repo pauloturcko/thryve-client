@@ -14,6 +14,7 @@ export const createCardService = {
     expiresIn,
     limit,
     lastFourDigits,
+    bankAccountId,
   }: CreateCardParams) =>
     http.post("/cards/register", {
       name,
@@ -22,6 +23,7 @@ export const createCardService = {
       expiresIn,
       limit,
       lastFourDigits,
+      bankAccountId,
     }),
 };
 

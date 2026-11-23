@@ -5,6 +5,7 @@ export type CreateCardParams = {
   expiresIn: string;
   limit: number | null;
   lastFourDigits: string;
+  bankAccountId: number | null;
 };
 
 export type Card = {
@@ -16,6 +17,10 @@ export type Card = {
   cardFlag: number;
   expiresIn: string;
   lastFourDigits: string;
+  bankAccountId: number | null;
+  bankAccount: { id: number; name: string } | null;
+  usedLimit: string | null;
+  availableLimit: string | null;
 };
 
 export type LoadAllCardsResponse = {

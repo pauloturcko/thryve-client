@@ -3,6 +3,7 @@ import { FormInput } from "@/components/Atoms/FormInput";
 import { FormWrapper } from "@/components/Atoms/FormWrapper";
 import { CardFlag, CardFlagOptions } from "@/constants/enums/card-flag-enum";
 import { CardType, CardTypeOptions } from "@/constants/enums/card-type-enum";
+import { useBankAccount } from "@/hooks/useBankAccount";
 import { useCard } from "@/hooks/useCard";
 import { Card } from "@/services/configuracoes/CardService/types";
 import { formatCurrencyInput, formatExpiryDate } from "@/utils/format";
@@ -19,6 +20,7 @@ type NewCardFormData = {
   tipo: number;
   validade: string;
   limite: string;
+  conta: string;
 };
 
 const requiredMessage = "Campo obrigatório";
@@ -31,6 +33,7 @@ export const NewCard = ({
   card?: Card;
 }) => {
   const { createCard, updateCard } = useCard();
+  const { loadAllBankAccounts } = useBankAccount();
   const isEditMode = !!card;
 
   const {
@@ -48,8 +51,14 @@ export const NewCard = ({
           validade: formatExpiryDate(card.expiresIn),
           limite:
             card.limit !== null ? formatCurrencyInput(Number(card.limit)) : "",
+          conta: card.bankAccountId ? String(card.bankAccountId) : "",
         }
-      : { bandeira: CardFlag.Visa, tipo: CardType.Credito, limite: "" },
+      : {
+          bandeira: CardFlag.Visa,
+          tipo: CardType.Credito,
+          limite: "",
+          conta: "",
+        },
   });
 
   const selectedCardType = Number(useWatch({ control, name: "tipo" }));
@@ -67,6 +76,15 @@ export const NewCard = ({
 
   const handleInvalid = useInvalidFormToast();
 
+  const bankAccounts = loadAllBankAccounts.data ?? [];
+  const accountOptions = [
+    { value: "", label: "Nenhuma" },
+    ...bankAccounts.map((account) => ({
+      value: String(account.id),
+      label: account.name,
+    })),
+  ];
+
   const onSubmit: SubmitHandler<NewCardFormData> = (data) => {
     const payload = {
       name: data.nome,
@@ -77,6 +95,7 @@ export const NewCard = ({
       limit: hasCredit
         ? Number(data.limite.replace(/\./g, "").replace(",", "."))
         : null,
+      bankAccountId: data.conta ? Number(data.conta) : null,
     };
 
     if (isEditMode && card) {
@@ -172,6 +191,29 @@ export const NewCard = ({
             limite.onChange(event);
           }}
         />
+      )}
+      {bankAccounts.length > 0 && (
+        <>
+          <Controller
+            name="conta"
+            control={control}
+            render={({ field }) => (
+              <FormInput.Select
+                label="Conta vinculada"
+                options={accountOptions}
+                ref={field.ref}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
+          <S.Hint>
+            Opcional. No débito, os gastos com este cartão saem automaticamente
+            desta conta.
+            {isEditMode && " Trocar a conta vale só para os próximos gastos."}
+          </S.Hint>
+        </>
       )}
       <S.Actions>
         <Button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</Button>
