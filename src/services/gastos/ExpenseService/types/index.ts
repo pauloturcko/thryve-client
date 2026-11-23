@@ -11,7 +11,7 @@ export type CreateExpenseParams = {
   dueDate?: string | null;
   status: number;
   categoryId: number;
-  bankAccountId: number;
+  bankAccountId?: number;
   paymentMethodId: number;
   cardId?: number | null;
   notes?: string | null;

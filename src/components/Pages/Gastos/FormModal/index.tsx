@@ -113,8 +113,17 @@ export const NewExpense = ({
   });
   const valor = register("valor", {
     required: requiredMessage,
-    validate: (value) =>
-      parseCurrencyInput(value) > 0 || "Informe um valor maior que zero",
+    validate: (value) => {
+      if (parseCurrencyInput(value) <= 0)
+        return "Informe um valor maior que zero";
+      if (
+        availableForThisExpense !== null &&
+        parseCurrencyInput(value) > availableForThisExpense
+      ) {
+        return `Passa do limite disponível do cartão (${formatCurrency(availableForThisExpense)})`;
+      }
+      return true;
+    },
   });
   const parcelas = register("parcelas", {
     validate: (value, formValues) => {
@@ -132,6 +141,8 @@ export const NewExpense = ({
   });
 
   const selectedPaymentMethodId = useWatch({ control, name: "formaPagamento" });
+  const selectedCardId = Number(useWatch({ control, name: "cartao" })) || null;
+  const selectedStatus = Number(useWatch({ control, name: "status" }));
   const purchaseMode = useWatch({ control, name: "compra" });
   const installments = Number(useWatch({ control, name: "parcelas" })) || 0;
   const amount = parseCurrencyInput(useWatch({ control, name: "valor" }));
@@ -197,6 +208,35 @@ export const NewExpense = ({
       })),
   ];
 
+  const bankAccounts = loadAllBankAccounts.data ?? [];
+  const selectedCard = requiresCard
+    ? (loadAllCards.data ?? []).find((card) => card.id === selectedCardId)
+    : undefined;
+  const keepsOriginalCard = isEditMode && selectedCard?.id === expense?.cardId;
+  const lockedAccountId = selectedCard?.bankAccountId
+    ? keepsOriginalCard
+      ? expense!.bankAccountId
+      : selectedCard.bankAccountId
+    : null;
+  const lockedAccountName = bankAccounts.find(
+    (account) => account.id === lockedAccountId
+  )?.name;
+  const showAccount = requiresCard ? !!selectedCard : !!selectedMethod;
+
+  const occupiesLimit =
+    isCreditCard && selectedStatus === TransactionStatus.Pendente;
+  const alreadyCounted =
+    isEditMode &&
+    expense?.cardId === selectedCard?.id &&
+    expense?.paymentMethodId === PaymentMethod.CartaoCredito &&
+    expense?.status === TransactionStatus.Pendente
+      ? Number(expense.amount)
+      : 0;
+  const availableForThisExpense =
+    occupiesLimit && selectedCard?.availableLimit != null
+      ? Number(selectedCard.availableLimit) + alreadyCounted
+      : null;
+
   const missingAccounts = loadAllBankAccounts.data?.length === 0;
   const missingCategories =
     loadAllCategories.isSuccess && expenseCategories.length === 0;
@@ -218,6 +258,36 @@ export const NewExpense = ({
           {...field}
         />
       )}
+    />
+  );
+  const accountSelect = (
+    <Controller
+      name="conta"
+      control={control}
+      shouldUnregister
+      rules={{
+        validate: (value) => !!lockedAccountId || !!value || requiredMessage,
+      }}
+      render={({ field }) =>
+        lockedAccountId ? (
+          <FormInput.Select
+            label="Conta"
+            options={accountOptions}
+            required
+            disabled
+            ref={field.ref}
+            value={String(lockedAccountId)}
+          />
+        ) : (
+          <FormInput.Select
+            label="Conta"
+            options={accountOptions}
+            required
+            error={errors.conta?.message}
+            {...field}
+          />
+        )
+      }
     />
   );
   const purchaseModeSelect = (
@@ -245,7 +315,7 @@ export const NewExpense = ({
       dueDate: formData.vencimento || null,
       status: Number(formData.status),
       categoryId: Number(formData.categoria),
-      bankAccountId: Number(formData.conta),
+      bankAccountId: lockedAccountId ?? Number(formData.conta),
       paymentMethodId: Number(formData.formaPagamento),
       cardId: requiresCard && formData.cartao ? Number(formData.cartao) : null,
       notes: formData.observacoes.trim() || null,
@@ -366,22 +436,6 @@ export const NewExpense = ({
           )}
         />
         <Controller
-          name="conta"
-          control={control}
-          rules={{ required: requiredMessage }}
-          render={({ field }) => (
-            <FormInput.Select
-              label="Conta"
-              options={accountOptions}
-              required
-              error={errors.conta?.message}
-              {...field}
-            />
-          )}
-        />
-      </S.Row>
-      <S.Row>
-        <Controller
           name="formaPagamento"
           control={control}
           rules={{ required: requiredMessage }}
@@ -395,11 +449,23 @@ export const NewExpense = ({
             />
           )}
         />
-        {showPurchaseMode ? purchaseModeSelect : requiresCard && cardSelect}
       </S.Row>
-      {showPurchaseMode && (
+      {requiresCard && (
         <S.Row>
           {cardSelect}
+          {showPurchaseMode && purchaseModeSelect}
+        </S.Row>
+      )}
+      {selectedCard && isCreditCard && selectedCard.availableLimit != null && (
+        <S.Hint>
+          Limite disponível:{" "}
+          {formatCurrency(Number(selectedCard.availableLimit))}. No crédito, o
+          valor vai para a fatura e não sai do saldo da conta.
+        </S.Hint>
+      )}
+      {(showAccount || isInstallment) && (
+        <S.Row>
+          {showAccount && accountSelect}
           {isInstallment && (
             <FormInput.Text
               label="Parcelas"
@@ -412,6 +478,11 @@ export const NewExpense = ({
             />
           )}
         </S.Row>
+      )}
+      {lockedAccountName && (
+        <S.Hint>
+          Conta vinculada ao cartão {selectedCard?.name}: {lockedAccountName}.
+        </S.Hint>
       )}
       {isInstallment && installments >= 2 && amount > 0 && (
         <S.Hint>
