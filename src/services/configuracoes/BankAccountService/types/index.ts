@@ -10,6 +10,8 @@ export type BankAccount = {
   name: string;
   accountType: number;
   balance: string;
+  // Data em que o saldo informado vale (AAAA-MM-DD); lançamentos a partir dela mexem no saldo.
+  balanceDate: string;
 };
 
 export type LoadAllBankAccountsResponse = {
