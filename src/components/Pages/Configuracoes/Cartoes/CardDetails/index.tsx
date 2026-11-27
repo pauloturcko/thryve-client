@@ -77,12 +77,14 @@ const thirdStat = (
     return { label: "Compras no mês", value: String(monthCount) };
   }
 
+  if (card.limit === null || card.availableLimit === null) {
+    return { label: "Limite", value: "Não informado" };
+  }
+
+  // Disponível = limite - compras no crédito ainda pendentes (calculado pela API).
   return {
-    label: "Limite",
-    value:
-      card.limit !== null
-        ? formatCurrency(Number(card.limit))
-        : "Não informado",
+    label: `Disponível de ${formatCurrency(Number(card.limit))}`,
+    value: formatCurrency(Number(card.availableLimit)),
   };
 };
 
@@ -120,7 +122,14 @@ export const CardDetails = ({
     <>
       <EntityDetailsHeader
         title={card.name}
-        subtitle={`Final ${card.lastFourDigits} · ${CardTypeLabels[card.cardType as CardType]} · Validade ${formatExpiryDate(card.expiresIn)}`}
+        subtitle={[
+          `Final ${card.lastFourDigits}`,
+          CardTypeLabels[card.cardType as CardType],
+          `Validade ${formatExpiryDate(card.expiresIn)}`,
+          card.bankAccount
+            ? `Conta ${card.bankAccount.name}`
+            : "Sem conta vinculada",
+        ].join(" · ")}
         onEdit={onEdit}
         onDelete={onDelete}
       />

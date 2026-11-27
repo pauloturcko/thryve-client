@@ -1,4 +1,5 @@
 import { http } from "@/http/http";
+import { todayISO } from "@/utils/date";
 import {
   CreateBankAccountParams,
   BankAccount,
@@ -12,7 +13,14 @@ export const createBankAccountService = {
     accountType,
     balance,
   }: CreateBankAccountParams) =>
-    http.post("/bank-accounts/register", { name, accountType, balance }),
+    // balanceDate: o saldo informado vale a partir de hoje na data local de quem cadastra. A API roda em UTC e,
+    // sem isso, uma conta cadastrada à noite ficava com a data do dia seguinte e ignorava os gastos do dia.
+    http.post("/bank-accounts/register", {
+      name,
+      accountType,
+      balance,
+      balanceDate: todayISO(),
+    }),
 };
 
 export const loadBankAccountsService = {
